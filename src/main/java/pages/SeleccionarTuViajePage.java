@@ -15,7 +15,7 @@ public class SeleccionarTuViajePage extends BasePage {
     //@TODO cambiar el selector de tarifa y precio tarifa al de la semimodal
     private By trainAvailable = By.cssSelector("div[id^='precio-viaje']:not(:has(div))");
     private By trainAvailableBasicFare = By.cssSelector("div[id^='precio-viaje']:not(:has(div))+div>div>div[class='planes-opciones']>div:nth-child(1)");
-    private By selectDayRightArrow = By.cssSelector("button.move_to_tomorrow");
+    private By selectDayRightArrow = By.cssSelector(".rescalendar_controls > button.move_to_tomorrow");
     private By seleccionaTuViajeLabel = By.xpath("//span[contains(text(), 'Selecciona tu viaje') and not(ancestor::select[@disabled])]");
     private By travelerLocator = By.xpath("(//div[contains(@class, 'viajerosSelected') and contains(text(), '1')])[1]");
     private By basicFareLocator = By.xpath("//div[contains(@class, 'viajerosSelected')]/span[text()='Básico']");
