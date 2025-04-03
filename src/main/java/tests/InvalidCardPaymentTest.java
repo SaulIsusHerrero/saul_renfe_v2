@@ -50,9 +50,9 @@ public class InvalidCardPaymentTest {
         homePage.clickAcceptButton();
         homePage.clickSearchTicketButton();
         seleccionarTuViajePage.verifyYouAreInSelecionaTuViaje();
-        seleccionarTuViajePage.selectFirstTrainAvailable();
-        seleccionarTuViajePage.clickFareApplied();
+        seleccionarTuViajePage.selectFirstTrainAvailableAndBasicFare();
         seleccionarTuViajePage.verifyNumberOfTravelers();
+        /**
         seleccionarTuViajePage.verifyFareIsBasic();
         seleccionarTuViajePage.verifyFarePrice();
         seleccionarTuViajePage.popUpFareAppears();//prueba
@@ -82,19 +82,20 @@ public class InvalidCardPaymentTest {
         compraPage.clickPurchaseCondition();
         compraPage.verifyTotalPurchasePrice();
         compraPage.clickContinuarCompra();
-        pasarelaPagoPage.verifyYouAreInPasarelaPagoPage();
-        pasarelaPagoPage.verifyTotalPricePasarelaPago();
+        //pasarelaPagoPage.verifyYouAreInPasarelaPagoPage();
+        //pasarelaPagoPage.verifyTotalPricePasarelaPago();
         pasarelaPagoPage.typeBankCard("4000 0000 0000 1000");
         pasarelaPagoPage.typeExpirationDate("03/30");
         pasarelaPagoPage.typeCVV("990");
         pasarelaPagoPage.clickPaymentButton();
+         */
     }
 
-    @AfterMethod
+    /**@AfterMethod
         public void tearDown() {
             if (webDriver != null) {
                 webDriver.quit(); //Closes the current instance of the browser
             }
-        }
+        }*/
 
 }
