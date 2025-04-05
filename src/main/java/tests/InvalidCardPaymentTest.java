@@ -36,8 +36,6 @@ public class InvalidCardPaymentTest {
         personalizaTuViajePage = new PersonalizaTuViajePage(webDriver); //Initialization of the PersonalizaTuViaje Page.
         compraPage = new CompraPage(webDriver); //Initialization of the Compra Page.
         pasarelaPagoPage = new PasarelaPagoPage(webDriver); //Initialization of the pasarelaPago Page.
-
-
     }
 
     @Test
@@ -52,50 +50,44 @@ public class InvalidCardPaymentTest {
         seleccionarTuViajePage.verifyYouAreInSelecionaTuViaje();
         seleccionarTuViajePage.selectFirstTrainAvailableAndBasicFare();
         seleccionarTuViajePage.verifyNumberOfTravelers();
-        /**
         seleccionarTuViajePage.verifyFareIsBasic();
-        seleccionarTuViajePage.verifyFarePrice();
-        seleccionarTuViajePage.popUpFareAppears();//prueba
-        seleccionarTuViajePage.verifyTotalPrice();
         seleccionarTuViajePage.verifyFareAndTotalPricesAreEquals();
         seleccionarTuViajePage.clickSelectButton();
         seleccionarTuViajePage.popUpFareAppears();
         seleccionarTuViajePage.linkContinueSameFareAppears();
         seleccionarTuViajePage.clickLinkContinueSameFare();
-        introduceTusDatosPage.verifyYouAreInIntroduceYourDataPage();
-        introduceTusDatosPage.writeFirstNameField("John");
-        introduceTusDatosPage.writeFirstSurnameField("Doe");
-        introduceTusDatosPage.writeSecondSurnameField("López");
-        introduceTusDatosPage.writeDNIField("46131651E");
-        introduceTusDatosPage.writeEmailField("test@qa.com");
-        introduceTusDatosPage.writePhoneField("696824570");
-        introduceTusDatosPage.verifyTotalPriceData();
-        introduceTusDatosPage.clickPersonalizeTrip();
-        personalizaTuViajePage.verifyYouAreInPersonalizedYourTravelPage();
-        personalizaTuViajePage.continueWithPurchase();
-        personalizaTuViajePage.verifyTotalPersonalizePrice();
-        compraPage.verifyYouAreInCompraPage();
-        compraPage.typeEmail("test@qa.com");
-        compraPage.writePhoneField("696824570");
-        compraPage.clickPurchaseCard();
-        compraPage.clickNewBankCard();
-        compraPage.clickPurchaseCondition();
-        compraPage.verifyTotalPurchasePrice();
-        compraPage.clickContinuarCompra();
+        //introduceTusDatosPage.verifyYouAreInIntroduceYourDataPage();
+        //introduceTusDatosPage.writeFirstNameField("John");
+        //introduceTusDatosPage.writeFirstSurnameField("Doe");
+        //introduceTusDatosPage.writeSecondSurnameField("López");
+        //introduceTusDatosPage.writeDNIField("46131651E");
+        //introduceTusDatosPage.writeEmailField("test@qa.com");
+        //introduceTusDatosPage.writePhoneField("696824570");
+        //introduceTusDatosPage.verifyTotalPriceData();
+        //introduceTusDatosPage.clickPersonalizeTrip();
+        //personalizaTuViajePage.verifyYouAreInPersonalizedYourTravelPage();
+        //personalizaTuViajePage.continueWithPurchase();
+        //personalizaTuViajePage.verifyTotalPersonalizePrice();
+        //compraPage.verifyYouAreInCompraPage();
+        //compraPage.typeEmail("test@qa.com");
+        //compraPage.writePhoneField("696824570");
+        //compraPage.clickPurchaseCard();
+        //compraPage.clickNewBankCard();
+        //compraPage.clickPurchaseCondition();
+        //compraPage.verifyTotalPurchasePrice();
+        //compraPage.clickContinuarCompra();
         //pasarelaPagoPage.verifyYouAreInPasarelaPagoPage();
         //pasarelaPagoPage.verifyTotalPricePasarelaPago();
-        pasarelaPagoPage.typeBankCard("4000 0000 0000 1000");
-        pasarelaPagoPage.typeExpirationDate("03/30");
-        pasarelaPagoPage.typeCVV("990");
-        pasarelaPagoPage.clickPaymentButton();
-         */
+        //pasarelaPagoPage.typeBankCard("4000 0000 0000 1000");
+        //pasarelaPagoPage.typeExpirationDate("03/30");
+        //pasarelaPagoPage.typeCVV("990");
+        //pasarelaPagoPage.clickPaymentButton();
     }
-
-    /**@AfterMethod
-        public void tearDown() {
-            if (webDriver != null) {
-                webDriver.quit(); //Closes the current instance of the browser
-            }
-        }*/
+    @AfterMethod
+    public void tearDown() {
+    if (webDriver != null) {
+    webDriver.quit(); //Closes the current instance of the browser
+    }
+    }
 
 }
