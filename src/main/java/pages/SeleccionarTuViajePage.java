@@ -118,7 +118,7 @@ public class SeleccionarTuViajePage extends BasePage {
         WebElement popUpElement = webDriver.findElement(popUpChangeFare);
         JavascriptExecutor js = (JavascriptExecutor) webDriver;
         String displayStyle = (String) js.executeScript("return window.getComputedStyle(arguments[0]).display;", popUpElement);
-        System.out.println("El Pop-up es visble en pantalla");
+        System.out.println("El Pop-up para un posible cambio de tarifa es visible en pantalla");
     }
 
     /**
@@ -128,7 +128,6 @@ public class SeleccionarTuViajePage extends BasePage {
         waitUntilElementIsDisplayed(linkContinueSameFare, Duration.ofSeconds(5));
         boolean linkPopUpAppears = isElementDisplayed(linkContinueSameFare); //@todo comprobar que aparece el link
         Assert.assertTrue(linkPopUpAppears);
-        System.out.println("El Link del pop-up para seguir con la misma tarifa es visble en pantalla");
     }
 
     /**

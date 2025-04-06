@@ -56,15 +56,15 @@ public class InvalidCardPaymentTest {
         seleccionarTuViajePage.popUpFareAppears();
         seleccionarTuViajePage.linkContinueSameFareAppears();
         seleccionarTuViajePage.clickLinkContinueSameFare();
-        //introduceTusDatosPage.verifyYouAreInIntroduceYourDataPage();
-        //introduceTusDatosPage.writeFirstNameField("John");
-        //introduceTusDatosPage.writeFirstSurnameField("Doe");
-        //introduceTusDatosPage.writeSecondSurnameField("López");
-        //introduceTusDatosPage.writeDNIField("46131651E");
-        //introduceTusDatosPage.writeEmailField("test@qa.com");
-        //introduceTusDatosPage.writePhoneField("696824570");
-        //introduceTusDatosPage.verifyTotalPriceData();
-        //introduceTusDatosPage.clickPersonalizeTrip();
+        introduceTusDatosPage.verifyYouAreInIntroduceYourDataPage();
+        introduceTusDatosPage.writeFirstNameField("John");
+        introduceTusDatosPage.writeFirstSurnameField("Doe");
+        introduceTusDatosPage.writeSecondSurnameField("López");
+        introduceTusDatosPage.writeDNIField("46131651E");
+        introduceTusDatosPage.writeEmailField("test@qa.com");
+        introduceTusDatosPage.writePhoneField("696824570");
+        introduceTusDatosPage.verifyTotalPriceData();
+        introduceTusDatosPage.clickPersonalizeTrip();
         //personalizaTuViajePage.verifyYouAreInPersonalizedYourTravelPage();
         //personalizaTuViajePage.continueWithPurchase();
         //personalizaTuViajePage.verifyTotalPersonalizePrice();
@@ -83,11 +83,11 @@ public class InvalidCardPaymentTest {
         //pasarelaPagoPage.typeCVV("990");
         //pasarelaPagoPage.clickPaymentButton();
     }
-    @AfterMethod
-    public void tearDown() {
-    if (webDriver != null) {
-    webDriver.quit(); //Closes the current instance of the browser
-    }
-    }
+    //@AfterMethod
+    //public void tearDown() {
+    //if (webDriver != null) {
+    //webDriver.quit(); //Closes the current instance of the browser
+    //}
+    //}
 
 }

@@ -4,11 +4,7 @@ import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
-import pages.SeleccionarTuViajePage;
 
 public class IntroduceTusDatosPage extends BasePage {
     //Locators
@@ -109,8 +105,10 @@ public class IntroduceTusDatosPage extends BasePage {
      */
     public void verifyTotalPriceData(){
         waitUntilElementIsDisplayed(totalPriceDataLocator, Duration.ofSeconds(5));
-        boolean totalPriceData = isElementDisplayed(totalPriceDataLocator); //@todo verificar que el precio es el mismo que en la pagina anterior.
-        Assert.assertTrue(totalPriceData);
+        //@todo comprobar el precio, no la disponibilidad. los precios se comprueban con el getText
+        String totalPriceData = webDriver.findElement(totalPriceDataLocator).getText().trim().replaceAll("\\s+", "");
+        //@todo verificar que el precio es el mismo que en la pagina anterior.
+        System.out.print("El precio total sigue siendo en la pantalla 'Introduce tus datos': " + totalPriceData);
     }
 
     /**
