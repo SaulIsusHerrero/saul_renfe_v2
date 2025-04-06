@@ -3,8 +3,6 @@ package pages;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 
@@ -38,7 +36,7 @@ public class PersonalizaTuViajePage extends BasePage {
         String totalPricePersonalize = webDriver.findElement(totalPricePersonalizeLocator).getText().trim().replaceAll("\\s+", "");
         //@todo verificar que el precio es el mismo que en la pagina anterior.
         //todo comprobar que el precio sigue siendo el mismo
-        System.out.print("El precio total sigue siendo en la pantalla 'Personaliza tu viaje': " + totalPricePersonalize);
+        System.out.println("El precio total sigue siendo en la pantalla 'Personaliza tu viaje': " + totalPricePersonalize + "\n");
     }
 
     /**

@@ -3,7 +3,6 @@ package pages;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import java.time.Duration;
 
 public class IntroduceTusDatosPage extends BasePage {
@@ -105,7 +104,7 @@ public class IntroduceTusDatosPage extends BasePage {
         //@todo comprobar el precio, no la disponibilidad. los precios se comprueban con el getText
         String totalPriceData = webDriver.findElement(totalPriceDataLocator).getText().trim().replaceAll("\\s+", "");
         //@todo verificar que el precio es el mismo que en la pagina anterior.
-        System.out.print("El precio total sigue siendo en la pantalla 'Introduce tus datos': " + totalPriceData);
+        System.out.print("El precio total sigue siendo en la pantalla 'Introduce tus datos': " + totalPriceData + "\n");
     }
 
     /**

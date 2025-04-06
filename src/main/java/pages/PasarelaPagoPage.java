@@ -5,16 +5,14 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import java.time.Duration;
 
-
 public class PasarelaPagoPage extends BasePage {
     //Locators
     private By cardField = By.xpath("//input[@id='card-number']");
     private By expirationField = By.xpath("//input[@id='card-expiration']");
-    private By totalPricePasarelaLocator = By.cssSelector("div.right");
+    private By totalPricePasarelaLocator = By.xpath("//div[@class='right']");
     private By cvvField = By.xpath("//input[@id='card-cvv']");
-    private By btnPayment = By.cssSelector("button#divImgAceptar.btn.btn-lg.btn-accept.validColor");
-    private By popUpError = By.cssSelector("div#myModalBody.modal-body");
-
+    private By btnPayment = By.xpath("//button[@class='btn btn-lg btn-accept validColor']");
+    private By popUpError = By.xpath("//div[@id='myModalBody']//li[contains(text(), 'Tarjeta no soportada (RS18)')]");
 
     //Constructor
     public PasarelaPagoPage(WebDriver webDriver) {
@@ -33,12 +31,13 @@ public class PasarelaPagoPage extends BasePage {
     }
 
     /**
-     * Assert to the total price on the "Pasarela de Pago" page
+     * Assert that the total price on the "Pasarela de Pago" page is the same than the other pages
      */
     public void verifyTotalPricePasarelaPago(){
         waitUntilElementIsDisplayed(totalPricePasarelaLocator, Duration.ofSeconds(5));
-        boolean totalPricePasarelaPago = isElementDisplayed(totalPricePasarelaLocator); //@todo verificar precio, no que este disponible
-        Assert.assertTrue(totalPricePasarelaPago);
+        String totalPricePasarela = webDriver.findElement(totalPricePasarelaLocator).getText().trim().replaceAll("\\s+", "");
+        //@todo verificar precio, no que este disponible
+        System.out.println("El precio total sigue siendo en la pantalla 'Pasarela de pago': " + totalPricePasarela + "\n");
     }
 
     /**

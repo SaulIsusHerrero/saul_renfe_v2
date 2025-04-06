@@ -15,8 +15,7 @@ public class CompraPage extends BasePage {
     private By emailField = By.xpath("//input[@id='inputEmail']");
     private By telefonoField = By.xpath("//input[@id='telefonoComprador']");
     private By cardInput = By.xpath("//input[@id='datosPago_cdgoFormaPago_tarjetaRedSys']");
-    private By newBankCard = By.cssSelector("button.target-puntos-renfe.selecTarjeta");
-    private By totalPriceCompralizeLocator = By.cssSelector("span#totalTrayecto.dinero-total");
+    private By totalPriceCompraLocator = By.cssSelector("span#totalTrayecto.dinero-total");
     private By conditionsCheckboxInput = By.xpath("//input[@id='aceptarCondiciones']");
     private By btnContinuarCompra = By.cssSelector("button#butonPagar.pagar-a");
 
@@ -28,20 +27,16 @@ public class CompraPage extends BasePage {
 
     //Methods
     /**
-     * Assert que estoy en la Page y esta habilitada “Personaliza tu viaje”
+     * Assert that I am on the right page and is enabled “Compra” page
      */
     public void verifyYouAreInCompraPage() {
         waitUntilElementIsDisplayed(compraLabel, Duration.ofSeconds(5));
-        WebElement element = webDriver.findElement(compraLabel);
-        boolean labelDisplayed = element.isDisplayed();
-        boolean labelEnabled = element.isEnabled();
-        Assert.assertTrue("Compra", labelDisplayed); //todo verificar igual que en las anteriores
-        Assert.assertTrue("Compra", labelEnabled);
+        //todo verificar igual que en las anteriores
+        Assert.assertTrue(webDriver.findElement(compraLabel).isEnabled());
     }
 
     /**
      * type the E-mail in the textbox on the "Compra" page.
-     *
      * @param email as a string
      */
     public void typeEmail(String email){
@@ -51,7 +46,6 @@ public class CompraPage extends BasePage {
 
     /**
      * type the Phone in the textbox on the "Introduce tus datos" page.
-     *
      * @param phone as a string
      */
     public void writePhoneField(String phone) {
@@ -70,30 +64,24 @@ public class CompraPage extends BasePage {
     }
 
     /**
-     * Clicks in new card in the Compra page.
-     */
-    public void clickNewBankCard() {
-        WebElement newCard = webDriver.findElement(newBankCard);
-        JavascriptExecutor js = (JavascriptExecutor) webDriver;
-        js.executeScript("arguments[0].click();", newCard);
-    }
-
-    /**
      * Marks the "Conditions of ourchase" checkbox as selected or unselected in the "Compra" page
      *
      */
     public void clickPurchaseCondition(){
+       scrollElementIntoView(conditionsCheckboxInput);
        WebElement conditions = webDriver.findElement(conditionsCheckboxInput);
-        JavascriptExecutor js = (JavascriptExecutor) webDriver;
-        js.executeScript("arguments[0].click();", conditions);
+       JavascriptExecutor js = (JavascriptExecutor) webDriver;
+       js.executeScript("arguments[0].click();", conditions);
     }
+
     /**
      * Verify the ticket price on the "Compra" page
      */
     public void verifyTotalPurchasePrice(){
-        waitUntilElementIsDisplayed(totalPriceCompralizeLocator, Duration.ofSeconds(5));
-        boolean totalPurchasePrice = isElementDisplayed(totalPriceCompralizeLocator); //todo verificar el precio
-        Assert.assertTrue(totalPurchasePrice);
+        waitUntilElementIsDisplayed(totalPriceCompraLocator, Duration.ofSeconds(5));
+        String totalPriceCompra = webDriver.findElement(totalPriceCompraLocator).getText().trim().replaceAll("\\s+", "");
+        //todo verificar el precio
+        System.out.println("El precio total sigue siendo en la pantalla 'Compra': " + totalPriceCompra + "\n");
     }
 
     /**

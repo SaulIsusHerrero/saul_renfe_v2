@@ -68,26 +68,25 @@ public class InvalidCardPaymentTest {
         personalizaTuViajePage.verifyYouAreInPersonalizedYourTravelPage();
         personalizaTuViajePage.verifyTotalPersonalizePrice();
         personalizaTuViajePage.continueWithPurchase();
-        //compraPage.verifyYouAreInCompraPage();
-        //compraPage.typeEmail("test@qa.com");
-        //compraPage.writePhoneField("696824570");
-        //compraPage.clickPurchaseCard();
-        //compraPage.clickNewBankCard();
-        //compraPage.clickPurchaseCondition();
-        //compraPage.verifyTotalPurchasePrice();
-        //compraPage.clickContinuarCompra();
-        //pasarelaPagoPage.verifyYouAreInPasarelaPagoPage();
-        //pasarelaPagoPage.verifyTotalPricePasarelaPago();
-        //pasarelaPagoPage.typeBankCard("4000 0000 0000 1000");
-        //pasarelaPagoPage.typeExpirationDate("03/30");
-        //pasarelaPagoPage.typeCVV("990");
-        //pasarelaPagoPage.clickPaymentButton();
+        compraPage.verifyYouAreInCompraPage();
+        compraPage.typeEmail("test@qa.com");
+        compraPage.writePhoneField("696824570");
+        compraPage.clickPurchaseCard();
+        compraPage.clickPurchaseCondition();
+        compraPage.verifyTotalPurchasePrice();
+        compraPage.clickContinuarCompra();
+        pasarelaPagoPage.verifyYouAreInPasarelaPagoPage();
+        pasarelaPagoPage.verifyTotalPricePasarelaPago();
+        pasarelaPagoPage.typeBankCard("4000 0000 0000 1000");
+        pasarelaPagoPage.typeExpirationDate("03/30");
+        pasarelaPagoPage.typeCVV("990");
+        pasarelaPagoPage.clickPaymentButton();
     }
-    //@AfterMethod
-    //public void tearDown() {
-    //if (webDriver != null) {
-    //webDriver.quit(); //Closes the current instance of the browser
-    //}
-    //}
+    @AfterMethod
+    public void tearDown() {
+    if (webDriver != null) {
+    webDriver.quit(); //Closes the current instance of the browser
+    }
+    }
 
 }
