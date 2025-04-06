@@ -32,12 +32,9 @@ public class IntroduceTusDatosPage extends BasePage {
      * Assert que estoy en la Page y esta habilitada “introduce tus datos”
      */
     public void verifyYouAreInIntroduceYourDataPage() {
+        //@todo investigar como se comprueba el texto, el tipo de assert que necesitas
         waitUntilElementIsDisplayed(introduceTusDatosLabel, Duration.ofSeconds(5));
-        WebElement element = webDriver.findElement(introduceTusDatosLabel);
-        boolean labelDisplayed = element.isDisplayed();
-        boolean labelEnabled = element.isEnabled();
-        Assert.assertTrue("Introduce tus datos", labelDisplayed);
-        Assert.assertTrue("Introduce tus datos", labelEnabled); //@todo investigar como se comprueba el texto, el tipo de assert que necesitas
+        Assert.assertTrue(webDriver.findElement(introduceTusDatosLabel).isEnabled());
     }
 
     /**

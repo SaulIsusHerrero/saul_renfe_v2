@@ -65,9 +65,9 @@ public class InvalidCardPaymentTest {
         introduceTusDatosPage.writePhoneField("696824570");
         introduceTusDatosPage.verifyTotalPriceData();
         introduceTusDatosPage.clickPersonalizeTrip();
-        //personalizaTuViajePage.verifyYouAreInPersonalizedYourTravelPage();
-        //personalizaTuViajePage.continueWithPurchase();
-        //personalizaTuViajePage.verifyTotalPersonalizePrice();
+        personalizaTuViajePage.verifyYouAreInPersonalizedYourTravelPage();
+        personalizaTuViajePage.verifyTotalPersonalizePrice();
+        personalizaTuViajePage.continueWithPurchase();
         //compraPage.verifyYouAreInCompraPage();
         //compraPage.typeEmail("test@qa.com");
         //compraPage.writePhoneField("696824570");

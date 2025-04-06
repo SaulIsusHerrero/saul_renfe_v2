@@ -11,11 +11,8 @@ import java.time.Duration;
 public class PersonalizaTuViajePage extends BasePage {
     //Locators
     private By personalizaTuViajeLabel = By.xpath("//span[contains(text(), 'Personaliza tu viaje') and not(ancestor::select[@disabled])]");
-    private By btnContinuarPersonalize = By.cssSelector("button#submitFormaPago.form-button.btn.btn-accordion");
+    private By btnContinuarPersonalize = By.xpath("//button[@id='submitFormaPago']");
     private By totalPricePersonalizeLocator = By.xpath("//span[@id='totalTrayecto']");
-
-    //Variables
-    WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(20));
 
     //Constructor
     public PersonalizaTuViajePage(WebDriver webDriver) {
@@ -24,17 +21,24 @@ public class PersonalizaTuViajePage extends BasePage {
     }
 
     //Methods
-
     /**
-     * Assert que estoy en la Page y esta habilitada “Personaliza tu viaje”
+     * Assert that I am on the right page and is enable “Personaliza tu viaje” page
      */
     public void verifyYouAreInPersonalizedYourTravelPage() {
         waitUntilElementIsDisplayed(personalizaTuViajeLabel, Duration.ofSeconds(5));
-        WebElement element = webDriver.findElement(personalizaTuViajeLabel);
-        boolean labelDisplayed = element.isDisplayed();
-        boolean labelEnabled = element.isEnabled();
-        Assert.assertTrue("Personaliza tu viaje", labelDisplayed); //@todo igual que en el titulo de la pag anterior
-        Assert.assertTrue("Personaliza tu viaje", labelEnabled);
+        Assert.assertTrue(webDriver.findElement(personalizaTuViajeLabel).isEnabled());
+    }
+
+    /**
+     * Verify the ticket price.
+     */
+    public void verifyTotalPersonalizePrice(){
+        waitUntilElementIsDisplayed(totalPricePersonalizeLocator, Duration.ofSeconds(5));
+        //@todo comprobar el precio, no la disponibilidad. los precios se comprueban con el getText
+        String totalPricePersonalize = webDriver.findElement(totalPricePersonalizeLocator).getText().trim().replaceAll("\\s+", "");
+        //@todo verificar que el precio es el mismo que en la pagina anterior.
+        //todo comprobar que el precio sigue siendo el mismo
+        System.out.print("El precio total sigue siendo en la pantalla 'Personaliza tu viaje': " + totalPricePersonalize);
     }
 
     /**
@@ -43,15 +47,6 @@ public class PersonalizaTuViajePage extends BasePage {
     public void continueWithPurchase(){
         waitUntilElementIsDisplayed(btnContinuarPersonalize, Duration.ofSeconds(5));
         clickElement(btnContinuarPersonalize);
-    }
-
-    /**
-     * Verify the ticket price.
-     */
-    public void verifyTotalPersonalizePrice(){
-        waitUntilElementIsDisplayed(totalPricePersonalizeLocator, Duration.ofSeconds(5));
-        boolean totalPricePersonalize = isElementDisplayed(totalPricePersonalizeLocator); //todo comprobar que el precio sigue siendo el mismo
-        Assert.assertTrue(totalPricePersonalize);
     }
 
 }
