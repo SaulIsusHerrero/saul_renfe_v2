@@ -31,13 +31,17 @@ public class PasarelaPagoPage extends BasePage {
     }
 
     /**
-     * Assert that the total price on the "Pasarela de Pago" page is the same than the other pages
+     * Verify the ticket price.
+     * @param totalPriceTrip as a String
      */
-    public void verifyTotalPricePasarelaPago(){
+    public String verifyTotalPricePasarelaPago(String totalPriceTrip){
         waitUntilElementIsDisplayed(totalPricePasarelaLocator, Duration.ofSeconds(5));
-        String totalPricePasarela = webDriver.findElement(totalPricePasarelaLocator).getText().trim().replaceAll("\\s+", "");
-        //@todo verificar precio, no que este disponible
-        System.out.println("El precio total sigue siendo en la pantalla 'Pasarela de pago': " + totalPricePasarela + "\n");
+        //@todo comprobar el precio, no la disponibilidad. los precios se comprueban con el getText
+        String totalPriceData = webDriver.findElement(totalPricePasarelaLocator).getText().trim().replaceAll("\\s+", "");
+        //@todo verificar que el precio es el mismo que en la pagina anterior. Sigue siendo el mismo desde el inicio
+        totalPriceTrip = webDriver.findElement(totalPricePasarelaLocator).getText().trim().replaceAll("\\s+", "");
+        Assert.assertEquals(totalPriceData, totalPriceTrip);
+        return totalPriceTrip;
     }
 
     /**

@@ -17,8 +17,8 @@ public class IntroduceTusDatosPage extends BasePage {
     private By totalPriceDataLocator = By.xpath("//span[@id='totalTrayecto']");
     private By btnPersonalizar = By.cssSelector("#btn-responsive > #submitpersonaliza");
 
-    //Variables
-    SeleccionarTuViajePage seleccionarTuViajePage;
+    //Instance
+    private SeleccionarTuViajePage seleccionarTuViajePage;
 
     //Constructor
     public IntroduceTusDatosPage(WebDriver webDriver) {
@@ -97,14 +97,17 @@ public class IntroduceTusDatosPage extends BasePage {
     }
 
     /**
-     * Check the total price on "Introduce tus datos" Page
+     * Verify the ticket price.
+     * @param totalPriceTrip as a String
      */
-    public void verifyTotalPriceData(){
+    public String verifyTotalPriceData(String totalPriceTrip){
         waitUntilElementIsDisplayed(totalPriceDataLocator, Duration.ofSeconds(5));
         //@todo comprobar el precio, no la disponibilidad. los precios se comprueban con el getText
         String totalPriceData = webDriver.findElement(totalPriceDataLocator).getText().trim().replaceAll("\\s+", "");
-        //@todo verificar que el precio es el mismo que en la pagina anterior.
-        System.out.print("El precio total sigue siendo en la pantalla 'Introduce tus datos': " + totalPriceData + "\n");
+        //@todo verificar que el precio es el mismo que en la pagina anterior. Sigue siendo el mismo desde el inicio
+        totalPriceTrip = webDriver.findElement(totalPriceDataLocator).getText().trim().replaceAll("\\s+", "");
+        Assert.assertEquals(totalPriceData, totalPriceTrip);
+        return totalPriceTrip;
     }
 
     /**

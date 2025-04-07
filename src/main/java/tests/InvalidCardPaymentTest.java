@@ -21,6 +21,9 @@ public class InvalidCardPaymentTest {
     private CompraPage compraPage;
     private PasarelaPagoPage pasarelaPagoPage;
 
+    //Variable global para el precio total del trayecto
+    String totalPriceTrip = "";
+
     @BeforeMethod
     public void setup() throws InterruptedException {
         //Chrome: Initialization of the ChromeDriver.
@@ -51,7 +54,8 @@ public class InvalidCardPaymentTest {
         seleccionarTuViajePage.selectFirstTrainAvailableAndBasicFare();
         seleccionarTuViajePage.verifyNumberOfTravelers();
         seleccionarTuViajePage.verifyFareIsBasic();
-        seleccionarTuViajePage.verifyFareAndTotalPricesAreEquals();
+        //1a) Verificación : el precio de la tarifa y precio del total son iguales en la semimodal
+        seleccionarTuViajePage.verifyFareAndTotalPricesAreEquals(totalPriceTrip);
         seleccionarTuViajePage.clickSelectButton();
         seleccionarTuViajePage.popUpFareAppears();
         seleccionarTuViajePage.linkContinueSameFareAppears();
@@ -63,20 +67,24 @@ public class InvalidCardPaymentTest {
         introduceTusDatosPage.writeDNIField("46131651E");
         introduceTusDatosPage.writeEmailField("test@qa.com");
         introduceTusDatosPage.writePhoneField("696824570");
-        introduceTusDatosPage.verifyTotalPriceData();
+        //2a) Verificación : el precio total en IntroduceTusDatosPage es igual que el de la Page anterior.
+        introduceTusDatosPage.verifyTotalPriceData(totalPriceTrip);
         introduceTusDatosPage.clickPersonalizeTrip();
         personalizaTuViajePage.verifyYouAreInPersonalizedYourTravelPage();
-        personalizaTuViajePage.verifyTotalPersonalizePrice();
+        //3a) Verificación : el precio total en PersonalizaTuViajePage es igual que el de la Page anterior
+        personalizaTuViajePage.verifyTotalPersonalizePrice(totalPriceTrip);
         personalizaTuViajePage.continueWithPurchase();
         compraPage.verifyYouAreInCompraPage();
         compraPage.typeEmail("test@qa.com");
         compraPage.writePhoneField("696824570");
         compraPage.clickPurchaseCard();
         compraPage.clickPurchaseCondition();
-        compraPage.verifyTotalPurchasePrice();
+        //4a) Verificación : el precio total en CompraPage es igual que el de la Page anterior
+        compraPage.verifyTotalCompraPrice(totalPriceTrip);
         compraPage.clickContinuarCompra();
         pasarelaPagoPage.verifyYouAreInPasarelaPagoPage();
-        pasarelaPagoPage.verifyTotalPricePasarelaPago();
+        //5a) Verificación : el precio total en PasarelaDePagoPage es igual que el de la Page anterior
+        pasarelaPagoPage.verifyTotalPricePasarelaPago(totalPriceTrip);
         pasarelaPagoPage.typeBankCard("4000 0000 0000 1000");
         pasarelaPagoPage.typeExpirationDate("03/30");
         pasarelaPagoPage.typeCVV("990");
@@ -84,9 +92,9 @@ public class InvalidCardPaymentTest {
     }
     @AfterMethod
     public void tearDown() {
-    if (webDriver != null) {
+      if (webDriver != null) {
     webDriver.quit(); //Closes the current instance of the browser
-    }
+      }
     }
 
 }

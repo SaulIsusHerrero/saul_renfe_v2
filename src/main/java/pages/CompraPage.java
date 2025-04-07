@@ -75,13 +75,17 @@ public class CompraPage extends BasePage {
     }
 
     /**
-     * Verify the ticket price on the "Compra" page
+     * Verify the ticket price.
+     * @param totalPriceTrip as a String
      */
-    public void verifyTotalPurchasePrice(){
+    public String verifyTotalCompraPrice(String totalPriceTrip){
         waitUntilElementIsDisplayed(totalPriceCompraLocator, Duration.ofSeconds(5));
-        String totalPriceCompra = webDriver.findElement(totalPriceCompraLocator).getText().trim().replaceAll("\\s+", "");
-        //todo verificar el precio
-        System.out.println("El precio total sigue siendo en la pantalla 'Compra': " + totalPriceCompra + "\n");
+        //@todo comprobar el precio, no la disponibilidad. los precios se comprueban con el getText
+        String totalPriceData = webDriver.findElement(totalPriceCompraLocator).getText().trim().replaceAll("\\s+", "");
+        //@todo verificar que el precio es el mismo que en la pagina anterior. Sigue siendo el mismo desde el inicio
+        totalPriceTrip = webDriver.findElement(totalPriceCompraLocator).getText().trim().replaceAll("\\s+", "");
+        Assert.assertEquals(totalPriceData, totalPriceTrip);
+        return totalPriceTrip;
     }
 
     /**
