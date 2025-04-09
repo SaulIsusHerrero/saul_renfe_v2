@@ -105,6 +105,7 @@ public class BasePage {
      * @param timeout as a long
      */
     public void waitUntilElementIsDisplayed(By locator, Duration timeout) {
+        //@todo Saul, lee el codigo- que esta mal aqui?
         WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(5));
         WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
         Assert.assertTrue(element.isDisplayed(),"The element" + element + "is not displayed");
