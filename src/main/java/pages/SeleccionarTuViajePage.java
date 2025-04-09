@@ -129,6 +129,8 @@ public class SeleccionarTuViajePage extends BasePage {
         waitUntilElementIsDisplayed(linkContinueSameFare, Duration.ofSeconds(5));
         boolean linkPopUpAppears = isElementDisplayed(linkContinueSameFare); //@todo comprobar que aparece el link
         Assert.assertTrue(linkPopUpAppears);
+        //@todo Saúl - ¿recuerdas que hablamos de que aqui estas comprobando que esta disponible? Hablamos de comprobar con el texto en pantalla.
+        //Recuerda que en esta web, el selector esta presente incluso si el pop up no lo está.
     }
 
     /**
