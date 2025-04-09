@@ -92,14 +92,13 @@ public class SeleccionarTuViajePage extends BasePage {
 
     /**
      * Verifies that the fare and the total prices applied for the trip in the semimodal are equals
-     * @param totalPriceTrip as a String
      */
-    public String verifyFareAndTotalPricesAreEquals(String totalPriceTrip) {
+    public String verifyFareAndTotalPricesAreEquals() {
         waitUntilElementIsDisplayed(basicFarePriceLocator, Duration.ofSeconds(5));
         waitUntilElementIsDisplayed(totalPriceLocator, Duration.ofSeconds(5));
         //@todo comprobar el precio, no la disponibilidad. los precios se comprueban con el getText
         String basicFarePrice = webDriver.findElement(basicFarePriceLocator).getText().trim().replaceAll("\\s+", "");
-        totalPriceTrip = webDriver.findElement(totalPriceLocator).getText().trim().replaceAll("\\s+", "");
+        String totalPriceTrip = webDriver.findElement(totalPriceLocator).getText().trim().replaceAll("\\s+", "");
         Assert.assertEquals(basicFarePrice, totalPriceTrip);
         return totalPriceTrip;
     }

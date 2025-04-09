@@ -55,7 +55,7 @@ public class InvalidCardPaymentTest {
         seleccionarTuViajePage.verifyNumberOfTravelers();
         seleccionarTuViajePage.verifyFareIsBasic();
         //1a) Verificación : el precio de la tarifa y precio del total son iguales en la semimodal
-        seleccionarTuViajePage.verifyFareAndTotalPricesAreEquals(totalPriceTrip);
+        totalPriceTrip = seleccionarTuViajePage.verifyFareAndTotalPricesAreEquals();
         seleccionarTuViajePage.clickSelectButton();
         seleccionarTuViajePage.popUpFareAppears();
         seleccionarTuViajePage.linkContinueSameFareAppears();

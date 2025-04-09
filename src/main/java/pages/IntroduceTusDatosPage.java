@@ -105,7 +105,6 @@ public class IntroduceTusDatosPage extends BasePage {
         //@todo comprobar el precio, no la disponibilidad. los precios se comprueban con el getText
         String totalPriceData = webDriver.findElement(totalPriceDataLocator).getText().trim().replaceAll("\\s+", "");
         //@todo verificar que el precio es el mismo que en la pagina anterior. Sigue siendo el mismo desde el inicio
-        totalPriceTrip = webDriver.findElement(totalPriceDataLocator).getText().trim().replaceAll("\\s+", "");
         Assert.assertEquals(totalPriceData, totalPriceTrip);
         return totalPriceTrip;
     }
