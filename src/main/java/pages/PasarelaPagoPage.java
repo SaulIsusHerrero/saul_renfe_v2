@@ -27,7 +27,7 @@ public class PasarelaPagoPage extends BasePage {
     public void verifyYouAreInPasarelaPagoPage() {
         String currentURL = webDriver.getCurrentUrl();
         String expectedURL = "https://sis.redsys.es/sis/realizarPago";
-        Assert.assertEquals("Error: La url que esta cargada en la web es: " + currentURL + ", sin embargo se esperaba:" + expectedURL, currentURL,expectedURL); //ejemplo
+        Assert.assertEquals("Error: La url que esta cargada en la web es: " + currentURL + ", sin embargo se esperaba:" + expectedURL, currentURL,expectedURL); 
     }
 
     /**
