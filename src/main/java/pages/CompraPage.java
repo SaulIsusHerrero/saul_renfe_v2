@@ -32,6 +32,7 @@ public class CompraPage extends BasePage {
     public void verifyYouAreInCompraPage() {
         waitUntilElementIsDisplayed(compraLabel, Duration.ofSeconds(5));
         //todo verificar igual que en las anteriores
+        //@todo Saul - otro todo sin hacer
         Assert.assertTrue(webDriver.findElement(compraLabel).isEnabled());
     }
 
