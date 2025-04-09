@@ -44,6 +44,7 @@ public class BasePage {
     public void clickElement(By locator) {
         WebElement element = webDriver.findElement(locator);
         ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", element);
+        //@todo Saul, ¿te has dado cuenta de esto? ¿Todos tus clicks ya van con javascript? No pasa nada, esta bien si quieres usar esta estrategia, solo que seas consciente. Borra el comentario cuando lo leas por favor
     }
 
     /**
