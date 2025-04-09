@@ -73,6 +73,7 @@ public class CompraPage extends BasePage {
        WebElement conditions = webDriver.findElement(conditionsCheckboxInput);
        JavascriptExecutor js = (JavascriptExecutor) webDriver;
        js.executeScript("arguments[0].click();", conditions);
+       //@todo Saul - usas el click con javascript en multiples ocasiones, ¿que te parece si creas un metodo en utils?
     }
 
     /**
