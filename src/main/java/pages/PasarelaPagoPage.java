@@ -77,6 +77,7 @@ public class PasarelaPagoPage extends BasePage {
         waitUntilElementIsDisplayed(popUpError, Duration.ofSeconds(5));
         boolean popUpErrorExpected = isElementDisplayed(popUpError);
         Assert.assertTrue(popUpErrorExpected);
+        //@Todo Saul- ¿Que esta comprobando este assert? ¿Estas seguro de que este selector no esta presente en el dom siempre?
     }
 
 }
