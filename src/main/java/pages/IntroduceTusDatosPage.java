@@ -103,9 +103,7 @@ public class IntroduceTusDatosPage extends BasePage {
      */
     public String verifyTotalPriceData(String totalPriceTrip){
         waitUntilElementIsDisplayed(totalPriceDataLocator, Duration.ofSeconds(5));
-        //@todo comprobar el precio, no la disponibilidad. los precios se comprueban con el getText
         String totalPriceData = webDriver.findElement(totalPriceDataLocator).getText().trim().replaceAll("\\s+", "");
-        //@todo verificar que el precio es el mismo que en la pagina anterior. Sigue siendo el mismo desde el inicio
         Assert.assertEquals(totalPriceData, totalPriceTrip);
         return totalPriceTrip;
     }
