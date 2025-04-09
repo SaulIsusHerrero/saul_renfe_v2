@@ -33,10 +33,7 @@ public class PersonalizaTuViajePage extends BasePage {
      */
     public String verifyTotalPersonalizePrice(String totalPriceTrip){
         waitUntilElementIsDisplayed(totalPricePersonalizeLocator, Duration.ofSeconds(5));
-        //@todo comprobar el precio, no la disponibilidad. los precios se comprueban con el getText
         String totalPricePersonalize = webDriver.findElement(totalPricePersonalizeLocator).getText().trim().replaceAll("\\s+", "");
-        //@todo verificar que el precio es el mismo que en la pagina anterior. Sigue siendo el mismo desde el inicio
-        totalPriceTrip = webDriver.findElement(totalPricePersonalizeLocator).getText().trim().replaceAll("\\s+", "");
         Assert.assertEquals(totalPricePersonalize, totalPriceTrip);
         return totalPriceTrip;
     }
