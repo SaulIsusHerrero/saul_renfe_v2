@@ -27,7 +27,7 @@ public class PasarelaPagoPage extends BasePage {
     public void verifyYouAreInPasarelaPagoPage() {
         String currentURL = webDriver.getCurrentUrl();
         String expectedURL = "https://sis.redsys.es/sis/realizarPago";
-        Assert.assertEquals("Error: La url que esta cargada en la web es: " + currentURL + ", sin embargo se esperaba:" + expectedURL, currentURL,expectedURL); 
+        Assert.assertEquals("Error: La url que esta cargada en la web es: " + currentURL + ", sin embargo se esperaba:" + expectedURL, currentURL,expectedURL);
     }
 
     /**
@@ -36,10 +36,7 @@ public class PasarelaPagoPage extends BasePage {
      */
     public String verifyTotalPricePasarelaPago(String totalPriceTrip){
         waitUntilElementIsDisplayed(totalPricePasarelaLocator, Duration.ofSeconds(5));
-        //@todo comprobar el precio, no la disponibilidad. los precios se comprueban con el getText
         String totalPriceData = webDriver.findElement(totalPricePasarelaLocator).getText().trim().replaceAll("\\s+", "");
-        //@todo verificar que el precio es el mismo que en la pagina anterior. Sigue siendo el mismo desde el inicio
-        totalPriceTrip = webDriver.findElement(totalPricePasarelaLocator).getText().trim().replaceAll("\\s+", "");
         Assert.assertEquals(totalPriceData, totalPriceTrip);
         return totalPriceTrip;
     }
