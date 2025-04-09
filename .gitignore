@@ -1,5 +1,4 @@
 .idea/compiler.xml
-*.xml
 target/classes/pages/BasePage.class
 target/classes/pages/BasePage.class
 target/classes/pages/BasePage.class
@@ -7,3 +6,7 @@ target/classes/pages/BasePage.class
 *.class
 *.class
 target/classes/pages/BasePage.class
+.idea/encodings.xml
+.idea/jarRepositories.xml
+.idea/misc.xml
+.idea/vcs.xml
