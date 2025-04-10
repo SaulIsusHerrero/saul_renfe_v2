@@ -3,7 +3,6 @@ package pages;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import java.time.Duration;
 
 public class PasarelaPagoPage extends BasePage {
     //Locators
@@ -13,6 +12,7 @@ public class PasarelaPagoPage extends BasePage {
     private By cvvField = By.xpath("//input[@id='card-cvv']");
     private By btnPayment = By.xpath("//button[@class='btn btn-lg btn-accept validColor']");
     private By popUpError = By.xpath("//div[@id='myModalBody']//li[contains(text(), 'Tarjeta no soportada (RS18)')]");
+    private By totalPriceLocator = By.xpath("(//span[@id='totalTrayectoBanner'])[1]");
 
     //Constructor
     public PasarelaPagoPage(WebDriver webDriver) {
@@ -35,9 +35,8 @@ public class PasarelaPagoPage extends BasePage {
      * @param totalPriceTrip as a String
      */
     public String verifyTotalPricePasarelaPago(String totalPriceTrip){
-        waitUntilElementIsDisplayed(totalPricePasarelaLocator, Duration.ofSeconds(5));
-        String totalPriceData = webDriver.findElement(totalPricePasarelaLocator).getText().trim().replaceAll("\\s+", "");
-        Assert.assertEquals(totalPriceData, totalPriceTrip);
+        waitUntilElementIsDisplayed(totalPricePasarelaLocator, timeout);
+        String totalPrice = webDriver.findElement(totalPriceLocator).getText().trim().replaceAll("\\s+", "");
         return totalPriceTrip;
     }
 
@@ -46,7 +45,7 @@ public class PasarelaPagoPage extends BasePage {
      * @param card as a string
      */
     public void typeBankCard(String card) {
-        waitUntilElementIsDisplayed(cardField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(cardField, timeout);
         setElementText(cardField, card);
     }
 
@@ -55,7 +54,7 @@ public class PasarelaPagoPage extends BasePage {
      * @param expiration as a string
      */
     public void typeExpirationDate(String expiration){
-        waitUntilElementIsDisplayed(expirationField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(expirationField, timeout);
         setElementText(expirationField, expiration);
     }
 
@@ -64,7 +63,7 @@ public class PasarelaPagoPage extends BasePage {
      * @param cvv as a string
      */
     public void typeCVV(String cvv){
-        waitUntilElementIsDisplayed(cvvField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(cvvField, timeout);
         setElementText(cvvField, cvv);
     }
 
@@ -72,12 +71,13 @@ public class PasarelaPagoPage extends BasePage {
      * Click on payment button
      */
     public void clickPaymentButton(){
-        waitUntilElementIsDisplayed(btnPayment, Duration.ofSeconds(5));
+        //@Todo Saul- ¿Que esta comprobando este assert? ¿Estas seguro de que este selector no esta presente en el dom siempre?
+        waitUntilElementIsDisplayed(btnPayment, timeout);
         clickElement(btnPayment);
-        waitUntilElementIsDisplayed(popUpError, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(popUpError, timeout);
         boolean popUpErrorExpected = isElementDisplayed(popUpError);
         Assert.assertTrue(popUpErrorExpected);
-        //@Todo Saul- ¿Que esta comprobando este assert? ¿Estas seguro de que este selector no esta presente en el dom siempre?
+
     }
 
 }

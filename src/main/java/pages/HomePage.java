@@ -4,7 +4,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-import java.time.Duration;
+
 
 public class HomePage extends BasePage {
     // Locators
@@ -61,7 +61,7 @@ public class HomePage extends BasePage {
      * clicks on the departure date calendar in the Home page
      */
     public void selectDepartureDate() {
-        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(5));
+        WebDriverWait wait = new WebDriverWait(webDriver, timeout);
         WebElement button = wait.until(ExpectedConditions.visibilityOfElementLocated(dateDepartureInput));
         button.click();
     }
@@ -71,7 +71,7 @@ public class HomePage extends BasePage {
      * @param expectedSelected boolean with the expected selected state of the element
      */
     public void clickSoloIdaButtonSelected(boolean expectedSelected) {
-        waitUntilElementIsDisplayed(onlyDepartureRadioButtonLabel, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(onlyDepartureRadioButtonLabel, timeout);
         setElementSelected(onlyDepartureRadioButtonInput, onlyDepartureRadioButtonLabel, expectedSelected);
     }
 
@@ -79,7 +79,7 @@ public class HomePage extends BasePage {
      * Method to click the 'Accept' button on the calendar in Home page.
      */
     public void clickAcceptButton() {
-        waitUntilElementIsDisplayed(acceptButtonLocator, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(acceptButtonLocator, timeout);
         scrollElementIntoView(acceptButtonLocator);
         clickElement(acceptButtonLocator);
         }
@@ -88,7 +88,7 @@ public class HomePage extends BasePage {
      * Searches the selected ticket in the Home page.
      */
     public void clickSearchTicketButton() {
-        waitUntilElementIsDisplayed(buscarBilleteLocator, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(buscarBilleteLocator, timeout);
         scrollElementIntoView(buscarBilleteLocator);
         clickElement(buscarBilleteLocator);
         }

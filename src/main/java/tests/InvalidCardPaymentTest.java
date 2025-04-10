@@ -24,12 +24,15 @@ public class InvalidCardPaymentTest {
     //Variable global para el precio total del trayecto
     String totalPriceTrip = "";
 
+    //Variables
+    Duration timeoutLong = Duration.ofSeconds(10);
+
     @BeforeMethod
     public void setup() throws InterruptedException {
         //Chrome: Initialization of the ChromeDriver.
         WebDriverManager.chromedriver().setup();
         webDriver = new ChromeDriver();
-        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        webDriver.manage().timeouts().implicitlyWait(timeoutLong);
         webDriver.manage().window().maximize();
         webDriver.get("https://www.renfe.com/es/es"); //URL page.
         basePage = new BasePage(webDriver); //Initialization of the Base Page.
@@ -92,9 +95,8 @@ public class InvalidCardPaymentTest {
     }
     @AfterMethod
     public void tearDown() {
-      if (webDriver != null) {
-    webDriver.quit(); //Closes the current instance of the browser
-      }
-    }
-
+        if (webDriver != null) {
+        webDriver.quit(); //Closes the current instance of the browser
+        }
+        }
 }

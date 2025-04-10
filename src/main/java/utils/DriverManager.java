@@ -12,6 +12,9 @@ public class DriverManager {
     private static WebDriver webDriver;
     private static final String BROWSER = System.getProperty("browser", "chrome"); // Default: Chrome
 
+    //Variables
+    static Duration timeoutLong = Duration.ofSeconds(10);
+
     public static WebDriver getDriver() {
         if (webDriver == null) {
             switch (BROWSER.toLowerCase()) {
@@ -32,7 +35,7 @@ public class DriverManager {
                     webDriver = new ChromeDriver(chromeOptions);
                     break;
             }
-            webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+            webDriver.manage().timeouts().implicitlyWait(timeoutLong);
             webDriver.manage().window().maximize();
         }
         return webDriver;

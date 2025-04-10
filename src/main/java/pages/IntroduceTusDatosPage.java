@@ -3,11 +3,10 @@ package pages;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import java.time.Duration;
 
 public class IntroduceTusDatosPage extends BasePage {
     //Locators
-    private By introduceTusDatosLabel = By.xpath("//span[contains(text(), 'Introduce tus datos') and not(ancestor::select[@disabled])]");
+    private By introduceDatosLabel = By.xpath("//span[contains(text(), 'Introduce tus datos') and not(ancestor::select[@disabled])]");
     private By firstNameField = By.xpath("//input[@id='nombre0']");
     private By firstSurnameField = By.xpath("//input[@id='apellido10']");
     private By secondSurnameField = By.xpath("//input[@id='apellido20']");
@@ -16,6 +15,8 @@ public class IntroduceTusDatosPage extends BasePage {
     private By emailField = By.xpath("//input[@id='email0']");
     private By totalPriceDataLocator = By.xpath("//span[@id='totalTrayecto']");
     private By btnPersonalizar = By.cssSelector("#btn-responsive > #submitpersonaliza");
+    private By totalPriceLocator = By.xpath("(//span[@id='totalTrayectoBanner'])[1]");
+
 
     //Instance
     private SeleccionarTuViajePage seleccionarTuViajePage;
@@ -32,9 +33,9 @@ public class IntroduceTusDatosPage extends BasePage {
      */
     public void verifyYouAreInIntroduceYourDataPage() {
         //@todo investigar como se comprueba el texto, el tipo de assert que necesitas
-        //@todo Saúl. otro todo sin hacer
-        waitUntilElementIsDisplayed(introduceTusDatosLabel, Duration.ofSeconds(5));
-        Assert.assertTrue(webDriver.findElement(introduceTusDatosLabel).isEnabled());
+        //@todo Saúl. otro todo sin hacer. Saúl : hago un getText en el assert.
+        waitUntilElementIsDisplayed(introduceDatosLabel, timeout);
+        Assert.assertEquals("Introduce tus datos", webDriver.findElement(introduceDatosLabel).getText());
     }
 
     /**
@@ -43,7 +44,7 @@ public class IntroduceTusDatosPage extends BasePage {
      * @param firstName as a string
      */
     public void writeFirstNameField(String firstName) {
-        waitUntilElementIsDisplayed(firstNameField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(firstNameField, timeout);
         setElementText(firstNameField, firstName);
     }
 
@@ -53,7 +54,7 @@ public class IntroduceTusDatosPage extends BasePage {
      * @param primerApellido as a string
      */
     public void writeFirstSurnameField(String primerApellido) {
-        waitUntilElementIsDisplayed(firstSurnameField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(firstSurnameField, timeout);
         setElementText(firstSurnameField, primerApellido);
     }
 
@@ -63,7 +64,7 @@ public class IntroduceTusDatosPage extends BasePage {
      * @param segundoApellido as a string
      */
     public void writeSecondSurnameField(String segundoApellido) {
-        waitUntilElementIsDisplayed(secondSurnameField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(secondSurnameField, timeout);
         setElementText(secondSurnameField, segundoApellido);
     }
 
@@ -73,7 +74,7 @@ public class IntroduceTusDatosPage extends BasePage {
      * @param dni as a string
      */
     public void writeDNIField(String dni) {
-        waitUntilElementIsDisplayed(dniField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(dniField, timeout);
         setElementText(dniField, dni);
     }
 
@@ -83,7 +84,7 @@ public class IntroduceTusDatosPage extends BasePage {
      * @param email as a string
      */
     public void writeEmailField(String email) {
-        waitUntilElementIsDisplayed(emailField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(emailField, timeout);
         setElementText(emailField, email);
     }
 
@@ -93,26 +94,27 @@ public class IntroduceTusDatosPage extends BasePage {
      * @param phone as a string
      */
     public void writePhoneField(String phone) {
-        waitUntilElementIsDisplayed(telefonoField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(telefonoField, timeout);
         setElementText(telefonoField, phone);
     }
 
     /**
      * Verify the ticket price.
-     * @param totalPriceTrip as a String
+     * @param totalPrice as a String
      */
-    public String verifyTotalPriceData(String totalPriceTrip){
-        waitUntilElementIsDisplayed(totalPriceDataLocator, Duration.ofSeconds(5));
+    public String verifyTotalPriceData(String totalPrice){
+        waitUntilElementIsDisplayed(totalPriceDataLocator, timeout);
         String totalPriceData = webDriver.findElement(totalPriceDataLocator).getText().trim().replaceAll("\\s+", "");
+        String totalPriceTrip = webDriver.findElement(totalPriceDataLocator).getText().trim().replaceAll("\\s+", "");
         Assert.assertEquals(totalPriceData, totalPriceTrip);
         return totalPriceTrip;
     }
 
     /**
-     * Clic "Personalizar viaje" button
+     * Click "Personalizar viaje" button
      */
     public void clickPersonalizeTrip() {
-        waitUntilElementIsDisplayed(btnPersonalizar, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(btnPersonalizar, timeout);
         clickElement(btnPersonalizar);
     }
 
