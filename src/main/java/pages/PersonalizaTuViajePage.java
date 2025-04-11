@@ -22,8 +22,6 @@ public class PersonalizaTuViajePage extends BasePage {
      * Assert that I am on the right page and is enabled “Personaliza tu viaje” page
      */
     public void verifyYouAreInPersonalizedYourTravelPage() {
-        //@todo verificar igual que en las anteriores
-        //@todo Saúl= otro todo sin hacer. Saúl : hago un getText.
         waitUntilElementIsDisplayed(personalizaTuViajeLabel, timeout);
         Assert.assertEquals("Personaliza tu viaje", webDriver.findElement(personalizaTuViajeLabel).getText());
     }

@@ -72,7 +72,6 @@ public class PasarelaPagoPage extends BasePage {
      * Click on payment button
      */
     public void clickPaymentButton(){
-        //@Todo Saul- ¿Que esta comprobando este assert? ¿Estas seguro de que este selector no esta presente en el dom siempre?
         waitUntilElementIsDisplayed(btnPayment, timeout);
         clickElement(btnPayment);
         waitUntilElementIsDisplayed(popUpError, timeout);

@@ -27,8 +27,6 @@ public class IntroduceTusDatosPage extends BasePage {
      * Assert que estoy en la Page y esta habilitada “introduce tus datos”
      */
     public void verifyYouAreInIntroduceYourDataPage() {
-        //@todo investigar como se comprueba el texto, el tipo de assert que necesitas
-        //@todo Saúl. otro todo sin hacer. Saúl : hago un getText en el assert.
         waitUntilElementIsDisplayed(introduceDatosLabel, timeout);
         Assert.assertEquals("Introduce tus datos", webDriver.findElement(introduceDatosLabel).getText());
     }
@@ -95,14 +93,14 @@ public class IntroduceTusDatosPage extends BasePage {
 
     /**
      * Verify the ticket price.
-     * @param totalPrice as a String
+     * @param totalPriceTrip as a String
      */
-    public String verifyTotalPriceData(String totalPrice){
+    public String verifyTotalPriceData(String totalPriceTrip){
         waitUntilElementIsDisplayed(totalPriceDataLocator, timeout);
         String totalPriceData = webDriver.findElement(totalPriceDataLocator).getText().trim().replaceAll("\\s+", "");
-        String totalPriceTrip = webDriver.findElement(totalPriceDataLocator).getText().trim().replaceAll("\\s+", "");
-        Assert.assertEquals(totalPriceData, totalPriceTrip);
-        return totalPriceTrip;
+        String totalPrice = webDriver.findElement(totalPriceDataLocator).getText().trim().replaceAll("\\s+", "");
+        Assert.assertEquals(totalPriceData, totalPrice);
+        return totalPrice;
     }
 
     /**

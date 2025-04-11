@@ -9,9 +9,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 public class SeleccionarTuViajePage extends BasePage {
-
     //Locators
-    //@TODO cambiar el selector de tarifa y precio tarifa al de la semimodal
     private By seleccionaViajeLabel = By.xpath("//span[contains(text(), 'Selecciona tu viaje') and not(ancestor::select[@disabled])]");
     private By trainAvailable = By.cssSelector("div[id^='precio-viaje']:not(:has(div))");
     private By trainAvailableBasicFare = By.cssSelector("div[id^='precio-viaje']:not(:has(div))+div>div>div[class='planes-opciones']>div:nth-child(1)");
@@ -34,7 +32,6 @@ public class SeleccionarTuViajePage extends BasePage {
      * Checks if we are in the next Page "SeleccionarTuViajePage".
      */
     public void verifyYouAreInSelecionaTuViaje() {
-        //Saúl : hago un getText.
         waitUntilElementIsDisplayed(seleccionaViajeLabel, timeout);
         Assert.assertEquals("Selecciona tu viaje", webDriver.findElement(seleccionaViajeLabel).getText());
     }
@@ -112,8 +109,6 @@ public class SeleccionarTuViajePage extends BasePage {
     /**
      * Verifies that the pop-up to change the fare applied appears on the screen
      */
-    //@todo usar el atributo style, donde comprobar si aparece  display:none o block. En el locator popUpChangeFare. La IA me dice que en un locator no se puede incluir el atributo sytle que esta en el ccs no en el html.
-    //@todo Saúl -- como estas comprobando aqui que el pop up aparece? he cambiado el metodo.Con un try-catch que comprueba el style, si realmente es visible en pantalla.
     public void popUpFareAppears() {
         WebElement popUpElement = webDriver.findElement(popUpChangeFare);
         JavascriptExecutor js = (JavascriptExecutor) webDriver;
@@ -128,9 +123,6 @@ public class SeleccionarTuViajePage extends BasePage {
     /**
     * Verifies that the link to follow with the same fare appears on the screen insde the pop-up and is enabled to click on it
     */
-    //@todo Saúl - ¿recuerdas que hablamos de que aqui estas comprobando que esta disponible? Hablamos de comprobar con el texto en pantalla.
-    //Recuerda que en esta web, el selector esta presente incluso si el pop up no lo está.
-    //SAÚL : El Locator del popup está en pantalla (se ha comprobado antes que el popup aparece en pantalla en el metodo popUpFareAppears.Y el locator usado contiene el texto.
     public void linkContinueSameFareAppears(){
         waitUntilElementIsDisplayed(linkContinueSameFare, timeout);
         Assert.assertTrue("❌ El link para continuar con la misma tarifa no está disponible", webDriver.findElement(linkContinueSameFare).isEnabled());

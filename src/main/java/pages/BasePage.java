@@ -103,15 +103,13 @@ public class BasePage {
      * Waits until an element is displayed in any Page.
      * @param locator as a By
      * @param timeout as a Duration
-     * @return
+     * @return locator as a String
      */
     public String waitUntilElementIsDisplayed(By locator, Duration timeout) {
-        //@todo Saul, lee el codigo- que esta mal aqui? Saúl= usar la variable creada ya timeout. El assert: he usado locator.toString() porque es un string.
         WebDriverWait wait = new WebDriverWait(webDriver, timeout);
         WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
         Assert.assertTrue(element.isDisplayed(), "The element located by " + locator.toString() + " is not displayed");
-
-        return null;
+        return locator.toString();
     }
 
     /**
