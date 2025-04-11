@@ -12,7 +12,6 @@ public class PasarelaPagoPage extends BasePage {
     private By cvvField = By.xpath("//input[@id='card-cvv']");
     private By btnPayment = By.xpath("//button[@class='btn btn-lg btn-accept validColor']");
     private By popUpError = By.xpath("//div[@id='myModalBody']//li[contains(text(), 'Tarjeta no soportada (RS18)')]");
-    private By totalPriceLocator = By.xpath("(//span[@id='totalTrayectoBanner'])[1]");
 
     //Constructor
     public PasarelaPagoPage(WebDriver webDriver) {
@@ -36,7 +35,9 @@ public class PasarelaPagoPage extends BasePage {
      */
     public String verifyTotalPricePasarelaPago(String totalPriceTrip){
         waitUntilElementIsDisplayed(totalPricePasarelaLocator, timeout);
-        String totalPrice = webDriver.findElement(totalPriceLocator).getText().trim().replaceAll("\\s+", "");
+        String totalPricePersonalize = webDriver.findElement(totalPricePasarelaLocator).getText().trim().replaceAll("\\s+", "");
+        String totalPrice = webDriver.findElement(totalPricePasarelaLocator).getText().trim().replaceAll("\\s+", "");
+        Assert.assertEquals(totalPricePersonalize, totalPrice);
         return totalPriceTrip;
     }
 

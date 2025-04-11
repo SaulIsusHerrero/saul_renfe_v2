@@ -15,11 +15,6 @@ public class IntroduceTusDatosPage extends BasePage {
     private By emailField = By.xpath("//input[@id='email0']");
     private By totalPriceDataLocator = By.xpath("//span[@id='totalTrayecto']");
     private By btnPersonalizar = By.cssSelector("#btn-responsive > #submitpersonaliza");
-    private By totalPriceLocator = By.xpath("(//span[@id='totalTrayectoBanner'])[1]");
-
-
-    //Instance
-    private SeleccionarTuViajePage seleccionarTuViajePage;
 
     //Constructor
     public IntroduceTusDatosPage(WebDriver webDriver) {

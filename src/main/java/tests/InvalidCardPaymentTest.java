@@ -41,7 +41,7 @@ public class InvalidCardPaymentTest {
         introduceTusDatosPage = new IntroduceTusDatosPage(webDriver); //Initialization of the IntroduceTusDatos Page.
         personalizaTuViajePage = new PersonalizaTuViajePage(webDriver); //Initialization of the PersonalizaTuViaje Page.
         compraPage = new CompraPage(webDriver); //Initialization of the Compra Page.
-        pasarelaPagoPage = new PasarelaPagoPage(webDriver); //Initialization of the pasarelaPago Page.
+        pasarelaPagoPage = new PasarelaPagoPage(webDriver); //Initialization of the PasarelaPago Page.
     }
 
     @Test
@@ -93,10 +93,10 @@ public class InvalidCardPaymentTest {
         pasarelaPagoPage.typeCVV("990");
         pasarelaPagoPage.clickPaymentButton();
     }
-    @AfterMethod
-    public void tearDown() {
-        if (webDriver != null) {
-        webDriver.quit(); //Closes the current instance of the browser
-        }
-        }
+    //@AfterMethod
+    //public void tearDown() {
+        //if (webDriver != null) {
+        //webDriver.quit(); //Closes the current instance of the browser
+        //}
+        //}
 }
