@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.*;
@@ -24,7 +25,7 @@ public class BasePage {
     protected By acceptAllCookiesButton = By.id("onetrust-accept-btn-handler");
 
     //Variables
-    Duration timeout = Duration.ofSeconds(5);
+    Duration timeout = Duration.ofSeconds(10);
 
     /**
      * Writes text inside a given element locator.

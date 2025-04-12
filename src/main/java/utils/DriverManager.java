@@ -13,7 +13,7 @@ public class DriverManager {
     private static final String BROWSER = System.getProperty("browser", "chrome"); // Default: Chrome
 
     //Variables
-    static Duration timeoutLong = Duration.ofSeconds(10);
+    static Duration timeoutLong = Duration.ofSeconds(20);
 
     public static WebDriver getDriver() {
         if (webDriver == null) {
