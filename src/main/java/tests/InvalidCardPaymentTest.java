@@ -21,15 +21,18 @@ public class InvalidCardPaymentTest {
     private CompraPage compraPage;
     private PasarelaPagoPage pasarelaPagoPage;
 
-    //Variable global para el precio total del trayecto
+    //Variable global que almacena el precio total del trayecto durante el proceso entero y asegura que es siempre el mismo.
     String totalPriceTrip = "";
+
+    //Variables
+    Duration timeoutLong = Duration.ofSeconds(10);
 
     @BeforeMethod
     public void setup() throws InterruptedException {
         //Chrome: Initialization of the ChromeDriver.
         WebDriverManager.chromedriver().setup();
         webDriver = new ChromeDriver();
-        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        webDriver.manage().timeouts().implicitlyWait(timeoutLong);
         webDriver.manage().window().maximize();
         webDriver.get("https://www.renfe.com/es/es"); //URL page.
         basePage = new BasePage(webDriver); //Initialization of the Base Page.
@@ -38,7 +41,7 @@ public class InvalidCardPaymentTest {
         introduceTusDatosPage = new IntroduceTusDatosPage(webDriver); //Initialization of the IntroduceTusDatos Page.
         personalizaTuViajePage = new PersonalizaTuViajePage(webDriver); //Initialization of the PersonalizaTuViaje Page.
         compraPage = new CompraPage(webDriver); //Initialization of the Compra Page.
-        pasarelaPagoPage = new PasarelaPagoPage(webDriver); //Initialization of the pasarelaPago Page.
+        pasarelaPagoPage = new PasarelaPagoPage(webDriver); //Initialization of the PasarelaPago Page.
     }
 
     @Test
@@ -55,7 +58,7 @@ public class InvalidCardPaymentTest {
         seleccionarTuViajePage.verifyNumberOfTravelers();
         seleccionarTuViajePage.verifyFareIsBasic();
         //1a) Verificación : el precio de la tarifa y precio del total son iguales en la semimodal
-        seleccionarTuViajePage.verifyFareAndTotalPricesAreEquals(totalPriceTrip);
+        totalPriceTrip = seleccionarTuViajePage.verifyFareAndTotalPricesAreEquals();
         seleccionarTuViajePage.clickSelectButton();
         seleccionarTuViajePage.popUpFareAppears();
         seleccionarTuViajePage.linkContinueSameFareAppears();
@@ -90,11 +93,10 @@ public class InvalidCardPaymentTest {
         pasarelaPagoPage.typeCVV("990");
         pasarelaPagoPage.clickPaymentButton();
     }
-    @AfterMethod
-    public void tearDown() {
-      if (webDriver != null) {
-    webDriver.quit(); //Closes the current instance of the browser
-      }
-    }
-
+    //@AfterMethod
+    //public void tearDown() {
+        //if (webDriver != null) {
+        //webDriver.quit(); //Closes the current instance of the browser
+        //}
+        //}
 }

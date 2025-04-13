@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.*;
@@ -17,14 +18,14 @@ public class BasePage {
     //Constructor with WebDriver as a parameter.
     public BasePage(WebDriver webDriver) {
         this.webDriver = webDriver;
-        PageFactory.initElements(webDriver, this);
+        PageFactory.initElements(webDriver, this);  // SAÚL : Inicializa los elementos con @FindBy en otras clases y el codigo es mas reusable siguiendo la estructura POM.
     }
 
     //Locators
     protected By acceptAllCookiesButton = By.id("onetrust-accept-btn-handler");
 
     //Variables
-    long timeout = 5;
+    Duration timeout = Duration.ofSeconds(10);
 
     /**
      * Writes text inside a given element locator.
@@ -94,20 +95,22 @@ public class BasePage {
      * Accepts all cookies in any Page.
      */
     public void clickAcceptAllCookiesButton() {
-        WebElement acceptButton = new WebDriverWait(webDriver, Duration.ofSeconds(5)).
-                until(ExpectedConditions.elementToBeClickable(acceptAllCookiesButton));
+        WebElement acceptButton = new WebDriverWait(webDriver, timeout).
+        until(ExpectedConditions.elementToBeClickable(acceptAllCookiesButton));
         ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", acceptButton);
     }
 
     /**
      * Waits until an element is displayed in any Page.
      * @param locator as a By
-     * @param timeout as a long
+     * @param timeout as a Duration
+     * @return locator as a String
      */
-    public void waitUntilElementIsDisplayed(By locator, Duration timeout) {
-        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(5));
+    public String waitUntilElementIsDisplayed(By locator, Duration timeout) {
+        WebDriverWait wait = new WebDriverWait(webDriver, timeout);
         WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-        Assert.assertTrue(element.isDisplayed(),"The element" + element + "is not displayed");
+        Assert.assertTrue(element.isDisplayed(), "The element located by " + locator.toString() + " is not displayed");
+        return locator.toString();
     }
 
     /**
@@ -130,5 +133,17 @@ public class BasePage {
      */
     public String getElementText(By locator) {
         return webDriver.findElement(locator).getText();
+    }
+
+    /**
+     * Hace scroll hasta el elemento y luego hace clic en él.
+     *
+     * @param locator By: el localizador del elemento.
+     */
+    public void ClickWithJS(By locator) {
+        WebElement element = webDriver.findElement(locator);
+        JavascriptExecutor js = (JavascriptExecutor) webDriver;
+        js.executeScript("arguments[0].scrollIntoView(true);", element);
+        element.click();
     }
 }
