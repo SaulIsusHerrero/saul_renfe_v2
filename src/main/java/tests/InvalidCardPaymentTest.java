@@ -21,7 +21,7 @@ public class InvalidCardPaymentTest {
     private CompraPage compraPage;
     private PasarelaPagoPage pasarelaPagoPage;
 
-    //Variable global para el precio total del trayecto
+    //Variable global que almacena el precio total del trayecto durante el proceso entero y asegura que es siempre el mismo.
     String totalPriceTrip = "";
 
     //Variables

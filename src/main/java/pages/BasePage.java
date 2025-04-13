@@ -134,4 +134,16 @@ public class BasePage {
     public String getElementText(By locator) {
         return webDriver.findElement(locator).getText();
     }
+
+    /**
+     * Hace scroll hasta el elemento y luego hace clic en él.
+     *
+     * @param locator By: el localizador del elemento.
+     */
+    public void ClickWithJS(By locator) {
+        WebElement element = webDriver.findElement(locator);
+        JavascriptExecutor js = (JavascriptExecutor) webDriver;
+        js.executeScript("arguments[0].scrollIntoView(true);", element);
+        element.click();
+    }
 }

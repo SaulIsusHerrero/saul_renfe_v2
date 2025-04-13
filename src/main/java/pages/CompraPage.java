@@ -66,9 +66,7 @@ public class CompraPage extends BasePage {
      */
     public void clickPurchaseCondition(){
        scrollElementIntoView(conditionsCheckboxInput);
-       WebElement conditions = webDriver.findElement(conditionsCheckboxInput);
-       JavascriptExecutor js = (JavascriptExecutor) webDriver;
-       js.executeScript("arguments[0].click();", conditions);
+        ClickWithJS(conditionsCheckboxInput);
        }
 
     /**
