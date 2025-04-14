@@ -34,6 +34,7 @@ public class PersonalizaTuViajePage extends BasePage {
     public String verifyTotalPersonalizePrice(String totalPriceTrip){
         waitUntilElementIsDisplayed(totalPricePersonalizeLocator, Duration.ofSeconds(5));
         String totalPricePersonalize = webDriver.findElement(totalPricePersonalizeLocator).getText().trim().replaceAll("\\s+", "");
+        totalPriceTrip = webDriver.findElement(totalPricePersonalizeLocator).getText().trim().replaceAll("\\s+", "");
         Assert.assertEquals(totalPricePersonalize, totalPriceTrip);
         return totalPriceTrip;
     }
