@@ -37,6 +37,7 @@ public class PasarelaPagoPage extends BasePage {
     public String verifyTotalPricePasarelaPago(String totalPriceTrip){
         waitUntilElementIsDisplayed(totalPricePasarelaLocator, Duration.ofSeconds(5));
         String totalPriceData = webDriver.findElement(totalPricePasarelaLocator).getText().trim().replaceAll("\\s+", "");
+        totalPriceTrip = webDriver.findElement(totalPricePasarelaLocator).getText().trim().replaceAll("\\s+", "");
         Assert.assertEquals(totalPriceData, totalPriceTrip);
         return totalPriceTrip;
     }

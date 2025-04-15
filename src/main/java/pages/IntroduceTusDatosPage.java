@@ -104,6 +104,7 @@ public class IntroduceTusDatosPage extends BasePage {
     public String verifyTotalPriceData(String totalPriceTrip){
         waitUntilElementIsDisplayed(totalPriceDataLocator, Duration.ofSeconds(5));
         String totalPriceData = webDriver.findElement(totalPriceDataLocator).getText().trim().replaceAll("\\s+", "");
+        totalPriceTrip = webDriver.findElement(totalPriceDataLocator).getText().trim().replaceAll("\\s+", "");
         Assert.assertEquals(totalPriceData, totalPriceTrip);
         return totalPriceTrip;
     }
