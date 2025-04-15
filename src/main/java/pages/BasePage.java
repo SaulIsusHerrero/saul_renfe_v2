@@ -4,7 +4,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.*;
@@ -18,14 +17,14 @@ public class BasePage {
     //Constructor with WebDriver as a parameter.
     public BasePage(WebDriver webDriver) {
         this.webDriver = webDriver;
-        PageFactory.initElements(webDriver, this);  // SAÚL : Inicializa los elementos con @FindBy en otras clases y el codigo es mas reusable siguiendo la estructura POM.
+        PageFactory.initElements(webDriver, this);
     }
 
     //Locators
     protected By acceptAllCookiesButton = By.id("onetrust-accept-btn-handler");
 
     //Variables
-    Duration timeout = Duration.ofSeconds(10);
+    long timeout = 5;
 
     /**
      * Writes text inside a given element locator.
@@ -45,6 +44,7 @@ public class BasePage {
     public void clickElement(By locator) {
         WebElement element = webDriver.findElement(locator);
         ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", element);
+        //@todo Saul, ¿te has dado cuenta de esto? ¿Todos tus clicks ya van con javascript? No pasa nada, esta bien si quieres usar esta estrategia, solo que seas consciente. Borra el comentario cuando lo leas por favor
     }
 
     /**
@@ -95,22 +95,21 @@ public class BasePage {
      * Accepts all cookies in any Page.
      */
     public void clickAcceptAllCookiesButton() {
-        WebElement acceptButton = new WebDriverWait(webDriver, timeout).
-        until(ExpectedConditions.elementToBeClickable(acceptAllCookiesButton));
+        WebElement acceptButton = new WebDriverWait(webDriver, Duration.ofSeconds(5)).
+                until(ExpectedConditions.elementToBeClickable(acceptAllCookiesButton));
         ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", acceptButton);
     }
 
     /**
      * Waits until an element is displayed in any Page.
      * @param locator as a By
-     * @param timeout as a Duration
-     * @return locator as a String
+     * @param timeout as a long
      */
-    public String waitUntilElementIsDisplayed(By locator, Duration timeout) {
-        WebDriverWait wait = new WebDriverWait(webDriver, timeout);
+    public void waitUntilElementIsDisplayed(By locator, Duration timeout) {
+        //@todo Saul, lee el codigo- que esta mal aqui?
+        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(5));
         WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-        Assert.assertTrue(element.isDisplayed(), "The element located by " + locator.toString() + " is not displayed");
-        return locator.toString();
+        Assert.assertTrue(element.isDisplayed(),"The element" + element + "is not displayed");
     }
 
     /**
@@ -133,17 +132,5 @@ public class BasePage {
      */
     public String getElementText(By locator) {
         return webDriver.findElement(locator).getText();
-    }
-
-    /**
-     * Hace scroll hasta el elemento y luego hace clic en él.
-     *
-     * @param locator By: el localizador del elemento.
-     */
-    public void ClickWithJS(By locator) {
-        WebElement element = webDriver.findElement(locator);
-        JavascriptExecutor js = (JavascriptExecutor) webDriver;
-        js.executeScript("arguments[0].scrollIntoView(true);", element);
-        element.click();
     }
 }
