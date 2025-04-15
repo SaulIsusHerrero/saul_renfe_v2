@@ -119,7 +119,7 @@ public class SeleccionarTuViajePage extends BasePage {
         JavascriptExecutor js = (JavascriptExecutor) webDriver;
         String displayStyle = (String) js.executeScript("return window.getComputedStyle(arguments[0]).display;", popUpElement);
         //@todo Saúl -- como estas comprobando aqui que el pop up aparece?
-        System.out.println("El Pop-up para un posible cambio de tarifa es visible en pantalla");
+        System.out.println("✅ El Pop-up para un posible cambio de tarifa es visible en pantalla");
     }
 
     /**
