@@ -82,7 +82,7 @@ public class HomePage extends BasePage {
         waitUntilElementIsDisplayed(acceptButtonLocator, Duration.ofSeconds(5));
         scrollElementIntoView(acceptButtonLocator);
         clickElement(acceptButtonLocator);
-        }
+    }
 
     /**
      * Searches the selected ticket in the Home page.
@@ -91,5 +91,5 @@ public class HomePage extends BasePage {
         waitUntilElementIsDisplayed(buscarBilleteLocator, Duration.ofSeconds(5));
         scrollElementIntoView(buscarBilleteLocator);
         clickElement(buscarBilleteLocator);
-        }
+    }
 }

@@ -3,8 +3,9 @@ package pages;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import java.time.Duration;
+import org.openqa.selenium.WebElement;
 
+import java.time.Duration;
 
 public class PersonalizaTuViajePage extends BasePage {
     //Locators
@@ -24,6 +25,8 @@ public class PersonalizaTuViajePage extends BasePage {
      */
     public void verifyYouAreInPersonalizedYourTravelPage() {
         waitUntilElementIsDisplayed(personalizaTuViajeLabel, Duration.ofSeconds(5));
+        WebElement element = webDriver.findElement(personalizaTuViajeLabel);
+        Assert.assertEquals("Personaliza tu viaje", element.getText());
         Assert.assertTrue(webDriver.findElement(personalizaTuViajeLabel).isEnabled());
     }
 

@@ -3,6 +3,8 @@ package pages;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
 import java.time.Duration;
 
 public class IntroduceTusDatosPage extends BasePage {
@@ -31,9 +33,9 @@ public class IntroduceTusDatosPage extends BasePage {
      * Assert que estoy en la Page y esta habilitada “introduce tus datos”
      */
     public void verifyYouAreInIntroduceYourDataPage() {
-        //@todo investigar como se comprueba el texto, el tipo de assert que necesitas
-        //@todo Saúl. otro todo sin hacer
         waitUntilElementIsDisplayed(introduceTusDatosLabel, Duration.ofSeconds(5));
+        WebElement element = webDriver.findElement(introduceTusDatosLabel);
+        Assert.assertEquals("Introduce tus datos", element.getText());
         Assert.assertTrue(webDriver.findElement(introduceTusDatosLabel).isEnabled());
     }
 

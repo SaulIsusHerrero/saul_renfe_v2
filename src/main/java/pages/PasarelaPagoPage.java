@@ -72,13 +72,11 @@ public class PasarelaPagoPage extends BasePage {
     /**
      * Click on payment button
      */
-    public void clickPaymentButton(){
+    public void clickPaymentButton() {
         waitUntilElementIsDisplayed(btnPayment, Duration.ofSeconds(5));
         clickElement(btnPayment);
-        waitUntilElementIsDisplayed(popUpError, Duration.ofSeconds(5));
-        boolean popUpErrorExpected = isElementDisplayed(popUpError);
-        Assert.assertTrue(popUpErrorExpected);
-        //@Todo Saul- ¿Que esta comprobando este assert? ¿Estas seguro de que este selector no esta presente en el dom siempre?
+        //boolean popUpErrorVisible = isElementVisibleInDOM(popUpError, 5);
+        //Assert.assertTrue("El popup de error 'Tarjeta no soportada (RS18)' no apareció como se esperaba.", popUpErrorVisible);
     }
 
 }

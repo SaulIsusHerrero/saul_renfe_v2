@@ -24,6 +24,7 @@ public class InvalidCardPaymentTest {
     //Variable global para el precio total del trayecto
     String totalPriceTrip = "";
 
+
     @BeforeMethod
     public void setup() throws InterruptedException {
         //Chrome: Initialization of the ChromeDriver.
@@ -90,11 +91,11 @@ public class InvalidCardPaymentTest {
         pasarelaPagoPage.typeCVV("990");
         pasarelaPagoPage.clickPaymentButton();
     }
-    @AfterMethod
-    public void tearDown() {
-      if (webDriver != null) {
-    webDriver.quit(); //Closes the current instance of the browser
-      }
-    }
+    //@AfterMethod
+    //public void tearDown() {
+      //if (webDriver != null) {
+    //webDriver.quit(); //Closes the current instance of the browser
+      //}
+    //}
 
 }

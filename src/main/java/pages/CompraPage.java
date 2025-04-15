@@ -8,7 +8,6 @@ import org.openqa.selenium.JavascriptExecutor;
 
 import java.time.Duration;
 
-
 public class CompraPage extends BasePage {
     //Locators
     private By compraLabel = By.xpath("//span[contains(text(), 'Compra') and not(ancestor::select[@disabled])]");
@@ -31,8 +30,8 @@ public class CompraPage extends BasePage {
      */
     public void verifyYouAreInCompraPage() {
         waitUntilElementIsDisplayed(compraLabel, Duration.ofSeconds(5));
-        //todo verificar igual que en las anteriores
-        //@todo Saul - otro todo sin hacer
+        WebElement element = webDriver.findElement(compraLabel);
+        Assert.assertEquals("Selecciona tu viaje", element.getText());
         Assert.assertTrue(webDriver.findElement(compraLabel).isEnabled());
     }
 
@@ -73,7 +72,6 @@ public class CompraPage extends BasePage {
        WebElement conditions = webDriver.findElement(conditionsCheckboxInput);
        JavascriptExecutor js = (JavascriptExecutor) webDriver;
        js.executeScript("arguments[0].click();", conditions);
-       //@todo Saul - usas el click con javascript en multiples ocasiones, ¿que te parece si creas un metodo en utils?
     }
 
     /**
@@ -82,9 +80,7 @@ public class CompraPage extends BasePage {
      */
     public String verifyTotalCompraPrice(String totalPriceTrip){
         waitUntilElementIsDisplayed(totalPriceCompraLocator, Duration.ofSeconds(5));
-        //@todo comprobar el precio, no la disponibilidad. los precios se comprueban con el getText
         String totalPriceData = webDriver.findElement(totalPriceCompraLocator).getText().trim().replaceAll("\\s+", "");
-        //@todo verificar que el precio es el mismo que en la pagina anterior. Sigue siendo el mismo desde el inicio
         totalPriceTrip = webDriver.findElement(totalPriceCompraLocator).getText().trim().replaceAll("\\s+", "");
         Assert.assertEquals(totalPriceData, totalPriceTrip);
         return totalPriceTrip;

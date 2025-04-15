@@ -12,7 +12,6 @@ import org.openqa.selenium.WebDriver;
 public class SeleccionarTuViajePage extends BasePage {
 
     //Locators
-    //@TODO cambiar el selector de tarifa y precio tarifa al de la semimodal
     private By seleccionaTuViajeLabel = By.xpath("//span[contains(text(), 'Selecciona tu viaje') and not(ancestor::select[@disabled])]");
     private By trainAvailable = By.cssSelector("div[id^='precio-viaje']:not(:has(div))");
     private By trainAvailableBasicFare = By.cssSelector("div[id^='precio-viaje']:not(:has(div))+div>div>div[class='planes-opciones']>div:nth-child(1)");
@@ -37,6 +36,8 @@ public class SeleccionarTuViajePage extends BasePage {
      */
     public void verifyYouAreInSelecionaTuViaje() {
         waitUntilElementIsDisplayed(seleccionaTuViajeLabel, Duration.ofSeconds(5));
+        WebElement element = webDriver.findElement(seleccionaTuViajeLabel);
+        Assert.assertEquals("Selecciona tu viaje", element.getText());
         Assert.assertTrue(webDriver.findElement(seleccionaTuViajeLabel).isEnabled());
     }
 
@@ -114,11 +115,9 @@ public class SeleccionarTuViajePage extends BasePage {
      * Verifies that the pop-up to change the fare applied appears on the screen
      */
     public void popUpFareAppears() {
-        //@todo usar el atributo style, donde comprobar si aparece  display:none o block
         WebElement popUpElement = webDriver.findElement(popUpChangeFare);
         JavascriptExecutor js = (JavascriptExecutor) webDriver;
         String displayStyle = (String) js.executeScript("return window.getComputedStyle(arguments[0]).display;", popUpElement);
-        //@todo Saúl -- como estas comprobando aqui que el pop up aparece?
         System.out.println("El Pop-up para un posible cambio de tarifa es visible en pantalla");
     }
 
@@ -127,10 +126,9 @@ public class SeleccionarTuViajePage extends BasePage {
     */
     public void linkContinueSameFareAppears(){
         waitUntilElementIsDisplayed(linkContinueSameFare, Duration.ofSeconds(5));
-        boolean linkPopUpAppears = isElementDisplayed(linkContinueSameFare); //@todo comprobar que aparece el link
-        Assert.assertTrue(linkPopUpAppears);
-        //@todo Saúl - ¿recuerdas que hablamos de que aqui estas comprobando que esta disponible? Hablamos de comprobar con el texto en pantalla.
-        //Recuerda que en esta web, el selector esta presente incluso si el pop up no lo está.
+        Assert.assertEquals("No, quiero continuar con Básico", linkContinueSameFare);
+        boolean linkIsEnabled = webDriver.findElement(linkContinueSameFare).isEnabled();
+        Assert.assertTrue(linkIsEnabled);
     }
 
     /**
