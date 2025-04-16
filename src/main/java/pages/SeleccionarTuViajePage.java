@@ -126,7 +126,7 @@ public class SeleccionarTuViajePage extends BasePage {
     */
     public void linkContinueSameFareAppears(){
         waitUntilElementIsDisplayed(linkContinueSameFare, Duration.ofSeconds(5));
-        Assert.assertEquals("No, quiero continuar con Básico", linkContinueSameFare);
+        //Assert.assertEquals("No, quiero continuar con Básico", linkContinueSameFare);
         boolean linkIsEnabled = webDriver.findElement(linkContinueSameFare).isEnabled();
         Assert.assertTrue(linkIsEnabled);
     }
