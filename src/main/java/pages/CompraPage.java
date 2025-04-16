@@ -31,7 +31,7 @@ public class CompraPage extends BasePage {
     public void verifyYouAreInCompraPage() {
         waitUntilElementIsDisplayed(compraLabel, Duration.ofSeconds(5));
         WebElement element = webDriver.findElement(compraLabel);
-        Assert.assertEquals("Selecciona tu viaje", element.getText());
+        Assert.assertEquals("Compra", element.getText());
         Assert.assertTrue(webDriver.findElement(compraLabel).isEnabled());
     }
 
