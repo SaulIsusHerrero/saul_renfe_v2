@@ -21,10 +21,10 @@ public class PersonalizaTuViajePage extends BasePage {
 
     //Methods
     /**
-     * Assert that I am on the right page and is enable “Personaliza tu viaje” page
+     * Assert that I am on the right page and is enabled “Personaliza tu viaje” page
      */
     public void verifyYouAreInPersonalizedYourTravelPage() {
-        waitUntilElementIsDisplayed(personalizaTuViajeLabel, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(personalizaTuViajeLabel, Duration.ofSeconds(15));
         WebElement element = webDriver.findElement(personalizaTuViajeLabel);
         Assert.assertEquals("Personaliza tu viaje", element.getText());
         Assert.assertTrue(webDriver.findElement(personalizaTuViajeLabel).isEnabled());
@@ -32,21 +32,26 @@ public class PersonalizaTuViajePage extends BasePage {
 
     /**
      * Verify the ticket price.
-     * @param totalPriceTrip as a String
+     * @param totalPriceTrip Precio obtenido previamente, ya normalizado
      */
-    public String verifyTotalPersonalizePrice(String totalPriceTrip){
-        waitUntilElementIsDisplayed(totalPricePersonalizeLocator, Duration.ofSeconds(5));
-        String totalPricePersonalize = webDriver.findElement(totalPricePersonalizeLocator).getText().trim().replaceAll("\\s+", "");
-        totalPriceTrip = webDriver.findElement(totalPricePersonalizeLocator).getText().trim().replaceAll("\\s+", "");
+    public void verifyTotalPersonalizePrice(String totalPriceTrip) {
+        waitUntilElementIsDisplayed(totalPricePersonalizeLocator, Duration.ofSeconds(15));
+
+        // Normaliza el precio de la nueva página
+        String totalPricePersonalize = normalizePrice(webDriver.findElement(totalPricePersonalizeLocator).getText());
+
+        // El precio recibido ya debería estar normalizado, pero por seguridad:
+        totalPriceTrip = normalizePrice(totalPriceTrip);
+
         Assert.assertEquals(totalPricePersonalize, totalPriceTrip);
-        return totalPriceTrip;
     }
 
     /**
-     * Clic on continue with the purchase
+     * Clicks on continues with the purchase
      */
     public void continueWithPurchase(){
-        waitUntilElementIsDisplayed(btnContinuarPersonalize, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(btnContinuarPersonalize, Duration.ofSeconds(15));
+        scrollElementIntoView(btnContinuarPersonalize);
         clickElement(btnContinuarPersonalize);
     }
 

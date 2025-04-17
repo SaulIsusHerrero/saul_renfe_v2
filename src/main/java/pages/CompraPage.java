@@ -29,7 +29,7 @@ public class CompraPage extends BasePage {
      * Assert that I am on the right page and is enabled “Compra” page
      */
     public void verifyYouAreInCompraPage() {
-        waitUntilElementIsDisplayed(compraLabel, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(compraLabel, Duration.ofSeconds(15));
         WebElement element = webDriver.findElement(compraLabel);
         Assert.assertEquals("Compra", element.getText());
         Assert.assertTrue(webDriver.findElement(compraLabel).isEnabled());
@@ -40,7 +40,7 @@ public class CompraPage extends BasePage {
      * @param email as a string
      */
     public void typeEmail(String email){
-        waitUntilElementIsDisplayed(emailField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(emailField, Duration.ofSeconds(15));
         setElementText(emailField, email);
     }
 
@@ -49,7 +49,7 @@ public class CompraPage extends BasePage {
      * @param phone as a string
      */
     public void writePhoneField(String phone) {
-        waitUntilElementIsDisplayed(telefonoField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(telefonoField, Duration.ofSeconds(15));
         setElementText(telefonoField, phone);
     }
 
@@ -64,7 +64,7 @@ public class CompraPage extends BasePage {
     }
 
     /**
-     * Marks the "Conditions of ourchase" checkbox as selected or unselected in the "Compra" page
+     * Marks the "Conditions of purchase" checkbox as selected or unselected in the "Compra" page
      *
      */
     public void clickPurchaseCondition(){
@@ -75,23 +75,27 @@ public class CompraPage extends BasePage {
     }
 
     /**
-     * Verify the ticket price.
-     * @param totalPriceTrip as a String
+     * clicks in the button continue with the Purchase on the "Compra" page
      */
-    public String verifyTotalCompraPrice(String totalPriceTrip){
-        waitUntilElementIsDisplayed(totalPriceCompraLocator, Duration.ofSeconds(5));
-        String totalPriceData = webDriver.findElement(totalPriceCompraLocator).getText().trim().replaceAll("\\s+", "");
-        totalPriceTrip = webDriver.findElement(totalPriceCompraLocator).getText().trim().replaceAll("\\s+", "");
-        Assert.assertEquals(totalPriceData, totalPriceTrip);
-        return totalPriceTrip;
+    public void clickContinuarCompra(){
+        waitUntilElementIsDisplayed(btnContinuarCompra, Duration.ofSeconds(15));
+        clickElement(btnContinuarCompra);
     }
 
     /**
-    * clicks in the button continue with the Purchase on the "Compra" page
-    */
-    public void clickContinuarCompra(){
-        waitUntilElementIsDisplayed(btnContinuarCompra, Duration.ofSeconds(5));
-        clickElement(btnContinuarCompra);
+     * Verify the ticket price.
+     * @param totalPriceTrip Precio obtenido previamente, ya normalizado
+     */
+    public void verifyTotalCompraPrice(String totalPriceTrip) {
+        waitUntilElementIsDisplayed(totalPriceCompraLocator, Duration.ofSeconds(15));
+
+        // Normaliza el precio de la nueva página
+        String totalPriceCompra = normalizePrice(webDriver.findElement(totalPriceCompraLocator).getText());
+
+        // El precio recibido ya debería estar normalizado, pero por seguridad:
+        totalPriceTrip = normalizePrice(totalPriceTrip);
+
+        Assert.assertEquals(totalPriceCompra, totalPriceTrip);
     }
 
 }

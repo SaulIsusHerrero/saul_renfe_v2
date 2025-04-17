@@ -131,4 +131,17 @@ public class BasePage {
     public String getElementText(By locator) {
         return webDriver.findElement(locator).getText();
     }
+
+    /**
+     * Normaliza el formato del precio para asegurar que usa coma como separador decimal
+     * y siempre tenga dos decimales.
+     * @param priceText Texto del precio (ej: "66.5€" o "66,50€")
+     * @return Precio normalizado (ej: "66,50€")
+     */
+    public String normalizePrice(String priceText) {
+        return priceText.trim()
+                .replaceAll("\\s+", "")  // Elimina espacios
+                .replace(".", ",")       // Asegura coma como separador decimal
+                .replaceAll(",(\\d)€", ",$10€");  // Asegura dos decimales
+    }
 }
