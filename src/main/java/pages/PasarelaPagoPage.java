@@ -41,12 +41,12 @@ public class PasarelaPagoPage extends BasePage {
         waitUntilElementIsDisplayed(totalPricePasarelaLocator, Duration.ofSeconds(15));
 
         // Normaliza el precio de la nueva página
-        String totalPriceData = normalizePrice(webDriver.findElement(totalPricePasarelaLocator).getText());
+        String totalPricePasarela = normalizePrice(webDriver.findElement(totalPricePasarelaLocator).getText());
 
         // El precio recibido ya debería estar normalizado, pero por seguridad:
         totalPriceTrip = normalizePrice(totalPriceTrip);
 
-        Assert.assertEquals(totalPriceData, totalPriceTrip);
+        Assert.assertEquals(totalPricePasarela, totalPriceTrip);
     }
 
     /**
