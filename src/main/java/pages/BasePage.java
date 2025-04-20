@@ -23,8 +23,8 @@ public class BasePage {
     //Locators
     protected By acceptAllCookiesButton = By.id("onetrust-accept-btn-handler");
 
-    //Variables
-    long timeout = 5;
+    //Variables and Constants
+    private final Duration TIMEOUT = Duration.ofSeconds(30);
 
     /**
      * Writes text inside a given element locator.

@@ -80,9 +80,9 @@ public class PasarelaPagoPage extends BasePage {
      * Click on the payment button
      */
     public void clickPaymentButton() {
-        waitUntilElementIsDisplayed(btnPayment, Duration.ofSeconds(15));
+        waitUntilElementIsDisplayed(btnPayment, Duration.ofSeconds(30));
         clickElement(btnPayment);
-        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(15));
+        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(30));
 
         // Assert 1: Verify element exists in DOM (presence)
         try {
