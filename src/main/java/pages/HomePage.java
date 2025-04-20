@@ -53,7 +53,7 @@ public class HomePage extends BasePage {
         destinationInput.sendKeys(Keys.DOWN);
         destinationInput.sendKeys(Keys.ENTER);
 
-        //Asserts the origin station
+        //Asserts the destination station
         Assert.assertEquals("BARCELONA-SANTS", destinationInput.getAttribute("value"));
     }
 
