@@ -1,0 +1,13 @@
+// filepath: /Users/eliapizarro/Repositories/saul_renfe_v2B/.vscode/launch.json
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Attach to Maven Debug",
+            "request": "attach",
+            "hostName": "localhost",
+            "port": 5005
+        }
+    ]
+}
