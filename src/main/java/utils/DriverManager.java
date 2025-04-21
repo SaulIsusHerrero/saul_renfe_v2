@@ -11,6 +11,7 @@ import java.time.Duration;
 public class DriverManager {
     private static WebDriver webDriver;
     private static final String BROWSER = System.getProperty("browser", "chrome"); // Default: Chrome
+    private static final Duration TIMEOUT = Duration.ofSeconds(30);
 
     public static WebDriver getDriver() {
         if (webDriver == null) {
@@ -32,7 +33,7 @@ public class DriverManager {
                     webDriver = new ChromeDriver(chromeOptions);
                     break;
             }
-            webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+            webDriver.manage().timeouts().implicitlyWait(TIMEOUT);
             webDriver.manage().window().maximize();
         }
         return webDriver;

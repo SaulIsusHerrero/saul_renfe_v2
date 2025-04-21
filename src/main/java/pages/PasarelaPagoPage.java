@@ -41,12 +41,12 @@ public class PasarelaPagoPage extends BasePage {
         waitUntilElementIsDisplayed(totalPricePasarelaLocator, Duration.ofSeconds(15));
 
         // Normaliza el precio de la nueva página
-        String totalPricePasarelaPago = normalizePrice(webDriver.findElement(totalPricePasarelaLocator).getText());
+        String totalPricePasarela = normalizePrice(webDriver.findElement(totalPricePasarelaLocator).getText());
 
         // El precio recibido ya debería estar normalizado, pero por seguridad:
         totalPriceTrip = normalizePrice(totalPriceTrip);
 
-        Assert.assertEquals(totalPricePasarelaPago, totalPriceTrip);
+        Assert.assertEquals(totalPricePasarela, totalPriceTrip);
     }
 
     /**
@@ -80,9 +80,9 @@ public class PasarelaPagoPage extends BasePage {
      * Click on the payment button
      */
     public void clickPaymentButton() {
-        waitUntilElementIsDisplayed(btnPayment, Duration.ofSeconds(15));
+        waitUntilElementIsDisplayed(btnPayment, Duration.ofSeconds(30));
         clickElement(btnPayment);
-        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(15));
+        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(30));
 
         // Assert 1: Verify element exists in DOM (presence)
         try {

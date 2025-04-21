@@ -23,8 +23,8 @@ public class BasePage {
     //Locators
     protected By acceptAllCookiesButton = By.id("onetrust-accept-btn-handler");
 
-    //Variables
-    long timeout = 5;
+    //Variables and Constants
+    private final Duration TIMEOUT = Duration.ofSeconds(30);
 
     /**
      * Writes text inside a given element locator.
@@ -101,8 +101,8 @@ public class BasePage {
 
     /**
      * Waits until an element is displayed in any Page.
-     * @param locator as a By
-     * @param timeout as a long
+     * @param locator By
+     * @param timeout long
      */
     public void waitUntilElementIsDisplayed(By locator, Duration timeout) {
         WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(5));

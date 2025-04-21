@@ -51,7 +51,7 @@ public class SeleccionarTuViajePage extends BasePage {
             // Encuentra la lista de trenes disponibles
             List<WebElement> trainList = webDriver.findElements(trainAvailable);
             List<WebElement> trainFare = webDriver.findElements(trainAvailableBasicFare);
-            WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(15));
+            WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(30));
 
             if (!trainList.isEmpty()) {
                 // Click on the first available train at position [0]

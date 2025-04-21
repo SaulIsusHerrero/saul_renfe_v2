@@ -5,13 +5,15 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pages.*;
+import utils.CSVDataProvider;
 
 import java.time.Duration;
 
 public class InvalidCardPaymentTest {
-    //Instances
+    // Instances
     private WebDriver webDriver;
     private BasePage basePage;
     private HomePage homePage;
@@ -21,81 +23,123 @@ public class InvalidCardPaymentTest {
     private CompraPage compraPage;
     private PasarelaPagoPage pasarelaPagoPage;
 
-    //Variable global para el precio total del trayecto
+    // Variable global para el precio total del trayecto
     String totalPriceTrip = "";
+    // Variables and Constants
+    private final Duration TIMEOUT = Duration.ofSeconds(30);
 
+    @DataProvider(name = "paymentData")
+    public Object[][] getPaymentData() {
+        return CSVDataProvider.readDatosPasajeros();
+    }
+
+    @DataProvider(name = "routeData")
+    public Object[][] getRouteData() {
+        return CSVDataProvider.readPreciosTrayectos();
+    }
 
     @BeforeMethod
     public void setup() throws InterruptedException {
-        //Chrome: Initialization of the ChromeDriver.
+        // Chrome: Initialization of the ChromeDriver.
         WebDriverManager.chromedriver().setup();
         webDriver = new ChromeDriver();
-        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        webDriver.manage().timeouts().implicitlyWait(TIMEOUT);
         webDriver.manage().window().maximize();
-        webDriver.get("https://www.renfe.com/es/es"); //URL page.
-        basePage = new BasePage(webDriver); //Initialization of the Base Page.
-        homePage = new HomePage(webDriver); //Initialization of the Home Page.
-        seleccionarTuViajePage = new SeleccionarTuViajePage(webDriver); //Initialization of the SeleccionarTuViaje Page.
-        introduceTusDatosPage = new IntroduceTusDatosPage(webDriver); //Initialization of the IntroduceTusDatos Page.
-        personalizaTuViajePage = new PersonalizaTuViajePage(webDriver); //Initialization of the PersonalizaTuViaje Page.
-        compraPage = new CompraPage(webDriver); //Initialization of the Compra Page.
-        pasarelaPagoPage = new PasarelaPagoPage(webDriver); //Initialization of the pasarelaPago Page.
+        webDriver.get("https://www.renfe.com/es/es"); // URL page.
+
+        // Initialize all pages
+        basePage = new BasePage(webDriver);
+        homePage = new HomePage(webDriver);
+        seleccionarTuViajePage = new SeleccionarTuViajePage(webDriver);
+        introduceTusDatosPage = new IntroduceTusDatosPage(webDriver);
+        personalizaTuViajePage = new PersonalizaTuViajePage(webDriver);
+        compraPage = new CompraPage(webDriver);
+        pasarelaPagoPage = new PasarelaPagoPage(webDriver);
     }
 
-    @Test
-    public void RenfeInvalidCardPaymentTest() {
+    @Test(dataProvider = "paymentData")
+    public void RenfeInvalidCardPaymentTest(
+            String originStation,  // Cambiado de 'origin' a 'originStation' para mayor claridad
+            String destinationStation,  // Cambiado de 'destination' a 'destinationStation'
+            String firstName,
+            String primerApellido,
+            String segundoApellido,
+            String dni,
+            String email,
+            String phone,
+            String card,
+            String expiration,
+            String cvv) {
+
         basePage.clickAcceptAllCookiesButton();
-        homePage.enterOrigin("VALENCIA JOAQUÍN SOROLLA");
-        homePage.enterDestination("BARCELONA-SANTS");
+
+        // Usar datos del CSV para origen y destino (ESTACIONES, no nombres de personas)
+        homePage.enterOrigin(originStation);  // Usa originStation (ej. "VALENCIA JOAQUÍN SOROLLA")
+        homePage.enterDestination(destinationStation);  // Usa destinationStation (ej. "BARCELONA-SANTS")
+
         homePage.selectDepartureDate();
         homePage.clickSoloIdaButtonSelected(true);
         homePage.clickAcceptButton();
         homePage.clickSearchTicketButton();
+
         seleccionarTuViajePage.verifyYouAreInSelecionaTuViaje();
         seleccionarTuViajePage.selectFirstTrainAvailableAndBasicFare();
         seleccionarTuViajePage.verifyNumberOfTravelers();
         seleccionarTuViajePage.verifyFareIsBasic();
-        //1a) Verificación : el precio de la tarifa y precio del total son iguales en la semimodal
+
         totalPriceTrip = seleccionarTuViajePage.verifyFareAndTotalPricesAreEquals();
         seleccionarTuViajePage.clickSelectButton();
         seleccionarTuViajePage.popUpFareAppears();
         seleccionarTuViajePage.linkContinueSameFareAppears();
         seleccionarTuViajePage.clickLinkContinueSameFare();
+
         introduceTusDatosPage.verifyYouAreInIntroduceYourDataPage();
-        introduceTusDatosPage.writeFirstNameField("John");
-        introduceTusDatosPage.writeFirstSurnameField("Doe");
-        introduceTusDatosPage.writeSecondSurnameField("López");
-        introduceTusDatosPage.writeDNIField("46131651E");
-        introduceTusDatosPage.writeEmailField("test@qa.com");
-        introduceTusDatosPage.writePhoneField("696824570");
-        //2a) Verificación : el precio total en IntroduceTusDatosPage es igual que el de la Page anterior.
+
+        // Usar datos del CSV para información personal
+        introduceTusDatosPage.writeFirstNameField(firstName);  // "John"
+        introduceTusDatosPage.writeFirstSurnameField(primerApellido);  // "Doe"
+        introduceTusDatosPage.writeSecondSurnameField(segundoApellido);  // "López"
+        introduceTusDatosPage.writeDNIField(dni);  // "46131651E"
+        introduceTusDatosPage.writeEmailField(email);  // "test@qa.com"
+        introduceTusDatosPage.writePhoneField(phone);  // "696824570"
+
         introduceTusDatosPage.verifyTotalPriceData(totalPriceTrip);
         introduceTusDatosPage.clickPersonalizeTrip();
+
         personalizaTuViajePage.verifyYouAreInPersonalizedYourTravelPage();
-        //3a) Verificación : el precio total en PersonalizaTuViajePage es igual que el de la Page anterior
         personalizaTuViajePage.verifyTotalPersonalizePrice(totalPriceTrip);
         personalizaTuViajePage.continueWithPurchase();
+
         compraPage.verifyYouAreInCompraPage();
-        compraPage.typeEmail("test@qa.com");
-        compraPage.writePhoneField("696824570");
+        compraPage.typeEmail(email);
+        compraPage.writePhoneField(phone);
         compraPage.clickPurchaseCard();
         compraPage.clickPurchaseCondition();
-        //4a) Verificación : el precio total en CompraPage es igual que el de la Page anterior
         compraPage.verifyTotalCompraPrice(totalPriceTrip);
         compraPage.clickContinuarCompra();
+
         pasarelaPagoPage.verifyYouAreInPasarelaPagoPage();
-        //5a) Verificación : el precio total en PasarelaDePagoPage es igual que el de la Page anterior
         pasarelaPagoPage.verifyTotalPricePasarelaPago(totalPriceTrip);
-        pasarelaPagoPage.typeBankCard("4000 0000 0000 1000");
-        pasarelaPagoPage.typeExpirationDate("03/30");
-        pasarelaPagoPage.typeCVV("990");
+
+        // Usar datos del CSV para información de pago
+        pasarelaPagoPage.typeBankCard(card);  // "4000 0000 0000 1000"
+        pasarelaPagoPage.typeExpirationDate(expiration);  // "03/30"
+        pasarelaPagoPage.typeCVV(cvv);  // "990"
         pasarelaPagoPage.clickPaymentButton();
     }
-    @AfterMethod
-    public void tearDown() {
-      if (webDriver != null) {
-    webDriver.quit(); //Closes the current instance of the browser
-      }
-    }
 
+   /** @Test(dataProvider = "routeData")
+    public void testWithDifferentRoutesAndPrices(String origin, String destination, String expectedPrice) {
+        // Test para probar diferentes rutas con precios
+        System.out.println("Testing route from " + origin + " to " + destination +
+                " with expected price: " + expectedPrice);
+        // Aquí puedes implementar la lógica para verificar los precios
+    }*/
+
+    /**@AfterMethod
+    public void tearDown() {
+        if (webDriver != null) {
+            webDriver.quit();
+        }
+    }*/
 }

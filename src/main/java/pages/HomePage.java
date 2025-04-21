@@ -16,6 +16,9 @@ public class HomePage extends BasePage {
     private By acceptButtonLocator = By.xpath("//button[contains(text(),'Aceptar')]");
     private By buscarBilleteLocator = By.xpath("//button[@title='Buscar billete']");
 
+    //Variables and Constants
+    private final Duration TIMEOUT = Duration.ofSeconds(30);
+
     //Constructor
     public HomePage(WebDriver webDriver) {
         super(webDriver); //Calls to the constructor from parent class and their variable
@@ -71,7 +74,8 @@ public class HomePage extends BasePage {
      * @param expectedSelected boolean with the expected selected state of the element
      */
     public void clickSoloIdaButtonSelected(boolean expectedSelected) {
-        waitUntilElementIsDisplayed(onlyDepartureRadioButtonLabel, Duration.ofSeconds(10));
+        waitUntilElementIsDisplayed(onlyDepartureRadioButtonLabel, Duration.ofSeconds(30));
+        scrollElementIntoView(onlyDepartureRadioButtonLabel);
         setElementSelected(onlyDepartureRadioButtonInput, onlyDepartureRadioButtonLabel, expectedSelected);
     }
 
@@ -79,7 +83,7 @@ public class HomePage extends BasePage {
      * Method to click the 'Accept' button on the calendar in Home page.
      */
     public void clickAcceptButton() {
-        waitUntilElementIsDisplayed(acceptButtonLocator, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(acceptButtonLocator, TIMEOUT);
         scrollElementIntoView(acceptButtonLocator);
         clickElement(acceptButtonLocator);
     }
@@ -88,7 +92,7 @@ public class HomePage extends BasePage {
      * Searches the selected ticket in the Home page.
      */
     public void clickSearchTicketButton() {
-        waitUntilElementIsDisplayed(buscarBilleteLocator, Duration.ofSeconds(10));
+        waitUntilElementIsDisplayed(buscarBilleteLocator, Duration.ofSeconds(30));
         scrollElementIntoView(buscarBilleteLocator);
         clickElement(buscarBilleteLocator);
     }
