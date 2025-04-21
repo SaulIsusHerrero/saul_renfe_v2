@@ -3,6 +3,8 @@ package pages;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
 import java.time.Duration;
 
 public class IntroduceTusDatosPage extends BasePage {
@@ -17,9 +19,6 @@ public class IntroduceTusDatosPage extends BasePage {
     private By totalPriceDataLocator = By.xpath("//span[@id='totalTrayecto']");
     private By btnPersonalizar = By.cssSelector("#btn-responsive > #submitpersonaliza");
 
-    //Instance
-    private SeleccionarTuViajePage seleccionarTuViajePage;
-
     //Constructor
     public IntroduceTusDatosPage(WebDriver webDriver) {
         super(webDriver); //Calls to the constructor from parent class and their variable
@@ -31,10 +30,10 @@ public class IntroduceTusDatosPage extends BasePage {
      * Assert que estoy en la Page y esta habilitada “introduce tus datos”
      */
     public void verifyYouAreInIntroduceYourDataPage() {
-        //@todo investigar como se comprueba el texto, el tipo de assert que necesitas
-        //@todo Saúl. otro todo sin hacer
-        waitUntilElementIsDisplayed(introduceTusDatosLabel, Duration.ofSeconds(5));
-        Assert.assertTrue(webDriver.findElement(introduceTusDatosLabel).isEnabled());
+        waitUntilElementIsDisplayed(introduceTusDatosLabel, Duration.ofSeconds(15));
+        WebElement element = webDriver.findElement(introduceTusDatosLabel);
+        Assert.assertEquals("Introduce tus datos", element.getText());
+        Assert.assertTrue(element.isEnabled());
     }
 
     /**
@@ -43,7 +42,7 @@ public class IntroduceTusDatosPage extends BasePage {
      * @param firstName as a string
      */
     public void writeFirstNameField(String firstName) {
-        waitUntilElementIsDisplayed(firstNameField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(firstNameField, Duration.ofSeconds(15));
         setElementText(firstNameField, firstName);
     }
 
@@ -53,7 +52,7 @@ public class IntroduceTusDatosPage extends BasePage {
      * @param primerApellido as a string
      */
     public void writeFirstSurnameField(String primerApellido) {
-        waitUntilElementIsDisplayed(firstSurnameField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(firstSurnameField, Duration.ofSeconds(15));
         setElementText(firstSurnameField, primerApellido);
     }
 
@@ -63,7 +62,7 @@ public class IntroduceTusDatosPage extends BasePage {
      * @param segundoApellido as a string
      */
     public void writeSecondSurnameField(String segundoApellido) {
-        waitUntilElementIsDisplayed(secondSurnameField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(secondSurnameField, Duration.ofSeconds(15));
         setElementText(secondSurnameField, segundoApellido);
     }
 
@@ -73,7 +72,7 @@ public class IntroduceTusDatosPage extends BasePage {
      * @param dni as a string
      */
     public void writeDNIField(String dni) {
-        waitUntilElementIsDisplayed(dniField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(dniField, Duration.ofSeconds(15));
         setElementText(dniField, dni);
     }
 
@@ -83,7 +82,7 @@ public class IntroduceTusDatosPage extends BasePage {
      * @param email as a string
      */
     public void writeEmailField(String email) {
-        waitUntilElementIsDisplayed(emailField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(emailField, Duration.ofSeconds(15));
         setElementText(emailField, email);
     }
 
@@ -93,20 +92,24 @@ public class IntroduceTusDatosPage extends BasePage {
      * @param phone as a string
      */
     public void writePhoneField(String phone) {
-        waitUntilElementIsDisplayed(telefonoField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(telefonoField, Duration.ofSeconds(15));
         setElementText(telefonoField, phone);
     }
 
     /**
      * Verify the ticket price.
-     * @param totalPriceTrip as a String
+     * @param totalPriceTrip Precio obtenido previamente, ya normalizado
      */
-    public String verifyTotalPriceData(String totalPriceTrip){
-        waitUntilElementIsDisplayed(totalPriceDataLocator, Duration.ofSeconds(5));
-        String totalPriceData = webDriver.findElement(totalPriceDataLocator).getText().trim().replaceAll("\\s+", "");
-        totalPriceTrip = webDriver.findElement(totalPriceDataLocator).getText().trim().replaceAll("\\s+", "");
+    public void verifyTotalPriceData(String totalPriceTrip) {
+        waitUntilElementIsDisplayed(totalPriceDataLocator, Duration.ofSeconds(15));
+
+        // Normaliza el precio de la nueva página
+        String totalPriceData = normalizePrice(webDriver.findElement(totalPriceDataLocator).getText());
+
+        // El precio recibido ya debería estar normalizado, pero por seguridad:
+        totalPriceTrip = normalizePrice(totalPriceTrip);
+
         Assert.assertEquals(totalPriceData, totalPriceTrip);
-        return totalPriceTrip;
     }
 
     /**

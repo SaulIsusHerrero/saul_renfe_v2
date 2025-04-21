@@ -3,6 +3,9 @@ package pages;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import java.time.Duration;
 
 public class PasarelaPagoPage extends BasePage {
@@ -32,14 +35,18 @@ public class PasarelaPagoPage extends BasePage {
 
     /**
      * Verify the ticket price.
-     * @param totalPriceTrip as a String
+     * @param totalPriceTrip Precio obtenido previamente, ya normalizado
      */
-    public String verifyTotalPricePasarelaPago(String totalPriceTrip){
-        waitUntilElementIsDisplayed(totalPricePasarelaLocator, Duration.ofSeconds(5));
-        String totalPriceData = webDriver.findElement(totalPricePasarelaLocator).getText().trim().replaceAll("\\s+", "");
-        totalPriceTrip = webDriver.findElement(totalPricePasarelaLocator).getText().trim().replaceAll("\\s+", "");
-        Assert.assertEquals(totalPriceData, totalPriceTrip);
-        return totalPriceTrip;
+    public void verifyTotalPricePasarelaPago(String totalPriceTrip) {
+        waitUntilElementIsDisplayed(totalPricePasarelaLocator, Duration.ofSeconds(15));
+
+        // Normaliza el precio de la nueva página
+        String totalPricePasarelaPago = normalizePrice(webDriver.findElement(totalPricePasarelaLocator).getText());
+
+        // El precio recibido ya debería estar normalizado, pero por seguridad:
+        totalPriceTrip = normalizePrice(totalPriceTrip);
+
+        Assert.assertEquals(totalPricePasarelaPago, totalPriceTrip);
     }
 
     /**
@@ -70,15 +77,28 @@ public class PasarelaPagoPage extends BasePage {
     }
 
     /**
-     * Click on payment button
+     * Click on the payment button
      */
-    public void clickPaymentButton(){
-        waitUntilElementIsDisplayed(btnPayment, Duration.ofSeconds(5));
+    public void clickPaymentButton() {
+        waitUntilElementIsDisplayed(btnPayment, Duration.ofSeconds(15));
         clickElement(btnPayment);
-        waitUntilElementIsDisplayed(popUpError, Duration.ofSeconds(5));
-        boolean popUpErrorExpected = isElementDisplayed(popUpError);
-        Assert.assertTrue(popUpErrorExpected);
-        //@Todo Saul- ¿Que esta comprobando este assert? ¿Estas seguro de que este selector no esta presente en el dom siempre?
+        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(15));
+
+        // Assert 1: Verify element exists in DOM (presence)
+        try {
+            wait.until(ExpectedConditions.presenceOfElementLocated(popUpError));
+            System.out.println("✅ El Pop-up con el error de tarjeta invalida (RS18) existe en el DOM");
+        } catch (Exception e) {
+            Assert.fail("❌ El Pop-up NO existe en el DOM");
+        }
+
+        // Assert 2: Verify element is actually visible on screen
+        try {
+            wait.until(ExpectedConditions.visibilityOfElementLocated(popUpError));
+            System.out.println("✅ El Pop-up con el error de tarjeta invalida (RS18) es visible en pantalla");
+        } catch (Exception e) {
+            Assert.fail("❌ El Pop-up con el error de tarjeta invalida (RS18) pero NO es visible en pantalla");
+        }
     }
 
 }

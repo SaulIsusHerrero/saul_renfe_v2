@@ -53,7 +53,7 @@ public class HomePage extends BasePage {
         destinationInput.sendKeys(Keys.DOWN);
         destinationInput.sendKeys(Keys.ENTER);
 
-        //Asserts the origin station
+        //Asserts the destination station
         Assert.assertEquals("BARCELONA-SANTS", destinationInput.getAttribute("value"));
     }
 
@@ -61,7 +61,7 @@ public class HomePage extends BasePage {
      * clicks on the departure date calendar in the Home page
      */
     public void selectDepartureDate() {
-        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(5));
+        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
         WebElement button = wait.until(ExpectedConditions.visibilityOfElementLocated(dateDepartureInput));
         button.click();
     }
@@ -71,7 +71,7 @@ public class HomePage extends BasePage {
      * @param expectedSelected boolean with the expected selected state of the element
      */
     public void clickSoloIdaButtonSelected(boolean expectedSelected) {
-        waitUntilElementIsDisplayed(onlyDepartureRadioButtonLabel, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(onlyDepartureRadioButtonLabel, Duration.ofSeconds(10));
         setElementSelected(onlyDepartureRadioButtonInput, onlyDepartureRadioButtonLabel, expectedSelected);
     }
 
@@ -82,14 +82,14 @@ public class HomePage extends BasePage {
         waitUntilElementIsDisplayed(acceptButtonLocator, Duration.ofSeconds(5));
         scrollElementIntoView(acceptButtonLocator);
         clickElement(acceptButtonLocator);
-        }
+    }
 
     /**
      * Searches the selected ticket in the Home page.
      */
     public void clickSearchTicketButton() {
-        waitUntilElementIsDisplayed(buscarBilleteLocator, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(buscarBilleteLocator, Duration.ofSeconds(10));
         scrollElementIntoView(buscarBilleteLocator);
         clickElement(buscarBilleteLocator);
-        }
+    }
 }

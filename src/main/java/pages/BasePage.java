@@ -44,7 +44,6 @@ public class BasePage {
     public void clickElement(By locator) {
         WebElement element = webDriver.findElement(locator);
         ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", element);
-        //@todo Saul, ¿te has dado cuenta de esto? ¿Todos tus clicks ya van con javascript? No pasa nada, esta bien si quieres usar esta estrategia, solo que seas consciente. Borra el comentario cuando lo leas por favor
     }
 
     /**
@@ -106,7 +105,6 @@ public class BasePage {
      * @param timeout as a long
      */
     public void waitUntilElementIsDisplayed(By locator, Duration timeout) {
-        //@todo Saul, lee el codigo- que esta mal aqui?
         WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(5));
         WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
         Assert.assertTrue(element.isDisplayed(),"The element" + element + "is not displayed");
@@ -132,5 +130,18 @@ public class BasePage {
      */
     public String getElementText(By locator) {
         return webDriver.findElement(locator).getText();
+    }
+
+    /**
+     * Normaliza el formato del precio para asegurar que usa coma como separador decimal
+     * y siempre tenga dos decimales.
+     * @param priceText Texto del precio (ej: "66.5€" o "66,50€")
+     * @return Precio normalizado (ej: "66,50€")
+     */
+    public String normalizePrice(String priceText) {
+        return priceText.trim()
+                .replaceAll("\\s+", "")  // Elimina espacios
+                .replace(".", ",")       // Asegura coma como separador decimal
+                .replaceAll(",(\\d)€", ",$10€");  // Asegura dos decimales
     }
 }

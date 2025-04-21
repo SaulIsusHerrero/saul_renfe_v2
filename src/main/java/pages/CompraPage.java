@@ -8,7 +8,6 @@ import org.openqa.selenium.JavascriptExecutor;
 
 import java.time.Duration;
 
-
 public class CompraPage extends BasePage {
     //Locators
     private By compraLabel = By.xpath("//span[contains(text(), 'Compra') and not(ancestor::select[@disabled])]");
@@ -30,9 +29,9 @@ public class CompraPage extends BasePage {
      * Assert that I am on the right page and is enabled “Compra” page
      */
     public void verifyYouAreInCompraPage() {
-        waitUntilElementIsDisplayed(compraLabel, Duration.ofSeconds(5));
-        //todo verificar igual que en las anteriores
-        //@todo Saul - otro todo sin hacer
+        waitUntilElementIsDisplayed(compraLabel, Duration.ofSeconds(15));
+        WebElement element = webDriver.findElement(compraLabel);
+        Assert.assertEquals("Compra", element.getText());
         Assert.assertTrue(webDriver.findElement(compraLabel).isEnabled());
     }
 
@@ -41,7 +40,7 @@ public class CompraPage extends BasePage {
      * @param email as a string
      */
     public void typeEmail(String email){
-        waitUntilElementIsDisplayed(emailField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(emailField, Duration.ofSeconds(15));
         setElementText(emailField, email);
     }
 
@@ -50,7 +49,7 @@ public class CompraPage extends BasePage {
      * @param phone as a string
      */
     public void writePhoneField(String phone) {
-        waitUntilElementIsDisplayed(telefonoField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(telefonoField, Duration.ofSeconds(15));
         setElementText(telefonoField, phone);
     }
 
@@ -65,7 +64,7 @@ public class CompraPage extends BasePage {
     }
 
     /**
-     * Marks the "Conditions of ourchase" checkbox as selected or unselected in the "Compra" page
+     * Marks the "Conditions of purchase" checkbox as selected or unselected in the "Compra" page
      *
      */
     public void clickPurchaseCondition(){
@@ -73,29 +72,30 @@ public class CompraPage extends BasePage {
        WebElement conditions = webDriver.findElement(conditionsCheckboxInput);
        JavascriptExecutor js = (JavascriptExecutor) webDriver;
        js.executeScript("arguments[0].click();", conditions);
-       //@todo Saul - usas el click con javascript en multiples ocasiones, ¿que te parece si creas un metodo en utils?
+    }
+
+    /**
+     * clicks in the button continue with the Purchase on the "Compra" page
+     */
+    public void clickContinuarCompra(){
+        waitUntilElementIsDisplayed(btnContinuarCompra, Duration.ofSeconds(15));
+        clickElement(btnContinuarCompra);
     }
 
     /**
      * Verify the ticket price.
-     * @param totalPriceTrip as a String
+     * @param totalPriceTrip Precio obtenido previamente, ya normalizado
      */
-    public String verifyTotalCompraPrice(String totalPriceTrip){
-        waitUntilElementIsDisplayed(totalPriceCompraLocator, Duration.ofSeconds(5));
-        //@todo comprobar el precio, no la disponibilidad. los precios se comprueban con el getText
-        String totalPriceData = webDriver.findElement(totalPriceCompraLocator).getText().trim().replaceAll("\\s+", "");
-        //@todo verificar que el precio es el mismo que en la pagina anterior. Sigue siendo el mismo desde el inicio
-        totalPriceTrip = webDriver.findElement(totalPriceCompraLocator).getText().trim().replaceAll("\\s+", "");
-        Assert.assertEquals(totalPriceData, totalPriceTrip);
-        return totalPriceTrip;
-    }
+    public void verifyTotalCompraPrice(String totalPriceTrip) {
+        waitUntilElementIsDisplayed(totalPriceCompraLocator, Duration.ofSeconds(15));
 
-    /**
-    * clicks in the button continue with the Purchase on the "Compra" page
-    */
-    public void clickContinuarCompra(){
-        waitUntilElementIsDisplayed(btnContinuarCompra, Duration.ofSeconds(5));
-        clickElement(btnContinuarCompra);
+        // Normaliza el precio de la nueva página
+        String totalPriceCompra = normalizePrice(webDriver.findElement(totalPriceCompraLocator).getText());
+
+        // El precio recibido ya debería estar normalizado, pero por seguridad:
+        totalPriceTrip = normalizePrice(totalPriceTrip);
+
+        Assert.assertEquals(totalPriceCompra, totalPriceTrip);
     }
 
 }

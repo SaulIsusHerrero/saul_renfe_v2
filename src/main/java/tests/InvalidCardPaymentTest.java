@@ -24,6 +24,7 @@ public class InvalidCardPaymentTest {
     //Variable global para el precio total del trayecto
     String totalPriceTrip = "";
 
+
     @BeforeMethod
     public void setup() throws InterruptedException {
         //Chrome: Initialization of the ChromeDriver.
