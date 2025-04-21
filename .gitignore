@@ -4,3 +4,8 @@
 .idea/misc.xml
 .idea/vcs.xml
 target/
+*.log
+*.class
+*.jar
+*.war
+*.ear
