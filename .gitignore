@@ -11,3 +11,4 @@ target/classes/pages/BasePage.class
 .idea/misc.xml
 .idea/vcs.xml
 /target
+.idea/csv-editor.xml
