@@ -10,11 +10,9 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class CSVDataProvider {
-<<<<<<< Updated upstream
-    private static final String BASE_PATH = "C:/Users/sisus_amaris.com/Desktop/repositorios/saul_renfe-main/src/main/java/utils/data/";
-=======
+
     private static final String BASE_PATH = Paths.get("src", "main", "java", "utils", "data").toAbsolutePath().toString() + "/";
->>>>>>> Stashed changes
+
 
     /**
      * Lee datos desde el archivo CSV correspondiente y devuelve un Object[][] para el DataProvider.
