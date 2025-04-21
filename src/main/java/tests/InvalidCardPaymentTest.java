@@ -1,16 +1,25 @@
 package tests;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
+import java.time.Duration;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import pages.*;
-import utils.CSVDataProvider;
 
-import java.time.Duration;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import pages.BasePage;
+import pages.CompraPage;
+import pages.HomePage;
+import pages.IntroduceTusDatosPage;
+import pages.PasarelaPagoPage;
+import pages.PersonalizaTuViajePage;
+import pages.SeleccionarTuViajePage;
+import utils.CSVDataProvider;
+import utils.DataStore;
 
 public class InvalidCardPaymentTest {
     // Instances
@@ -28,14 +37,9 @@ public class InvalidCardPaymentTest {
     // Variables and Constants
     private final Duration TIMEOUT = Duration.ofSeconds(30);
 
-    @DataProvider(name = "paymentData")
+    @DataProvider(name = "CP002")
     public Object[][] getPaymentData() {
-        return CSVDataProvider.readDatosPasajeros();
-    }
-
-    @DataProvider(name = "routeData")
-    public Object[][] getRouteData() {
-        return CSVDataProvider.readPreciosTrayectos();
+        return CSVDataProvider.readData("datos_pasajeros.csv"); // Lee y almacena en DataStore
     }
 
     @BeforeMethod
@@ -57,25 +61,24 @@ public class InvalidCardPaymentTest {
         pasarelaPagoPage = new PasarelaPagoPage(webDriver);
     }
 
-    @Test(dataProvider = "paymentData")
-    public void RenfeInvalidCardPaymentTest(
-            String originStation,  // Cambiado de 'origin' a 'originStation' para mayor claridad
-            String destinationStation,  // Cambiado de 'destination' a 'destinationStation'
-            String firstName,
-            String primerApellido,
-            String segundoApellido,
-            String dni,
-            String email,
-            String phone,
-            String card,
-            String expiration,
-            String cvv) {
+    @Test(dataProvider = "CP002")
+    public void RenfeInvalidCardPaymentTest(Object testData) {
+        // Realizar un casting a Object[] para procesar los datos
+        Object[] data = (Object[]) testData;
+        System.out.println("MAYÚSCULAS: " + data[0]);
+
+        // Almacenar automáticamente los datos en DataStore desde el CSV
+        storeTestData(data);
 
         basePage.clickAcceptAllCookiesButton();
 
-        // Usar datos del CSV para origen y destino (ESTACIONES, no nombres de personas)
-        homePage.enterOrigin(originStation);  // Usa originStation (ej. "VALENCIA JOAQUÍN SOROLLA")
-        homePage.enterDestination(destinationStation);  // Usa destinationStation (ej. "BARCELONA-SANTS")
+        // Recuperar valores directamente desde DataStore
+        String originStation = DataStore.getInstance().getValue("originStation");
+        System.out.println("Valor recuperado para 'originStation': " + originStation);
+        String destinationStation = DataStore.getInstance().getValue("destinationStation");
+
+        homePage.enterOrigin(originStation);
+        homePage.enterDestination(destinationStation);
 
         homePage.selectDepartureDate();
         homePage.clickSoloIdaButtonSelected(true);
@@ -96,12 +99,19 @@ public class InvalidCardPaymentTest {
         introduceTusDatosPage.verifyYouAreInIntroduceYourDataPage();
 
         // Usar datos del CSV para información personal
-        introduceTusDatosPage.writeFirstNameField(firstName);  // "John"
-        introduceTusDatosPage.writeFirstSurnameField(primerApellido);  // "Doe"
-        introduceTusDatosPage.writeSecondSurnameField(segundoApellido);  // "López"
-        introduceTusDatosPage.writeDNIField(dni);  // "46131651E"
-        introduceTusDatosPage.writeEmailField(email);  // "test@qa.com"
-        introduceTusDatosPage.writePhoneField(phone);  // "696824570"
+        String firstName = DataStore.getInstance().getValue("firstName");
+        String primerApellido = DataStore.getInstance().getValue("primerApellido");
+        String segundoApellido = DataStore.getInstance().getValue("segundoApellido");
+        String dni = DataStore.getInstance().getValue("dni");
+        String email = DataStore.getInstance().getValue("email");
+        String phone = DataStore.getInstance().getValue("phone");
+
+        introduceTusDatosPage.writeFirstNameField(firstName);
+        introduceTusDatosPage.writeFirstSurnameField(primerApellido);
+        introduceTusDatosPage.writeSecondSurnameField(segundoApellido);
+        introduceTusDatosPage.writeDNIField(dni);
+        introduceTusDatosPage.writeEmailField(email);
+        introduceTusDatosPage.writePhoneField(phone);
 
         introduceTusDatosPage.verifyTotalPriceData(totalPriceTrip);
         introduceTusDatosPage.clickPersonalizeTrip();
@@ -122,24 +132,39 @@ public class InvalidCardPaymentTest {
         pasarelaPagoPage.verifyTotalPricePasarelaPago(totalPriceTrip);
 
         // Usar datos del CSV para información de pago
-        pasarelaPagoPage.typeBankCard(card);  // "4000 0000 0000 1000"
-        pasarelaPagoPage.typeExpirationDate(expiration);  // "03/30"
-        pasarelaPagoPage.typeCVV(cvv);  // "990"
+        String card = DataStore.getInstance().getValue("card");
+        String expiration = DataStore.getInstance().getValue("expiration");
+        String cvv = DataStore.getInstance().getValue("cvv");
+
+        pasarelaPagoPage.typeBankCard(card);
+        pasarelaPagoPage.typeExpirationDate(expiration);
+        pasarelaPagoPage.typeCVV(cvv);
         pasarelaPagoPage.clickPaymentButton();
     }
 
-   /** @Test(dataProvider = "routeData")
-    public void testWithDifferentRoutesAndPrices(String origin, String destination, String expectedPrice) {
-        // Test para probar diferentes rutas con precios
-        System.out.println("Testing route from " + origin + " to " + destination +
-                " with expected price: " + expectedPrice);
-        // Aquí puedes implementar la lógica para verificar los precios
-    }*/
-
-    /**@AfterMethod
-    public void tearDown() {
-        if (webDriver != null) {
-            webDriver.quit();
+    /**
+     * Método auxiliar para almacenar datos en DataStore.
+     * @param testData Array de datos del CSV (primera fila son claves, las demás son valores).
+     */
+    private void storeTestData(Object[] testData) {
+        if (testData.length % 2 != 0) {
+            throw new IllegalArgumentException("El conjunto de datos debe contener pares clave-valor.");
         }
-    }*/
+        for (int i = 0; i < testData.length; i += 2) {
+            String key = testData[i].toString();
+            String value = testData[i + 1].toString();
+            DataStore.getInstance().setElement(key, value);
+        }
+    }
+
+    @AfterMethod
+    public void logTestData(ITestResult result) {
+        System.out.println("Datos utilizados en el test: " + result.getName());
+        DataStore.getInstance().getData().forEach((key, value) -> 
+            System.out.println("Clave: " + key + ", Valor: " + value)
+        );
+
+        // Limpiar los datos después de imprimirlos para evitar conflictos entre tests
+        DataStore.getInstance().clearData();
+    }
 }
