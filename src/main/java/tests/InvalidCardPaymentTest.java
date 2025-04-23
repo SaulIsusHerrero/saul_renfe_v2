@@ -18,6 +18,7 @@ import pages.PersonalizaTuViajePage;
 import pages.SeleccionarTuViajePage;
 import utils.CSVDataProvider;
 import utils.TemporaryDataStore;
+import utils.DriverManager;
 
 public class InvalidCardPaymentTest {
     // Instances
@@ -64,8 +65,8 @@ public class InvalidCardPaymentTest {
 
     @Test(dataProvider = "paymentData")
     public void RenfeInvalidCardPaymentTest(
-            String originStation,  // Cambiado de 'origin' a 'originStation' para mayor claridad
-            String destinationStation,  // Cambiado de 'destination' a 'destinationStation'
+            String originStation, // Cambiado de 'origin' a 'originStation' para mayor claridad
+            String destinationStation, // Cambiado de 'destination' a 'destinationStation'
             String firstName,
             String primerApellido,
             String segundoApellido,
@@ -79,8 +80,8 @@ public class InvalidCardPaymentTest {
         basePage.clickAcceptAllCookiesButton();
 
         // Usar datos del CSV para origen y destino (ESTACIONES, no nombres de personas)
-        homePage.enterOrigin(originStation);  // Usa originStation (ej. "VALENCIA JOAQUÍN SOROLLA")
-        homePage.enterDestination(destinationStation);  // Usa destinationStation (ej. "BARCELONA-SANTS")
+        homePage.enterOrigin(originStation); // Usa originStation (ej. "VALENCIA JOAQUÍN SOROLLA")
+        homePage.enterDestination(destinationStation); // Usa destinationStation (ej. "BARCELONA-SANTS")
 
         homePage.selectDepartureDate();
         homePage.clickSoloIdaButtonSelected(true);
@@ -103,18 +104,19 @@ public class InvalidCardPaymentTest {
         introduceTusDatosPage.verifyYouAreInIntroduceYourDataPage();
 
         // Usar datos del CSV para información personal
-        introduceTusDatosPage.writeFirstNameField(firstName);  // "John"
-        introduceTusDatosPage.writeFirstSurnameField(primerApellido);  // "Doe"
-        introduceTusDatosPage.writeSecondSurnameField(segundoApellido);  // "López"
-        introduceTusDatosPage.writeDNIField(dni);  // "46131651E"
-        introduceTusDatosPage.writeEmailField(email);  // "test@qa.com"
-        introduceTusDatosPage.writePhoneField(phone);  // "696824570"
+        introduceTusDatosPage.writeFirstNameField(firstName); // "John"
+        introduceTusDatosPage.writeFirstSurnameField(primerApellido); // "Doe"
+        introduceTusDatosPage.writeSecondSurnameField(segundoApellido); // "López"
+        introduceTusDatosPage.writeDNIField(dni); // "46131651E"
+        introduceTusDatosPage.writeEmailField(email); // "test@qa.com"
+        introduceTusDatosPage.writePhoneField(phone); // "696824570"
 
         introduceTusDatosPage.verifyTotalPriceData((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
         introduceTusDatosPage.clickPersonalizeTrip();
 
         personalizaTuViajePage.verifyYouAreInPersonalizedYourTravelPage();
-        personalizaTuViajePage.verifyTotalPersonalizePrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
+        personalizaTuViajePage
+                .verifyTotalPersonalizePrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
         personalizaTuViajePage.continueWithPurchase();
 
         compraPage.verifyYouAreInCompraPage();
@@ -129,24 +131,31 @@ public class InvalidCardPaymentTest {
         pasarelaPagoPage.verifyTotalPricePasarelaPago((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
 
         // Usar datos del CSV para información de pago
-        pasarelaPagoPage.typeBankCard(card);  // "4000 0000 0000 1000"
-        pasarelaPagoPage.typeExpirationDate(expiration);  // "03/30"
-        pasarelaPagoPage.typeCVV(cvv);  // "990"
+        pasarelaPagoPage.typeBankCard(card); // "4000 0000 0000 1000"
+        pasarelaPagoPage.typeExpirationDate(expiration); // "03/30"
+        pasarelaPagoPage.typeCVV(cvv); // "990"
         pasarelaPagoPage.clickPaymentButton();
     }
 
-   /** @Test(dataProvider = "routeData")
-    public void testWithDifferentRoutesAndPrices(String origin, String destination, String expectedPrice) {
-        // Test para probar diferentes rutas con precios
-        System.out.println("Testing route from " + origin + " to " + destination +
-                " with expected price: " + expectedPrice);
-        // Aquí puedes implementar la lógica para verificar los precios
-    }*/
+    /**
+     * @Test(dataProvider = "routeData")
+     *                    public void testWithDifferentRoutesAndPrices(String
+     *                    origin, String destination, String expectedPrice) {
+     *                    // Test para probar diferentes rutas con precios
+     *                    System.out.println("Testing route from " + origin + " to "
+     *                    + destination +
+     *                    " with expected price: " + expectedPrice);
+     *                    // Aquí puedes implementar la lógica para verificar los
+     *                    precios
+     *                    }
+     */
 
-    /**@AfterMethod
-    public void tearDown() {
-        if (webDriver != null) {
-            webDriver.quit();
-        }
-    }*/
+    /**
+     * @AfterMethod
+     *              public void tearDown() {
+     *              if (webDriver != null) {
+     *              webDriver.quit();
+     *              }
+     *              }
+     */
 }
