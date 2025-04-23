@@ -1,16 +1,23 @@
 package tests;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
+import java.time.Duration;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import pages.*;
-import utils.CSVDataProvider;
 
-import java.time.Duration;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import pages.BasePage;
+import pages.CompraPage;
+import pages.HomePage;
+import pages.IntroduceTusDatosPage;
+import pages.PasarelaPagoPage;
+import pages.PersonalizaTuViajePage;
+import pages.SeleccionarTuViajePage;
+import utils.CSVDataProvider;
+import utils.TemporaryDataStore;
 
 public class InvalidCardPaymentTest {
     // Instances
@@ -23,8 +30,6 @@ public class InvalidCardPaymentTest {
     private CompraPage compraPage;
     private PasarelaPagoPage pasarelaPagoPage;
 
-    // Variable global para el precio total del trayecto
-    String totalPriceTrip = "";
     // Variables and Constants
     private final Duration TIMEOUT = Duration.ofSeconds(30);
 
@@ -87,7 +92,9 @@ public class InvalidCardPaymentTest {
         seleccionarTuViajePage.verifyNumberOfTravelers();
         seleccionarTuViajePage.verifyFareIsBasic();
 
-        totalPriceTrip = seleccionarTuViajePage.verifyFareAndTotalPricesAreEquals();
+        String totalPriceTrip = seleccionarTuViajePage.verifyFareAndTotalPricesAreEquals();
+        TemporaryDataStore.getInstance().set("totalPriceTrip", totalPriceTrip); // Guardar el precio total
+
         seleccionarTuViajePage.clickSelectButton();
         seleccionarTuViajePage.popUpFareAppears();
         seleccionarTuViajePage.linkContinueSameFareAppears();
@@ -103,11 +110,11 @@ public class InvalidCardPaymentTest {
         introduceTusDatosPage.writeEmailField(email);  // "test@qa.com"
         introduceTusDatosPage.writePhoneField(phone);  // "696824570"
 
-        introduceTusDatosPage.verifyTotalPriceData(totalPriceTrip);
+        introduceTusDatosPage.verifyTotalPriceData((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
         introduceTusDatosPage.clickPersonalizeTrip();
 
         personalizaTuViajePage.verifyYouAreInPersonalizedYourTravelPage();
-        personalizaTuViajePage.verifyTotalPersonalizePrice(totalPriceTrip);
+        personalizaTuViajePage.verifyTotalPersonalizePrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
         personalizaTuViajePage.continueWithPurchase();
 
         compraPage.verifyYouAreInCompraPage();
@@ -115,11 +122,11 @@ public class InvalidCardPaymentTest {
         compraPage.writePhoneField(phone);
         compraPage.clickPurchaseCard();
         compraPage.clickPurchaseCondition();
-        compraPage.verifyTotalCompraPrice(totalPriceTrip);
+        compraPage.verifyTotalCompraPrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
         compraPage.clickContinuarCompra();
 
         pasarelaPagoPage.verifyYouAreInPasarelaPagoPage();
-        pasarelaPagoPage.verifyTotalPricePasarelaPago(totalPriceTrip);
+        pasarelaPagoPage.verifyTotalPricePasarelaPago((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
 
         // Usar datos del CSV para información de pago
         pasarelaPagoPage.typeBankCard(card);  // "4000 0000 0000 1000"

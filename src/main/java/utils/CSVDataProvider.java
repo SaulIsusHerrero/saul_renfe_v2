@@ -5,13 +5,11 @@ import com.opencsv.exceptions.CsvException;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
 public class CSVDataProvider {
-    private static final String BASE_PATH = "C:/Users/sisus_amaris.com/Desktop/repositorios/saul_renfe-main/src/main/java/utils/data/";
-
+    private static final String BASE_PATH = Paths.get("src", "main", "java", "utils", "data").toAbsolutePath().toString() + "/";
     /**
      * Lee datos de pasajeros desde el archivo CSV correspondiente
      */

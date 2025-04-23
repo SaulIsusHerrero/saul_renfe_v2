@@ -54,4 +54,19 @@
             <version>5.7.1</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <testSourceDirectory>src/main/java/tests</testSourceDirectory>
+        <plugins>
+            <!-- Ensure the Maven Surefire Plugin is configured -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <testSourceDirectory>src/main/java/tests</testSourceDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
