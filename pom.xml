@@ -20,12 +20,6 @@
             <artifactId>testng</artifactId>
             <version>7.10.2</version>
         </dependency>
-        <!-- WebDriverManager (para manejar Chromedriver automáticamente) -->
-        <dependency>
-            <groupId>io.github.bonigarcia</groupId>
-            <artifactId>webdrivermanager</artifactId>
-            <version>5.9.1</version> <!-- Usa la última versión disponible -->
-        </dependency>
         <!-- Dependencia de Selenium -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
@@ -52,6 +46,12 @@
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
             <version>5.7.1</version>
+        </dependency>
+        <!-- WebDriverManager(para manejar los drivers de los browsers automáticamente) -->
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>5.9.1</version> <!-- Usa la última versión disponible -->
         </dependency>
     </dependencies>
 
