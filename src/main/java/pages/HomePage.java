@@ -5,6 +5,13 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.util.Locale;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 public class HomePage extends BasePage {
     // Locators
@@ -13,6 +20,9 @@ public class HomePage extends BasePage {
     private By dateDepartureInput = By.xpath("//input[@id='first-input']");
     private By onlyDepartureRadioButtonLabel = By.xpath("//label[@for='trip-go']");
     private By onlyDepartureRadioButtonInput = By.xpath("//input[@id='trip-go']");
+    private By nextMonthButton = By.xpath("//button[contains(@class, 'lightpick__next-action')]");
+    private By targetDayButton = By.xpath("//div[@class='lightpick__day is-available ']");
+    private By monthYearLabel = By.cssSelector("span.rf-daterange-picker-alternative__month-label");
     private By acceptButtonLocator = By.xpath("//button[contains(text(),'Aceptar')]");
     private By buscarBilleteLocator = By.xpath("//button[@title='Buscar billete']");
 
@@ -22,7 +32,7 @@ public class HomePage extends BasePage {
     //Constructor
     public HomePage(WebDriver webDriver) {
         super(webDriver); //Calls to the constructor from parent class and their variable
-        this.webDriver = webDriver; //Current class instance
+        this.webDriver = webDriver; //Current instance
     }
 
     // Methods
@@ -80,11 +90,40 @@ public class HomePage extends BasePage {
     }
 
     /**
+     * Selecciona la fecha que es 15 días después del día actual en el datepicker
+     * Navega por los meses si es necesario y selecciona el día correspondiente
+     */
+
+    public void selectDepartureDate15DaysLater() throws InterruptedException {
+        LocalDate targetDate = LocalDate.now().plusDays(15);
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEE. dd/MM/yy", new Locale("es", "ES"));
+        String targetDateText = targetDate.format(dateFormatter).toLowerCase();
+        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
+        // Navigate to the correct month
+        DateTimeFormatter monthYearFormatter = DateTimeFormatter.ofPattern("MMMM yyyy", new Locale("es", "ES"));
+        while (true) {
+        String dateLabel = webDriver.findElement(monthYearLabel).getText().toLowerCase();
+        if (dateLabel.contains(targetDate.getMonth().getDisplayName(TextStyle.FULL, new Locale("es", "ES")).toLowerCase())) {
+        break;
+        }
+        webDriver.findElement(nextMonthButton).click();
+         wait.until(ExpectedConditions.visibilityOfElementLocated(monthYearLabel));
+    }
+
+    // Select the correct day
+    String dayXpath = String.format("//div[contains(@class, 'lightpick__day') and text()='%d']", targetDate.getDayOfMonth());
+    WebElement dayElement = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(dayXpath)));
+
+    // Scroll into view and click
+    ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", dayElement);
+    dayElement.click();
+    }
+
+    /**
      * Method to click the 'Accept' button on the calendar in Home page.
      */
     public void clickAcceptButton() {
         waitUntilElementIsDisplayed(acceptButtonLocator, TIMEOUT);
-        scrollElementIntoView(acceptButtonLocator);
         clickElement(acceptButtonLocator);
     }
 
@@ -96,4 +135,5 @@ public class HomePage extends BasePage {
         scrollElementIntoView(buscarBilleteLocator);
         clickElement(buscarBilleteLocator);
     }
+
 }
