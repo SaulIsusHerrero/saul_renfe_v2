@@ -2,6 +2,7 @@ package tests;
 
 import java.time.Duration;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -9,6 +10,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.*;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -19,6 +21,9 @@ import utils.CSVDataProvider;
 import utils.TemporaryDataStore;
 
 public class InvalidCardPaymentTest {
+    //Locators
+    private By popUpError = By.xpath("//div[@id='myModalBody']//li[contains(text(), 'Tarjeta no soportada (RS18)')]");
+
     private WebDriver webDriver;
     private BasePage basePage;
     private HomePage homePage;
@@ -84,9 +89,8 @@ public class InvalidCardPaymentTest {
             String email,
             String phone,
             String card,
-            String expiration,
+            String expirationDate,
             String cvv) {
-
         basePage.clickAcceptAllCookiesButton();
         homePage.enterOrigin(originStation);
         homePage.enterDestination(destinationStation);
@@ -101,8 +105,8 @@ public class InvalidCardPaymentTest {
         String totalPriceTrip = seleccionarTuViajePage.verifyFareAndTotalPricesAreEquals();
         TemporaryDataStore.getInstance().set("totalPriceTrip", totalPriceTrip);
         seleccionarTuViajePage.clickSelectButton();
-        seleccionarTuViajePage.popUpFareAppears();
         seleccionarTuViajePage.linkContinueSameFareAppears();
+        seleccionarTuViajePage.popUpFareAppears();
         seleccionarTuViajePage.clickLinkContinueSameFare();
         introduceTusDatosPage.verifyYouAreInIntroduceYourDataPage();
         introduceTusDatosPage.writeFirstNameField(firstName);
@@ -114,29 +118,31 @@ public class InvalidCardPaymentTest {
         introduceTusDatosPage.verifyTotalPriceData((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
         introduceTusDatosPage.clickPersonalizeTrip();
         personalizaTuViajePage.verifyYouAreInPersonalizedYourTravelPage();
-        personalizaTuViajePage.verifyTotalPersonalizePrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
         personalizaTuViajePage.continueWithPurchase();
         WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10)); // espera explicita para Firefox
+        personalizaTuViajePage.verifyTotalPersonalizePrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
         compraPage.verifyYouAreInCompraPage();
         wait = new WebDriverWait(webDriver, Duration.ofSeconds(10)); // espera explicita para Firefox
         compraPage.typeEmail(email);
         compraPage.writePhoneField(phone);
         compraPage.clickPurchaseCard();
+        compraPage.clickNewCard();
         compraPage.clickPurchaseCondition();
         compraPage.verifyTotalCompraPrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
         compraPage.clickContinuarCompra();
         pasarelaPagoPage.verifyYouAreInPasarelaPagoPage();
         pasarelaPagoPage.verifyTotalPricePasarelaPago((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
         pasarelaPagoPage.typeBankCard(card);
-        pasarelaPagoPage.typeExpirationDate(expiration);
+        pasarelaPagoPage.typeExpirationDate(expirationDate);
         pasarelaPagoPage.typeCVV(cvv);
         pasarelaPagoPage.clickPaymentButton();
+        Assert.assertTrue(true, String.valueOf(popUpError));
     }
 
-    //@AfterMethod
-    //public void tearDown() {
-        //if (webDriver != null) {
-            //webDriver.quit();
-        //}
-    //}
+    @AfterMethod
+    public void tearDown() {
+        if (webDriver != null) {
+            webDriver.quit();
+        }
+    }
 }

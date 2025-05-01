@@ -22,7 +22,7 @@ public class SeleccionarTuViajePage extends BasePage {
     private By totalPriceLocator = By.xpath("(//span[@id='totalTrayectoBanner'])[1]");
     private By btnSeleccionar = By.xpath("(//button[@id='btnSeleccionar'])[1]");
     private By popUpChangeFare = By.xpath("//button[@id='closeConfirmacionFareUpgrade' and " + "contains(@class, 'close') and " + "not(contains(@style, 'display: none'))]");
-    private By linkContinueSameFare = By.cssSelector("p.link-fareUpg[id='aceptarConfirmacionFareUpgrade']");
+    private By linkContinueSameFare = By.xpath("//div/p[@class and contains(text(), 'No')]");
 
     //Constructor
     public SeleccionarTuViajePage(WebDriver webDriver) {
@@ -48,6 +48,7 @@ public class SeleccionarTuViajePage extends BasePage {
         boolean control = true;
 
         while (control) {
+            Assert.assertTrue(control);
             // Encuentra la lista de trenes disponibles
             List<WebElement> trainList = webDriver.findElements(trainAvailable);
             List<WebElement> trainFare = webDriver.findElements(trainAvailableBasicFare);
@@ -64,7 +65,7 @@ public class SeleccionarTuViajePage extends BasePage {
                 scrollElementIntoViewElement(firstBasicFare);
                 wait.until(ExpectedConditions.visibilityOf(firstBasicFare));
                 wait.until(ExpectedConditions.elementToBeClickable(firstBasicFare));
-                //click con JavascriptExecutor para que no sea interceptado.
+                //click a la tarifa Básico con JavascriptExecutor para que no sea interceptado.
                 ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", firstBasicFare);
                 control = false;
             } else {
@@ -74,6 +75,8 @@ public class SeleccionarTuViajePage extends BasePage {
             }
         }
     }
+
+
 
     /**
      * Verifies the number of travelers for the trip in the semimodal
@@ -122,7 +125,7 @@ public class SeleccionarTuViajePage extends BasePage {
     public void popUpFareAppears() {
         WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
 
-        // Assert 1: Verify element exists in DOM (presence)
+        // Assert 1: Verify the element exists in DOM (presence)
         try {
             wait.until(ExpectedConditions.presenceOfElementLocated(popUpChangeFare));
             System.out.println("✅ El Pop-up existe en el DOM");
@@ -130,7 +133,7 @@ public class SeleccionarTuViajePage extends BasePage {
             Assert.fail("❌ El Pop-up NO existe en el DOM");
         }
 
-        // Assert 2: Verify element is actually visible on screen
+        // Assert 2: Verify the element is actually visible on screen
         try {
             wait.until(ExpectedConditions.visibilityOfElementLocated(popUpChangeFare));
             System.out.println("✅ El Pop-up es visible en pantalla");
@@ -139,8 +142,9 @@ public class SeleccionarTuViajePage extends BasePage {
         }
     }
 
+
     /**
-     * Verifica que el enlace "Continuar con Básico" existe en el DOM y es visible en pantalla
+     * Verifica que el enlace "No..." existe en el DOM y es visible en pantalla
      */
     public void linkContinueSameFareAppears() {
         WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));

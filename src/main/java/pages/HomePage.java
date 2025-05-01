@@ -21,7 +21,6 @@ public class HomePage extends BasePage {
     private By onlyDepartureRadioButtonLabel = By.xpath("//label[@for='trip-go']");
     private By onlyDepartureRadioButtonInput = By.xpath("//input[@id='trip-go']");
     private By nextMonthButton = By.xpath("//button[contains(@class, 'lightpick__next-action')]");
-    private By targetDayButton = By.xpath("//div[@class='lightpick__day is-available ']");
     private By monthYearLabel = By.cssSelector("span.rf-daterange-picker-alternative__month-label");
     private By acceptButtonLocator = By.xpath("//button[contains(text(),'Aceptar')]");
     private By buscarBilleteLocator = By.xpath("//button[@title='Buscar billete']");
@@ -38,14 +37,14 @@ public class HomePage extends BasePage {
     // Methods
     /**
      * Types the trip origin
-     * @param origin
+     * @param originStation
      */
-    public void enterOrigin(String origin) {
+    public void enterOrigin(String originStation) {
         WebElement originInput = webDriver.findElement(originInputLocator);
 
         //Enter the destination
         originInput.click();
-        originInput.sendKeys(origin);
+        originInput.sendKeys(originStation);
         originInput.sendKeys(Keys.DOWN);
         originInput.sendKeys(Keys.ENTER);
 
@@ -55,14 +54,14 @@ public class HomePage extends BasePage {
 
     /**
      * Types the trip destination
-     * @param destination
+     * @param destinationStation
      */
-    public void enterDestination(String destination) {
+    public void enterDestination(String destinationStation) {
         WebElement destinationInput = webDriver.findElement(destinationInputLocator);
 
         //Enter the destination
         destinationInput.click();
-        destinationInput.sendKeys(destination);
+        destinationInput.sendKeys(destinationStation);
         destinationInput.sendKeys(Keys.DOWN);
         destinationInput.sendKeys(Keys.ENTER);
 
@@ -94,13 +93,11 @@ public class HomePage extends BasePage {
      * Navega por los meses si es necesario y selecciona el día correspondiente
      */
 
-    public void selectDepartureDate15DaysLater() throws InterruptedException {
+    public void selectDepartureDate15DaysLater(){
         LocalDate targetDate = LocalDate.now().plusDays(15);
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEE. dd/MM/yy", new Locale("es", "ES"));
-        String targetDateText = targetDate.format(dateFormatter).toLowerCase();
         WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
         // Navigate to the correct month
-        DateTimeFormatter monthYearFormatter = DateTimeFormatter.ofPattern("MMMM yyyy", new Locale("es", "ES"));
         while (true) {
         String dateLabel = webDriver.findElement(monthYearLabel).getText().toLowerCase();
         if (dateLabel.contains(targetDate.getMonth().getDisplayName(TextStyle.FULL, new Locale("es", "ES")).toLowerCase())) {
@@ -123,6 +120,7 @@ public class HomePage extends BasePage {
      * Method to click the 'Accept' button on the calendar in Home page.
      */
     public void clickAcceptButton() {
+        scrollElementIntoView(acceptButtonLocator);
         waitUntilElementIsDisplayed(acceptButtonLocator, TIMEOUT);
         clickElement(acceptButtonLocator);
     }

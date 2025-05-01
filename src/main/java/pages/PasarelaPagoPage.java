@@ -60,11 +60,11 @@ public class PasarelaPagoPage extends BasePage {
 
     /**
      * Type the Expiration Date in the textbox on the "Pasarela de pago" page.
-     * @param expiration as a string
+     * @param expirationDate as a string
      */
-    public void typeExpirationDate(String expiration){
+    public void typeExpirationDate(String expirationDate){
         waitUntilElementIsDisplayed(expirationField, Duration.ofSeconds(5));
-        setElementText(expirationField, expiration);
+        setElementText(expirationField, expirationDate);
     }
 
     /**
@@ -92,7 +92,7 @@ public class PasarelaPagoPage extends BasePage {
             Assert.fail("❌ El Pop-up NO existe en el DOM");
         }
 
-        // Assert 2: Verify element is actually visible on screen
+        // Assert 2: Verify the element is actually visible on screen
         try {
             wait.until(ExpectedConditions.visibilityOfElementLocated(popUpError));
             System.out.println("✅ El Pop-up con el error de tarjeta invalida (RS18) es visible en pantalla");

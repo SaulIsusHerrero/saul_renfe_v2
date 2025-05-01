@@ -116,6 +116,7 @@ public class IntroduceTusDatosPage extends BasePage {
      * Clic "Personalizar viaje" button
      */
     public void clickPersonalizeTrip() {
+        scrollElementIntoView(btnPersonalizar);
         waitUntilElementIsDisplayed(btnPersonalizar, Duration.ofSeconds(5));
         clickElement(btnPersonalizar);
     }

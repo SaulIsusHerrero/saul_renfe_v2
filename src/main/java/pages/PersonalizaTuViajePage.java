@@ -31,6 +31,15 @@ public class PersonalizaTuViajePage extends BasePage {
     }
 
     /**
+     * Clicks on continues with the purchase
+     */
+    public void continueWithPurchase(){
+        waitUntilElementIsDisplayed(btnContinuarPersonalize, Duration.ofSeconds(15));
+        scrollElementIntoView(btnContinuarPersonalize);
+        clickElement(btnContinuarPersonalize);
+    }
+
+    /**
      * Verify the ticket price.
      * @param totalPriceTrip Precio obtenido previamente, ya normalizado
      */
@@ -44,15 +53,6 @@ public class PersonalizaTuViajePage extends BasePage {
         totalPriceTrip = normalizePrice(totalPriceTrip);
 
         Assert.assertEquals(totalPricePersonalize, totalPriceTrip);
-    }
-
-    /**
-     * Clicks on continues with the purchase
-     */
-    public void continueWithPurchase(){
-        waitUntilElementIsDisplayed(btnContinuarPersonalize, Duration.ofSeconds(15));
-        scrollElementIntoView(btnContinuarPersonalize);
-        clickElement(btnContinuarPersonalize);
     }
 
 }

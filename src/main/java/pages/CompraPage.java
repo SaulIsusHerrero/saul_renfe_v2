@@ -14,6 +14,7 @@ public class CompraPage extends BasePage {
     private By emailField = By.xpath("//input[@id='inputEmail']");
     private By telefonoField = By.xpath("//input[@id='telefonoComprador']");
     private By cardInput = By.xpath("//input[@id='datosPago_cdgoFormaPago_tarjetaRedSys']");
+    private By newCard = By.cssSelector("button.target-puntos-renfe.selecTarjeta");
     private By totalPriceCompraLocator = By.cssSelector("span#totalTrayecto.dinero-total");
     private By conditionsCheckboxInput = By.xpath("//input[@id='aceptarCondiciones']");
     private By btnContinuarCompra = By.cssSelector("button#butonPagar.pagar-a");
@@ -64,6 +65,15 @@ public class CompraPage extends BasePage {
     }
 
     /**
+     * Clicks on new card
+     */
+     public void clickNewCard(){
+         scrollElementIntoView(newCard);
+         waitUntilElementIsDisplayed(newCard, Duration.ofSeconds(15));
+         clickElement(newCard);
+     }
+
+    /**
      * Marks the "Conditions of purchase" checkbox as selected or unselected in the "Compra" page
      *
      */
@@ -72,14 +82,6 @@ public class CompraPage extends BasePage {
        WebElement conditions = webDriver.findElement(conditionsCheckboxInput);
        JavascriptExecutor js = (JavascriptExecutor) webDriver;
        js.executeScript("arguments[0].click();", conditions);
-    }
-
-    /**
-     * clicks in the button continue with the Purchase on the "Compra" page
-     */
-    public void clickContinuarCompra(){
-        waitUntilElementIsDisplayed(btnContinuarCompra, Duration.ofSeconds(15));
-        clickElement(btnContinuarCompra);
     }
 
     /**
@@ -96,6 +98,14 @@ public class CompraPage extends BasePage {
         totalPriceTrip = normalizePrice(totalPriceTrip);
 
         Assert.assertEquals(totalPriceCompra, totalPriceTrip);
+    }
+
+    /**
+     * clicks in the button continue with the Purchase on the "Compra" page
+     */
+    public void clickContinuarCompra(){
+        waitUntilElementIsDisplayed(btnContinuarCompra, Duration.ofSeconds(15));
+        clickElement(btnContinuarCompra);
     }
 
 }

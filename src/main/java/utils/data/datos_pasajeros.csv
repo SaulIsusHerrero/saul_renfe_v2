@@ -1,2 +1,2 @@
-﻿originStation,destinationStation,firstName,primerApellido,segundoApellido,dni,email,phone,card,expiration,cvv
+﻿originStation,destinationStation,firstName,primerApellido,segundoApellido,dni,email,phone,card,expirationDate,cvv
 VALENCIA JOAQUÍN SOROLLA,BARCELONA-SANTS,John,Doe,López,46131651E,test@qa.com,696824570,4000 0000 0000 1000,03/30,990
