@@ -13,6 +13,7 @@ import pages.*;
 import utils.CSVDataProvider;
 import utils.TemporaryDataStore;
 import java.time.LocalDate;
+import steps.Steps; // Assuming Steps is in the 'utils' package. Update the package name if necessary.
 
 import java.time.Duration;
 
@@ -25,6 +26,7 @@ public class InvalidCardPaymentTest15dmas {
     private PersonalizaTuViajePage personalizaTuViajePage;
     private CompraPage compraPage;
     private PasarelaPagoPage pasarelaPagoPage;
+    private Steps steps;
 
     @DataProvider(name = "paymentData")
     public Object[][] getPaymentData() {
@@ -69,6 +71,8 @@ public class InvalidCardPaymentTest15dmas {
         personalizaTuViajePage = new PersonalizaTuViajePage(webDriver);
         compraPage = new CompraPage(webDriver);
         pasarelaPagoPage = new PasarelaPagoPage(webDriver);
+        steps = new Steps(webDriver);
+
     }
 
     @Test(dataProvider = "paymentData")
@@ -85,14 +89,17 @@ public class InvalidCardPaymentTest15dmas {
             String expiration,
             String cvv
             ) throws InterruptedException {
-        basePage.clickAcceptAllCookiesButton();
-        homePage.enterOrigin(originStation);
-        homePage.enterDestination(destinationStation);
-        homePage.selectDepartureDate();
-        homePage.clickSoloIdaButtonSelected(true);
-        //click en el datepicker 15 más respecto al actual
-        homePage.selectDepartureDate15DaysLater();
-        homePage.clickAcceptButton();
+
+
+         //Implementación de ejemplo de clase steps:
+         TemporaryDataStore.getInstance().set("testCase", "InvalidCardPaymentTest15dmas");
+         
+         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
+         steps.selectDepartureDate();
+         
+         //Continua haciendo mas steps, dividiendo el codigo en bloques que siempre se ejecuten juntos, y que se puedan reutilizar en otros test :)
+        
+      
         homePage.clickSearchTicketButton();
         seleccionarTuViajePage.verifyYouAreInSelecionaTuViaje();
         seleccionarTuViajePage.selectFirstTrainAvailableAndBasicFare();
