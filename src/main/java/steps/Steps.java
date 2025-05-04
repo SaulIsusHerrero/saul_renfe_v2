@@ -1,41 +1,49 @@
 package steps;
 
 import org.openqa.selenium.WebDriver;
-
 import pages.BasePage;
 import pages.HomePage;
 import utils.TemporaryDataStore;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class Steps extends BasePage {
+    private final WebDriver webDriver;
+    private final HomePage homePage;
 
     public Steps(WebDriver webDriver) {
-        // Empty constructor
-        super(webDriver); //Calls to the constructor from parent class and their variable
-        this.webDriver = webDriver; //Current instance
+        super(webDriver);
+        this.webDriver = webDriver;
+        this.homePage = new HomePage(webDriver);
     }
 
     public void performSearchOriginAndDestinationStation(String originStation, String destinationStation) {
-
-        new BasePage(webDriver).clickAcceptAllCookiesButton();
-        HomePage homePage = new HomePage(webDriver);
-        homePage.enterOrigin(originStation);
-        homePage.enterDestination(destinationStation);
-
+        homePage.clickAcceptAllCookiesButton();
+        homePage.enterOrigin(originStation, originStation);  // Asume que el valor esperado es igual al ingresado
+        homePage.enterDestination(destinationStation, destinationStation);
     }
 
-    public void selectDepartureDate() throws InterruptedException {
-
-        HomePage homePage = new HomePage(webDriver);
+    public void selectDepartureDate(int defaultDaysLater) {
         homePage.selectDepartureDate();
-        homePage.clickSoloIdaButtonSelected(true); //From the moment, all test cases requires only one way ticket
+        homePage.clickSoloIdaButtonSelected(true);
 
-        //In case test: InvalidCardPaymentTest15dmas
-        if("InvalidCardPaymentTest15dmas".equalsIgnoreCase((String) TemporaryDataStore.getInstance().get("totalPriceTrip"))) {
-            homePage.selectDepartureDate15DaysLater();  //click en el datepicker 15 más respecto al actual
+        String targetDate = (String) TemporaryDataStore.getInstance().get("targetDate");
+        if (Boolean.parseBoolean(targetDate = "5")) {
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                LocalDate parsedDate = LocalDate.parse(targetDate, formatter);
+                homePage.selectDepartureDate5DaysLater(defaultDaysLater);wait((5));
+                parsedDate.until(LocalDate.now()).getDays();
+            } catch (DateTimeParseException e) {
+                throw new IllegalArgumentException("Formato de fecha inválido. Use dd/MM/yyyy");
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         } else {
-            System.out.println("El precio del trayecto no es 0");
+            homePage.selectDepartureDate15DaysLater();
         }
-        
-        homePage.clickAcceptButton();
+
     }
+
 }

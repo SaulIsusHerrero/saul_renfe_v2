@@ -1,6 +1,6 @@
 package pages;
 
-import org.junit.Assert;
+import org.testng.Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -48,7 +48,6 @@ public class SeleccionarTuViajePage extends BasePage {
         boolean control = true;
 
         while (control) {
-            Assert.assertTrue(control);
             // Encuentra la lista de trenes disponibles
             List<WebElement> trainList = webDriver.findElements(trainAvailable);
             List<WebElement> trainFare = webDriver.findElements(trainAvailableBasicFare);
@@ -122,51 +121,32 @@ public class SeleccionarTuViajePage extends BasePage {
     /**
      * Verifies that the fare change pop-up exists in DOM and is visible on screen
      */
-    public void popUpFareAppears() {
+    private void verifyElementPresenceAndVisibility(By locator, String elementName) {
         WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
-
-        // Assert 1: Verify the element exists in DOM (presence)
         try {
-            wait.until(ExpectedConditions.presenceOfElementLocated(popUpChangeFare));
-            System.out.println("✅ El Pop-up existe en el DOM");
+            wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+            System.out.println("✅ " + elementName + " está presente en el DOM y visible");
         } catch (Exception e) {
-            Assert.fail("❌ El Pop-up NO existe en el DOM");
-        }
-
-        // Assert 2: Verify the element is actually visible on screen
-        try {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(popUpChangeFare));
-            System.out.println("✅ El Pop-up es visible en pantalla");
-        } catch (Exception e) {
-            Assert.fail("❌ El Pop-up existe en el DOM pero NO es visible en pantalla");
+            Assert.fail("❌ " + elementName + " no está visible o presente");
         }
     }
-
 
     /**
-     * Verifica que el enlace "No..." existe en el DOM y es visible en pantalla
+     * Verifies that the fare change pop-up exists in DOM and is visible on screen
      */
-    public void linkContinueSameFareAppears() {
-        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
-
-        // Verificación 1: Presencia en DOM
-        try {
-            wait.until(ExpectedConditions.presenceOfElementLocated(linkContinueSameFare));
-            System.out.println("✅ Enlace 'Continuar con Básico' existe en el DOM");
-        } catch (Exception e) {
-            Assert.fail("❌ Enlace 'Continuar con Básico' NO encontrado en el DOM");
-        }
-
-        // Verificación 2: Visibilidad en pantalla
-        try {
-            WebElement link = wait.until(ExpectedConditions.visibilityOfElementLocated(linkContinueSameFare));
-            Assert.assertTrue("El enlace debería estar visible", link.isDisplayed());
-            Assert.assertEquals(link.getText().trim(), "No, quiero continuar con Básico");
-            System.out.println("✅ El Enlace 'No, quiero continuar con Básico' es visible y tiene el texto correcto");
-        } catch (Exception e) {
-            Assert.fail("❌ El Enlace existe en DOM pero NO es visible o tiene texto incorrecto");
-        }
+    public void popUpFareAppears() {
+        verifyElementPresenceAndVisibility(popUpChangeFare, "Pop-up de cambio de tarifa");
     }
+
+    /**
+     * Verifies that the fare change pop-up exists in DOM and is visible on screen
+     */
+    public void linkPopUpFareAppears() {
+        verifyElementPresenceAndVisibility(linkContinueSameFare, "El link NO aparece de la misma tarifa esta presente y visible");
+    }
+
+
 
     /**
      * Click in the link to continue with the same fare

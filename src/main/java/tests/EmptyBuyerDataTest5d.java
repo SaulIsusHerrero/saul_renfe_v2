@@ -1,36 +1,31 @@
 package tests;
 
-import java.time.Duration;
-
-import org.openqa.selenium.By;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.*;
-
-import io.github.bonigarcia.wdm.WebDriverManager;
-
 import pages.*;
-import utils.CSVDataProvider;
+import steps.Steps;
 import utils.TemporaryDataStore;
+import utils.CSVDataProvider;
 
-public class InvalidCardPaymentTest {
+import java.time.Duration;
 
-    // Locators
-    private final By popUpError = By.xpath("//div[@id='myModalBody']//li[contains(text(), 'Tarjeta no soportada (RS18)')]");
-
+public class EmptyBuyerDataTest5d {
     private WebDriver webDriver;
+    private Steps steps;
+    private PersonalizaTuViajePage personalizaTuViajePage;
+    private CompraPage compraPage;
+    private IntroduceTusDatosPage introduceTusDatosPage;
     private BasePage basePage;
     private HomePage homePage;
     private SeleccionarTuViajePage seleccionarTuViajePage;
-    private IntroduceTusDatosPage introduceTusDatosPage;
-    private PersonalizaTuViajePage personalizaTuViajePage;
-    private CompraPage compraPage;
     private PasarelaPagoPage pasarelaPagoPage;
 
     @DataProvider(name = "paymentData")
@@ -69,6 +64,8 @@ public class InvalidCardPaymentTest {
         webDriver.manage().window().maximize();
         webDriver.get("https://www.renfe.com/es/es");
 
+        // Inicialización de páginas y steps
+        steps = new Steps(webDriver);
         basePage = new BasePage(webDriver);
         homePage = new HomePage(webDriver);
         seleccionarTuViajePage = new SeleccionarTuViajePage(webDriver);
@@ -79,29 +76,27 @@ public class InvalidCardPaymentTest {
     }
 
     @Test(dataProvider = "paymentData")
-    public void InvalidCardPaymentTest(
+    public void testEmptyBuyerData(
             String originStation,
-            String expectedValueOrigin,
             String destinationStation,
-            String expectedValueDestination,
+            int daysLater,
             String firstName,
             String primerApellido,
             String segundoApellido,
             String dni,
             String email,
-            String phone,
-            String card,
-            String expirationDate,
-            String cvv) {
-
-        basePage.clickAcceptAllCookiesButton();
-        homePage.enterOrigin(originStation, expectedValueOrigin);
-        homePage.enterDestination(destinationStation, expectedValueDestination);
-        homePage.selectDepartureDate();
+            String phone
+    )
+    {
+        // Configurar fecha 5 días después (formato validado)
+        steps.selectDepartureDate(5);
+        // Búsqueda de ruta y selección de fecha
+        steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
         homePage.clickSoloIdaButtonSelected(true);
+        //click en el datepicker 5 más respecto al actual
+        homePage.selectDepartureDate5DaysLater(daysLater);
         homePage.clickAcceptButton();
         homePage.clickSearchTicketButton();
-
         seleccionarTuViajePage.verifyYouAreInSelecionaTuViaje();
         seleccionarTuViajePage.selectFirstTrainAvailableAndBasicFare();
         seleccionarTuViajePage.verifyNumberOfTravelers();
@@ -109,10 +104,9 @@ public class InvalidCardPaymentTest {
         String totalPriceTrip = seleccionarTuViajePage.verifyFareAndTotalPricesAreEquals();
         TemporaryDataStore.getInstance().set("totalPriceTrip", totalPriceTrip);
         seleccionarTuViajePage.clickSelectButton();
-        seleccionarTuViajePage.linkPopUpFareAppears();
         seleccionarTuViajePage.popUpFareAppears();
+        seleccionarTuViajePage.linkPopUpFareAppears();
         seleccionarTuViajePage.clickLinkContinueSameFare();
-
         introduceTusDatosPage.verifyYouAreInIntroduceYourDataPage();
         introduceTusDatosPage.writeFirstNameField(firstName);
         introduceTusDatosPage.writeFirstSurnameField(primerApellido);
@@ -120,33 +114,23 @@ public class InvalidCardPaymentTest {
         introduceTusDatosPage.writeDNIField(dni);
         introduceTusDatosPage.writeEmailField(email);
         introduceTusDatosPage.writePhoneField(phone);
-        introduceTusDatosPage.verifyTotalPriceData(totalPriceTrip);
+        introduceTusDatosPage.verifyTotalPriceData((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
         introduceTusDatosPage.clickPersonalizeTrip();
-
         personalizaTuViajePage.verifyYouAreInPersonalizedYourTravelPage();
+        personalizaTuViajePage.verifyTotalPersonalizePrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
         personalizaTuViajePage.continueWithPurchase();
-        personalizaTuViajePage.verifyTotalPersonalizePrice(totalPriceTrip);
-
+        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10)); // espera explicita para Firefox
         compraPage.verifyYouAreInCompraPage();
+        wait = new WebDriverWait(webDriver, Duration.ofSeconds(10)); // espera explicita para Firefox
         compraPage.typeEmail(email);
         compraPage.writePhoneField(phone);
         compraPage.clickPurchaseCard();
-        compraPage.clickNewCard();
         compraPage.clickPurchaseCondition();
-        compraPage.verifyTotalCompraPrice(totalPriceTrip);
+        compraPage.verifyTotalCompraPrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
         compraPage.clickContinuarCompra();
-
-        pasarelaPagoPage.verifyYouAreInPasarelaPagoPage();
-        pasarelaPagoPage.verifyTotalPricePasarelaPago(totalPriceTrip);
-        pasarelaPagoPage.typeBankCard(card);
-        pasarelaPagoPage.typeExpirationDate(expirationDate);
-        pasarelaPagoPage.typeCVV(cvv);
-        pasarelaPagoPage.clickPaymentButton();
-
-        // Verificar si aparece el mensaje de error por tarjeta inválida
-        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
-        boolean isErrorVisible = wait.until(driver -> driver.findElements(popUpError).size() > 0);
-        Assert.assertTrue(isErrorVisible, "El mensaje de error por tarjeta inválida no apareció.");
+        //Verificar mensajes de error en campos obligatorios
+        compraPage.isErrorMessageDisplayed(true);
+        Assert.assertTrue(compraPage.isErrorMessageDisplayed(true), "No se mostraron todos los mensajes de error esperados");
     }
 
     @AfterMethod
@@ -154,5 +138,6 @@ public class InvalidCardPaymentTest {
         if (webDriver != null) {
             webDriver.quit();
         }
+        TemporaryDataStore.getInstance().clear();
     }
 }

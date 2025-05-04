@@ -1,6 +1,7 @@
 package tests;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -8,16 +9,20 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.*;
+
 import pages.*;
 import utils.CSVDataProvider;
 import utils.TemporaryDataStore;
-import java.time.LocalDate;
-import steps.Steps; // Assuming Steps is in the 'utils' package. Update the package name if necessary.
+import steps.Steps;
 
 import java.time.Duration;
 
-public class InvalidCardPaymentTest15dmas {
+public class InvalidDataTraveler15d {
+
+    private final By popUpError = By.xpath("//div[@id='myModalBody']//li[contains(text(), 'Tarjeta no soportada (RS18)')]");
+
     private WebDriver webDriver;
     private BasePage basePage;
     private HomePage homePage;
@@ -31,11 +36,6 @@ public class InvalidCardPaymentTest15dmas {
     @DataProvider(name = "paymentData")
     public Object[][] getPaymentData() {
         return CSVDataProvider.readDatosPasajeros();
-    }
-
-    @DataProvider(name = "routeData")
-    public Object[][] getRouteData() {
-        return CSVDataProvider.readPreciosTrayectos();
     }
 
     @BeforeMethod
@@ -64,6 +64,7 @@ public class InvalidCardPaymentTest15dmas {
         webDriver.manage().window().maximize();
         webDriver.get("https://www.renfe.com/es/es");
 
+        // Inicialización de páginas y steps
         basePage = new BasePage(webDriver);
         homePage = new HomePage(webDriver);
         seleccionarTuViajePage = new SeleccionarTuViajePage(webDriver);
@@ -72,7 +73,6 @@ public class InvalidCardPaymentTest15dmas {
         compraPage = new CompraPage(webDriver);
         pasarelaPagoPage = new PasarelaPagoPage(webDriver);
         steps = new Steps(webDriver);
-
     }
 
     @Test(dataProvider = "paymentData")
@@ -88,29 +88,27 @@ public class InvalidCardPaymentTest15dmas {
             String card,
             String expiration,
             String cvv
-            ) throws InterruptedException {
+    ) {
 
+        String totalPriceTrip = null;
+        TemporaryDataStore.getInstance().set("testCase", totalPriceTrip);
 
-         //Implementación de ejemplo de clase steps:
-         TemporaryDataStore.getInstance().set("testCase", "InvalidCardPaymentTest15dmas");
-         
-         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
-         steps.selectDepartureDate();
-         
-         //Continua haciendo mas steps, dividiendo el codigo en bloques que siempre se ejecuten juntos, y que se puedan reutilizar en otros test :)
-        
-      
+        // Bloques reutilizables (steps)
+        steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
+        steps.selectDepartureDate(15);
+
         homePage.clickSearchTicketButton();
         seleccionarTuViajePage.verifyYouAreInSelecionaTuViaje();
         seleccionarTuViajePage.selectFirstTrainAvailableAndBasicFare();
         seleccionarTuViajePage.verifyNumberOfTravelers();
         seleccionarTuViajePage.verifyFareIsBasic();
-        String totalPriceTrip = seleccionarTuViajePage.verifyFareAndTotalPricesAreEquals();
+        totalPriceTrip = seleccionarTuViajePage.verifyFareAndTotalPricesAreEquals();
         TemporaryDataStore.getInstance().set("totalPriceTrip", totalPriceTrip);
         seleccionarTuViajePage.clickSelectButton();
         seleccionarTuViajePage.popUpFareAppears();
-        seleccionarTuViajePage.linkContinueSameFareAppears();
+        seleccionarTuViajePage.linkPopUpFareAppears();
         seleccionarTuViajePage.clickLinkContinueSameFare();
+
         introduceTusDatosPage.verifyYouAreInIntroduceYourDataPage();
         introduceTusDatosPage.writeFirstNameField(firstName);
         introduceTusDatosPage.writeFirstSurnameField(primerApellido);
@@ -118,26 +116,32 @@ public class InvalidCardPaymentTest15dmas {
         introduceTusDatosPage.writeDNIField(dni);
         introduceTusDatosPage.writeEmailField(email);
         introduceTusDatosPage.writePhoneField(phone);
-        introduceTusDatosPage.verifyTotalPriceData((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
+        introduceTusDatosPage.verifyTotalPriceData(totalPriceTrip);
         introduceTusDatosPage.clickPersonalizeTrip();
+
         personalizaTuViajePage.verifyYouAreInPersonalizedYourTravelPage();
-        personalizaTuViajePage.verifyTotalPersonalizePrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
+        personalizaTuViajePage.verifyTotalPersonalizePrice(totalPriceTrip);
         personalizaTuViajePage.continueWithPurchase();
-        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10)); // espera explicita para Firefox
+
         compraPage.verifyYouAreInCompraPage();
-        wait = new WebDriverWait(webDriver, Duration.ofSeconds(10)); // espera explicita para Firefox
         compraPage.typeEmail(email);
         compraPage.writePhoneField(phone);
         compraPage.clickPurchaseCard();
         compraPage.clickPurchaseCondition();
-        compraPage.verifyTotalCompraPrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
+        compraPage.verifyTotalCompraPrice(totalPriceTrip);
         compraPage.clickContinuarCompra();
+
         pasarelaPagoPage.verifyYouAreInPasarelaPagoPage();
-        pasarelaPagoPage.verifyTotalPricePasarelaPago((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
+        pasarelaPagoPage.verifyTotalPricePasarelaPago(totalPriceTrip);
         pasarelaPagoPage.typeBankCard(card);
         pasarelaPagoPage.typeExpirationDate(expiration);
         pasarelaPagoPage.typeCVV(cvv);
         pasarelaPagoPage.clickPaymentButton();
+
+        // Validación de que aparece el mensaje de error por tarjeta inválida
+        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
+        boolean isErrorVisible = wait.until(driver -> driver.findElements(popUpError).size() > 0);
+        Assert.assertTrue(isErrorVisible, "El mensaje de tarjeta no válida (RS18) no apareció.");
     }
 
     @AfterMethod

@@ -7,7 +7,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.*;
-import org.testng.Assert;
+
 import java.time.Duration;
 
 public class BasePage {
@@ -101,13 +101,13 @@ public class BasePage {
 
     /**
      * Waits until an element is displayed in any Page.
+     *
      * @param locator By
-     * @param timeout long
+     * @param TIMEOUT
      */
-    public void waitUntilElementIsDisplayed(By locator, Duration timeout) {
-        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(5));
-        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-        Assert.assertTrue(element.isDisplayed(),"The element" + element + "is not displayed");
+    public void waitUntilElementIsDisplayed(By locator, Duration TIMEOUT) {
+        WebDriverWait wait = new WebDriverWait(webDriver, this.TIMEOUT);  // Usa la constante
+        wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
     /**
@@ -140,8 +140,8 @@ public class BasePage {
      */
     public String normalizePrice(String priceText) {
         return priceText.trim()
-                .replaceAll("\\s+", "")  // Elimina espacios
-                .replace(".", ",")       // Asegura coma como separador decimal
-                .replaceAll(",(\\d)€", ",$10€");  // Asegura dos decimales
+                .replaceAll("\\s+", "")
+                .replace(".", ",")
+                .replaceAll(",(\\d)€", ",$10€");
     }
 }

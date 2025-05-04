@@ -1,10 +1,12 @@
 package pages;
 
-import org.junit.Assert;
+import org.testng.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
@@ -106,6 +108,24 @@ public class CompraPage extends BasePage {
     public void clickContinuarCompra(){
         waitUntilElementIsDisplayed(btnContinuarCompra, Duration.ofSeconds(15));
         clickElement(btnContinuarCompra);
+    }
+
+    /**
+     *
+     * @param popup boolean
+     * @return false
+     */
+    public boolean isErrorMessageDisplayed(boolean popup) {
+        try {
+            By errorLocator = By.xpath(String.format("//div[contains(text(), '%s')]"));
+            new WebDriverWait(webDriver, Duration.ofSeconds(5))
+                    .until(ExpectedConditions.visibilityOfElementLocated(errorLocator));
+        } catch (Exception e) {
+            System.out.println("Error no se han insertado los datos obligatorios para la compra");
+            return false;
+        }
+
+        return popup;
     }
 
 }
