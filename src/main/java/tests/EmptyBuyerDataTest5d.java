@@ -30,7 +30,7 @@ public class EmptyBuyerDataTest5d {
 
     @DataProvider(name = "paymentData")
     public Object[][] getPaymentData() {
-        return CSVDataProvider.readDatosPasajerosBlanKDataPayment();
+        return CSVDataProvider.readDatosPasajerosBlankPaymentData();
     }
 
     @DataProvider(name = "routeData")
