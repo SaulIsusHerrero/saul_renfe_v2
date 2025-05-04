@@ -30,7 +30,7 @@ public class EmptyBuyerDataTest5d {
 
     @DataProvider(name = "paymentData")
     public Object[][] getPaymentData() {
-        return CSVDataProvider.readDatosPasajeros();
+        return CSVDataProvider.readDatosPasajerosBlanKDataPayment();
     }
 
     @DataProvider(name = "routeData")
@@ -89,7 +89,7 @@ public class EmptyBuyerDataTest5d {
     )
     {
         // Configurar fecha 5 días después (formato validado)
-        steps.selectDepartureDate(5);
+        steps.selectDepartureDate(daysLater);
         // Búsqueda de ruta y selección de fecha
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
         homePage.clickSoloIdaButtonSelected(true);

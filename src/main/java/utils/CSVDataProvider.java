@@ -18,6 +18,20 @@ public class CSVDataProvider {
     }
 
     /**
+     * Lee datos de pasajeros desde el archivo CSV correspondiente con un error.
+     */
+    public static Object[][] readDatosPasajerosError() {
+        return readCSV(BASE_PATH + "datos_pasajeros_error.csv");
+    }
+
+    /**
+     * Lee datos de pasajeros desde el archivo CSV correspondiente con 5 días hacia adelante en el viaje.
+     */
+    public static Object[][] readDatosPasajeros5() {
+        return readCSV(BASE_PATH + "datos_pasajeros_blank_payment_data.csv");
+    }
+
+    /**
      * Lee precios de trayectos desde el archivo CSV correspondiente
      */
     public static Object[][] readPreciosTrayectos() {

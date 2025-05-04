@@ -1,7 +1,6 @@
 package tests;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -21,8 +20,6 @@ import java.time.Duration;
 
 public class InvalidDataTraveler15d {
 
-    private final By popUpError = By.xpath("//div[@id='myModalBody']//li[contains(text(), 'Tarjeta no soportada (RS18)')]");
-
     private WebDriver webDriver;
     private BasePage basePage;
     private HomePage homePage;
@@ -35,7 +32,7 @@ public class InvalidDataTraveler15d {
 
     @DataProvider(name = "paymentData")
     public Object[][] getPaymentData() {
-        return CSVDataProvider.readDatosPasajeros();
+        return CSVDataProvider.readDatosPasajerosError();
     }
 
     @BeforeMethod

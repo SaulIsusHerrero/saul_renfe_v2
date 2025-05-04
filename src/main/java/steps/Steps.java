@@ -37,8 +37,6 @@ public class Steps extends BasePage {
                 parsedDate.until(LocalDate.now()).getDays();
             } catch (DateTimeParseException e) {
                 throw new IllegalArgumentException("Formato de fecha inválido. Use dd/MM/yyyy");
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
             }
         } else {
             homePage.selectDepartureDate15DaysLater();
