@@ -20,19 +20,15 @@ public class CSVDataProvider {
     /**
      * Lee datos de pasajeros desde el archivo CSV correspondiente con 15 días adelante en el viaje y con un error en el nombre del pasajero.
      */
-    public static Object[][] readDatosPasajerosError15d() {
-        return readCSV(BASE_PATH + "datos_pasajeros_error_15d.csv");
-    }
+    public static Object[][] readDatosPasajerosError15d() { return readCSV(BASE_PATH + "datos_pasajeros_error_15d.csv");}
 
     /**
      * Lee datos de pasajeros desde el archivo CSV correspondiente con 5 días hacia adelante en el viaje y sin datos de pago.
      */
-    public static Object[][] readDatosPasajerosBlankPaymentData5d() {
-        return readCSV(BASE_PATH + "datos_pasajeros_blank_payment_data_5d.csv");
-    }
+    public static Object[][] readDatosPasajerosBlankPaymentData5d() {return readCSV(BASE_PATH + "datos_pasajeros_blank_payment_data_5d.csv");}
 
     /**
-     * Lee precios de trayectos desde el archivo CSV correspondiente
+     * Lee precios de trayectos desde el archivo CSV correspondiente.
      */
     public static Object[][] readPreciosTrayectos() {
         return readCSV(BASE_PATH + "precios_trayectos.csv");
@@ -57,10 +53,10 @@ public class CSVDataProvider {
                 testData[i - startRow] = data.get(i);
             }
 
-            return testData;
         } catch (IOException | CsvException e) {
             throw new RuntimeException("Error al leer el archivo CSV: " + filePath, e);
         }
+        return new Object[0][];
     }
 
     /**
