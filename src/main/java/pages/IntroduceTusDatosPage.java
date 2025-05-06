@@ -9,7 +9,7 @@ import java.time.Duration;
 
 public class IntroduceTusDatosPage extends BasePage {
     //Locators
-    private By introduceTusDatosLabel = By.xpath("//span[contains(text(), 'Introduce tus datos') and not(ancestor::select[@disabled])]");
+    private By introduceTusDatosStepper = By.xpath("//ul[@class='stepper stepper-horizontal']//li[contains(@class, 'active')]//span[contains(text(), 'Introduce tus datos')]");
     private By firstNameField = By.xpath("//input[@id='nombre0']");
     private By firstSurnameField = By.xpath("//input[@id='apellido10']");
     private By secondSurnameField = By.xpath("//input[@id='apellido20']");
@@ -30,10 +30,8 @@ public class IntroduceTusDatosPage extends BasePage {
      * Assert que estoy en la Page y esta habilitada “introduce tus datos”
      */
     public void verifyYouAreInIntroduceYourDataPage() {
-        waitUntilElementIsDisplayed(introduceTusDatosLabel, Duration.ofSeconds(15));
-        WebElement element = webDriver.findElement(introduceTusDatosLabel);
-        Assert.assertEquals("Introduce tus datos", element.getText());
-        Assert.assertTrue(element.isEnabled());
+        waitUntilElementIsDisplayed(introduceTusDatosStepper, Duration.ofSeconds(10));
+        Assert.assertTrue(webDriver.findElement(introduceTusDatosStepper).isEnabled(),"No está habilitado este step");
     }
 
     /**

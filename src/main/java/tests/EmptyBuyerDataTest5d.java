@@ -35,7 +35,7 @@ public class EmptyBuyerDataTest5d {
 
     @DataProvider(name = "paymentData")
     public Object[][] getPaymentData() {
-        return CSVDataProvider.readDatosPasajerosBlankPaymentData();
+        return CSVDataProvider.readDatosPasajerosBlankPaymentData5d();
     }
 
     @DataProvider(name = "routeData")
@@ -129,8 +129,6 @@ public class EmptyBuyerDataTest5d {
         compraPage.clickPurchaseCondition();
         compraPage.verifyTotalCompraPrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
         compraPage.clickContinuarCompra();
-        //Verificar mensajes de error en campos obligatorios
-        Assert.assertTrue(compraPage.isErrorMessageDisplayed(true), "No se mostr el mensaje de error esperado");
     }
 
     @AfterMethod

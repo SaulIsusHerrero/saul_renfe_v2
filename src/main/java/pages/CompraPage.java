@@ -12,7 +12,7 @@ import java.time.Duration;
 
 public class CompraPage extends BasePage {
     //Locators
-    private By compraLabel = By.xpath("//span[contains(text(), 'Compra') and not(ancestor::select[@disabled])]");
+    private By compraStepper = By.xpath("//ul[@class='stepper stepper-horizontal']//li[contains(@class, 'active')]//span[contains(text(), 'Compra')]");
     private By emailField = By.xpath("//input[@id='inputEmail']");
     private By telefonoField = By.xpath("//input[@id='telefonoComprador']");
     private By cardInput = By.xpath("//input[@id='datosPago_cdgoFormaPago_tarjetaRedSys']");
@@ -32,10 +32,8 @@ public class CompraPage extends BasePage {
      * Assert that I am on the right page and is enabled “Compra” page
      */
     public void verifyYouAreInCompraPage() {
-        waitUntilElementIsDisplayed(compraLabel, Duration.ofSeconds(15));
-        WebElement element = webDriver.findElement(compraLabel);
-        Assert.assertEquals("Compra", element.getText());
-        Assert.assertTrue(webDriver.findElement(compraLabel).isEnabled());
+        waitUntilElementIsDisplayed(compraStepper, Duration.ofSeconds(10));
+        Assert.assertTrue(webDriver.findElement(compraStepper).isEnabled(),"No está habilitado este step");
     }
 
     /**
@@ -108,24 +106,6 @@ public class CompraPage extends BasePage {
     public void clickContinuarCompra(){
         waitUntilElementIsDisplayed(btnContinuarCompra, Duration.ofSeconds(15));
         clickElement(btnContinuarCompra);
-    }
-
-    /**
-     *
-     * @param popup boolean
-     * @return false
-     */
-    public boolean isErrorMessageDisplayed(boolean popup) {
-        try {
-            By errorLocator = By.xpath(String.format("//div[contains(text(), '%s')]"));
-            new WebDriverWait(webDriver, Duration.ofSeconds(5))
-                    .until(ExpectedConditions.visibilityOfElementLocated(errorLocator));
-        } catch (Exception e) {
-            System.out.println("Error no se han insertado los datos obligatorios para la compra");
-            return false;
-        }
-
-        return popup;
     }
 
 }

@@ -36,8 +36,7 @@ public class HomePage extends BasePage {
      * Accepts all cookies in any Page.
      */
     public void clickAcceptAllCookiesButton() {
-        WebElement acceptButton = new WebDriverWait(webDriver, Duration.ofSeconds(5)).
-                until(ExpectedConditions.elementToBeClickable(acceptAllCookiesButton));
+        WebElement acceptButton = new WebDriverWait(webDriver, Duration.ofSeconds(5)).until(ExpectedConditions.elementToBeClickable(acceptAllCookiesButton));
         ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", acceptButton);
     }
 

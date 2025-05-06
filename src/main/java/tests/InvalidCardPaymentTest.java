@@ -95,7 +95,7 @@ public class InvalidCardPaymentTest {
             String cvv) {
         // acepta cookies y escoge estacion de origen y destino.
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
-        // selecciona el número de días para escoger tu viaje.
+        // click en seleccionar salida de viaje y selecciona el número de días para escoger tu viaje hacia adelante (en este caso el mismo día = 0), sólo de ida, acepta y busca billete
         steps.selectDepartureDate(0);
         seleccionarTuViajePage.verifyYouAreInSelecionaTuViaje();
         seleccionarTuViajePage.selectFirstTrainAvailableAndBasicFare();
@@ -133,7 +133,6 @@ public class InvalidCardPaymentTest {
         pasarelaPagoPage.typeExpirationDate(expirationDate);
         pasarelaPagoPage.typeCVV(cvv);
         pasarelaPagoPage.clickPaymentButton();
-
         // Verificar si aparece el mensaje de error por tarjeta inválida
         WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
         boolean isErrorVisible = wait.until(driver -> driver.findElements(popUpError).size() > 0);
@@ -147,5 +146,3 @@ public class InvalidCardPaymentTest {
         }
     }
 }
-
-

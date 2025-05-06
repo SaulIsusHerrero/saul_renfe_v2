@@ -7,15 +7,16 @@
         <classes>
             <class name="tests.InvalidCardPaymentTest"/>
             <class name="tests.InvalidDataTraveler15d"/>
+            <class name="tests.EmptyBuyerDataTest5d"/>
         </classes>
     </test>
     <!-- Configuraciones alternativas para otros navegadores -->
     <test name="Chrome_Execution" enabled="false">
         <parameter name="browser" value="chrome"/>
         <classes>
-            <class name="tests.EmptyBuyerDataTest5d"></class>
             <class name="tests.InvalidCardPaymentTest"/>
             <class name="tests.InvalidDataTraveler15d"/>
+            <class name="tests.EmptyBuyerDataTest5d"/>
         </classes>
     </test>
     <test name="Firefox_Execution" enabled="false">
@@ -23,6 +24,7 @@
         <classes>
             <class name="tests.InvalidCardPaymentTest"/>
             <class name="tests.InvalidDataTraveler15d"/>
+            <class name="tests.EmptyBuyerDataTest5d"/>
         </classes>
     </test>
     <test name="Edge_Execution" enabled="false">
@@ -30,6 +32,7 @@
         <classes>
             <class name="tests.InvalidCardPaymentTest"/>
             <class name="tests.InvalidDataTraveler15d"/>
+            <class name="tests.EmptyBuyerDataTest5d"/>
         </classes>
     </test>
 

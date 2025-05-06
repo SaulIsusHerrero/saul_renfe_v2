@@ -32,7 +32,7 @@ public class InvalidDataTraveler15d {
 
     @DataProvider(name = "paymentData")
     public Object[][] getPaymentData() {
-        return CSVDataProvider.readDatosPasajerosError();
+        return CSVDataProvider.readDatosPasajerosError15d();
     }
 
     @BeforeMethod
