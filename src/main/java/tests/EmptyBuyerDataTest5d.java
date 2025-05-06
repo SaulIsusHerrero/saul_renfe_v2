@@ -96,7 +96,8 @@ public class EmptyBuyerDataTest5d {
         // Acepta cookies y escoge estacion de origen y destino.
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
         // selecciona el número de días para escoger tu viaje.
-        steps.selectDepartureDate(5);
+        steps.selectDepartureDate();
+        homePage.selectDepartureDateDaysLater(5);
         seleccionarTuViajePage.verifyYouAreInSelecionaTuViaje();
         seleccionarTuViajePage.selectFirstTrainAvailableAndBasicFare();
         seleccionarTuViajePage.verifyNumberOfTravelers();

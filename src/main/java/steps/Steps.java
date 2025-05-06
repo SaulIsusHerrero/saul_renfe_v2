@@ -21,7 +21,7 @@ public class Steps extends BasePage {
         homePage.enterDestination(destinationStation);
     }
 
-    public void selectDepartureDate(int daysLater) {
+    public void selectDepartureDate() {
         HomePage homePage = new HomePage(webDriver);
         homePage.selectDepartureDate();
         homePage.clickSoloIdaButtonSelected(true); //From the moment, all the test cases require only one way ticket
