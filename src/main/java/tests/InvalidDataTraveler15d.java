@@ -87,10 +87,10 @@ public class InvalidDataTraveler15d {
 
         String totalPriceTrip = null;
         TemporaryDataStore.getInstance().set("testCase", totalPriceTrip);
-
         // Bloques reutilizables (steps)
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
-        steps.selectDepartureDate(15);
+        steps.selectDepartureDate();
+        homePage.selectDepartureDateDaysLater(15);
         seleccionarTuViajePage.verifyYouAreInSelecionaTuViaje();
         seleccionarTuViajePage.selectFirstTrainAvailableAndBasicFare();
         seleccionarTuViajePage.verifyNumberOfTravelers();
