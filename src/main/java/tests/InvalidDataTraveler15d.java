@@ -86,7 +86,7 @@ public class InvalidDataTraveler15d {
     ) {
 
         String totalPriceTrip = null;
-        TemporaryDataStore.getInstance().set("testCase", totalPriceTrip);
+        TemporaryDataStore.getInstance().set("testCase", "InvalidDataTraveler15d");
         // Bloques reutilizables (steps)
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
         steps.selectDepartureDate();
@@ -113,6 +113,7 @@ public class InvalidDataTraveler15d {
         personalizaTuViajePage.verifyYouAreInPersonalizedYourTravelPage();
         personalizaTuViajePage.verifyTotalPersonalizePrice(totalPriceTrip);
         personalizaTuViajePage.continueWithPurchase();
+        //BORRAR por el assert.
         compraPage.verifyYouAreInCompraPage();
         compraPage.typeEmail(email);
         compraPage.writePhoneField(phone);
