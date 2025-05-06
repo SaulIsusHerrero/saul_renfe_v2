@@ -13,8 +13,8 @@ public class SeleccionarTuViajePage extends BasePage {
 
     //Locators
     private By seleccionaTuViajeStepper = By.xpath("//ul[@class='stepper stepper-horizontal']//li[contains(@class, 'active')]//span[contains(text(), 'Selecciona tu viaje')]");
-    private By trainAvailable = By.cssSelector("div[id^='precio-viaje']:not(:has(div))");
-    private By trainAvailableBasicFare = By.cssSelector("div[id^='precio-viaje']:not(:has(div))+div>div>div[class='planes-opciones']>div:nth-child(1)");
+    private By trainAvailable = By.xpath("//div[contains(@class, 'selectedTren')]//div[contains(@class, 'tarifaBasica')]");
+    private By trainAvailableBasicFare = By.xpath("//div[contains(@class, 'tarifaBasica')]");
     private By selectDayRightArrow = By.cssSelector(".rescalendar_controls > button.move_to_tomorrow");
     private By travelerLocator = By.xpath("(//div[contains(@class, 'viajerosSelected') and contains(text(), '1')])[1]");
     private By basicFareLocator = By.xpath("//div[@class='asient']//div[contains(@class, 'rowitem1')]/span[contains(text(), 'Básico')]");
@@ -68,13 +68,11 @@ public class SeleccionarTuViajePage extends BasePage {
                 control = false;
             } else {
                 // Haz clic en el botón del siguiente día para buscar trenes disponibles
+                wait.until(ExpectedConditions.elementToBeClickable(selectDayRightArrow));
                 webDriver.findElement(selectDayRightArrow).click();
-                wait.until(ExpectedConditions.visibilityOfElementLocated(trainAvailable));
             }
         }
     }
-
-
 
     /**
      * Verifies the number of travelers for the trip in the semimodal

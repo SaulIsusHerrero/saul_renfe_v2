@@ -84,7 +84,6 @@ public class EmptyBuyerDataTest5d {
     public void testEmptyBuyerData(
             String originStation,
             String destinationStation,
-            int daysLater,
             String firstName,
             String primerApellido,
             String segundoApellido,
@@ -129,6 +128,7 @@ public class EmptyBuyerDataTest5d {
         compraPage.clickPurchaseCondition();
         compraPage.verifyTotalCompraPrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
         compraPage.clickContinuarCompra();
+        Assert.assertTrue(webDriver.findElement(messageError).isDisplayed());
     }
 
     @AfterMethod

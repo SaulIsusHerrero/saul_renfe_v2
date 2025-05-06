@@ -47,8 +47,12 @@
             <artifactId>opencsv</artifactId>
             <version>5.7.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>4.26.0</version>
+        </dependency>
     </dependencies>
-
     <build>
         <testSourceDirectory>src/main/java/tests</testSourceDirectory>
         <plugins>

@@ -7,8 +7,6 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Assert;
 import org.testng.annotations.*;
 
 import pages.*;
@@ -73,7 +71,7 @@ public class InvalidDataTraveler15d {
     }
 
     @Test(dataProvider = "paymentData")
-    public void RenfeInvalidCardPaymentTest15dmas(
+    public void InvalidDataTraveler15d(
             String originStation,
             String destinationStation,
             String firstName,
@@ -93,8 +91,6 @@ public class InvalidDataTraveler15d {
         // Bloques reutilizables (steps)
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
         steps.selectDepartureDate(15);
-
-        homePage.clickSearchTicketButton();
         seleccionarTuViajePage.verifyYouAreInSelecionaTuViaje();
         seleccionarTuViajePage.selectFirstTrainAvailableAndBasicFare();
         seleccionarTuViajePage.verifyNumberOfTravelers();
@@ -105,7 +101,6 @@ public class InvalidDataTraveler15d {
         seleccionarTuViajePage.popUpFareAppears();
         seleccionarTuViajePage.linkPopUpFareAppears();
         seleccionarTuViajePage.clickLinkContinueSameFare();
-
         introduceTusDatosPage.verifyYouAreInIntroduceYourDataPage();
         introduceTusDatosPage.writeFirstNameField(firstName);
         introduceTusDatosPage.writeFirstSurnameField(primerApellido);
@@ -115,11 +110,9 @@ public class InvalidDataTraveler15d {
         introduceTusDatosPage.writePhoneField(phone);
         introduceTusDatosPage.verifyTotalPriceData(totalPriceTrip);
         introduceTusDatosPage.clickPersonalizeTrip();
-
         personalizaTuViajePage.verifyYouAreInPersonalizedYourTravelPage();
         personalizaTuViajePage.verifyTotalPersonalizePrice(totalPriceTrip);
         personalizaTuViajePage.continueWithPurchase();
-
         compraPage.verifyYouAreInCompraPage();
         compraPage.typeEmail(email);
         compraPage.writePhoneField(phone);
@@ -127,14 +120,12 @@ public class InvalidDataTraveler15d {
         compraPage.clickPurchaseCondition();
         compraPage.verifyTotalCompraPrice(totalPriceTrip);
         compraPage.clickContinuarCompra();
-
         pasarelaPagoPage.verifyYouAreInPasarelaPagoPage();
         pasarelaPagoPage.verifyTotalPricePasarelaPago(totalPriceTrip);
         pasarelaPagoPage.typeBankCard(card);
         pasarelaPagoPage.typeExpirationDate(expiration);
         pasarelaPagoPage.typeCVV(cvv);
         pasarelaPagoPage.clickPaymentButton();
-
         }
 
     @AfterMethod
