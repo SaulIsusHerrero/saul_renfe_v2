@@ -2,6 +2,7 @@ package tests;
 
 import java.time.Duration;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -12,10 +13,8 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.*;
-
-import io.github.bonigarcia.wdm.WebDriverManager;
-
 import pages.*;
+import steps.Steps;
 import utils.CSVDataProvider;
 import utils.TemporaryDataStore;
 
@@ -25,6 +24,7 @@ public class InvalidCardPaymentTest {
     private final By popUpError = By.xpath("//div[@id='myModalBody']//li[contains(text(), 'Tarjeta no soportada (RS18)')]");
 
     private WebDriver webDriver;
+    private Steps steps;
     private BasePage basePage;
     private HomePage homePage;
     private SeleccionarTuViajePage seleccionarTuViajePage;
@@ -69,6 +69,8 @@ public class InvalidCardPaymentTest {
         webDriver.manage().window().maximize();
         webDriver.get("https://www.renfe.com/es/es");
 
+        // Inicialización de páginas y steps
+        steps = new Steps(webDriver);
         basePage = new BasePage(webDriver);
         homePage = new HomePage(webDriver);
         seleccionarTuViajePage = new SeleccionarTuViajePage(webDriver);
@@ -81,9 +83,7 @@ public class InvalidCardPaymentTest {
     @Test(dataProvider = "paymentData")
     public void InvalidCardPaymentTest(
             String originStation,
-            String expectedValueOrigin,
             String destinationStation,
-            String expectedValueDestination,
             String firstName,
             String primerApellido,
             String segundoApellido,
@@ -93,15 +93,10 @@ public class InvalidCardPaymentTest {
             String card,
             String expirationDate,
             String cvv) {
-
-        basePage.clickAcceptAllCookiesButton();
-        homePage.enterOrigin(originStation, expectedValueOrigin);
-        homePage.enterDestination(destinationStation, expectedValueDestination);
-        homePage.selectDepartureDate();
-        homePage.clickSoloIdaButtonSelected(true);
-        homePage.clickAcceptButton();
-        homePage.clickSearchTicketButton();
-
+        // acepta cookies y escoge estacion de origen y destino.
+        steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
+        // selecciona el número de días para escoger tu viaje.
+        steps.selectDepartureDate(0);
         seleccionarTuViajePage.verifyYouAreInSelecionaTuViaje();
         seleccionarTuViajePage.selectFirstTrainAvailableAndBasicFare();
         seleccionarTuViajePage.verifyNumberOfTravelers();
@@ -112,7 +107,6 @@ public class InvalidCardPaymentTest {
         seleccionarTuViajePage.linkPopUpFareAppears();
         seleccionarTuViajePage.popUpFareAppears();
         seleccionarTuViajePage.clickLinkContinueSameFare();
-
         introduceTusDatosPage.verifyYouAreInIntroduceYourDataPage();
         introduceTusDatosPage.writeFirstNameField(firstName);
         introduceTusDatosPage.writeFirstSurnameField(primerApellido);
@@ -122,11 +116,9 @@ public class InvalidCardPaymentTest {
         introduceTusDatosPage.writePhoneField(phone);
         introduceTusDatosPage.verifyTotalPriceData(totalPriceTrip);
         introduceTusDatosPage.clickPersonalizeTrip();
-
         personalizaTuViajePage.verifyYouAreInPersonalizedYourTravelPage();
         personalizaTuViajePage.continueWithPurchase();
         personalizaTuViajePage.verifyTotalPersonalizePrice(totalPriceTrip);
-
         compraPage.verifyYouAreInCompraPage();
         compraPage.typeEmail(email);
         compraPage.writePhoneField(phone);
@@ -135,7 +127,6 @@ public class InvalidCardPaymentTest {
         compraPage.clickPurchaseCondition();
         compraPage.verifyTotalCompraPrice(totalPriceTrip);
         compraPage.clickContinuarCompra();
-
         pasarelaPagoPage.verifyYouAreInPasarelaPagoPage();
         pasarelaPagoPage.verifyTotalPricePasarelaPago(totalPriceTrip);
         pasarelaPagoPage.typeBankCard(card);
@@ -156,3 +147,5 @@ public class InvalidCardPaymentTest {
         }
     }
 }
+
+

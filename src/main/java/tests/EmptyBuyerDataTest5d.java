@@ -1,6 +1,9 @@
 package tests;
 
+import java.time.Duration;
+
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -15,17 +18,19 @@ import steps.Steps;
 import utils.TemporaryDataStore;
 import utils.CSVDataProvider;
 
-import java.time.Duration;
-
 public class EmptyBuyerDataTest5d {
+
+    //Locators
+    private final By messageError = By.xpath("//span[@class='cvv-instruction invalid' and contains(text(), 'Introduce un código de seguridad (CVV) válido')]");
+
     private WebDriver webDriver;
     private Steps steps;
-    private PersonalizaTuViajePage personalizaTuViajePage;
-    private CompraPage compraPage;
-    private IntroduceTusDatosPage introduceTusDatosPage;
     private BasePage basePage;
     private HomePage homePage;
     private SeleccionarTuViajePage seleccionarTuViajePage;
+    private IntroduceTusDatosPage introduceTusDatosPage;
+    private PersonalizaTuViajePage personalizaTuViajePage;
+    private CompraPage compraPage;
     private PasarelaPagoPage pasarelaPagoPage;
 
     @DataProvider(name = "paymentData")
@@ -85,18 +90,14 @@ public class EmptyBuyerDataTest5d {
             String segundoApellido,
             String dni,
             String email,
-            String phone
-    )
-    {
-        // Configurar fecha 5 días después (formato validado)
-        steps.selectDepartureDate(daysLater);
-        // Búsqueda de ruta y selección de fecha
+            String phone,
+            String card,
+            String expirationDate,
+            String cvv) {
+        // Acepta cookies y escoge estacion de origen y destino.
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
-        homePage.clickSoloIdaButtonSelected(true);
-        //click en el datepicker 5 más respecto al actual
-        homePage.selectDepartureDate5DaysLater(daysLater);
-        homePage.clickAcceptButton();
-        homePage.clickSearchTicketButton();
+        // selecciona el número de días para escoger tu viaje.
+        steps.selectDepartureDate(5);
         seleccionarTuViajePage.verifyYouAreInSelecionaTuViaje();
         seleccionarTuViajePage.selectFirstTrainAvailableAndBasicFare();
         seleccionarTuViajePage.verifyNumberOfTravelers();
@@ -129,8 +130,7 @@ public class EmptyBuyerDataTest5d {
         compraPage.verifyTotalCompraPrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
         compraPage.clickContinuarCompra();
         //Verificar mensajes de error en campos obligatorios
-        compraPage.isErrorMessageDisplayed(true);
-        Assert.assertTrue(compraPage.isErrorMessageDisplayed(true), "No se mostraron todos los mensajes de error esperados");
+        Assert.assertTrue(compraPage.isErrorMessageDisplayed(true), "No se mostr el mensaje de error esperado");
     }
 
     @AfterMethod

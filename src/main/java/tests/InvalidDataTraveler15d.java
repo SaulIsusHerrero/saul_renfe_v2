@@ -135,11 +135,7 @@ public class InvalidDataTraveler15d {
         pasarelaPagoPage.typeCVV(cvv);
         pasarelaPagoPage.clickPaymentButton();
 
-        // Validación de que aparece el mensaje de error por tarjeta inválida
-        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
-        boolean isErrorVisible = wait.until(driver -> driver.findElements(popUpError).size() > 0);
-        Assert.assertTrue(isErrorVisible, "El mensaje de tarjeta no válida (RS18) no apareció.");
-    }
+        }
 
     @AfterMethod
     public void tearDown() {

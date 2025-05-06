@@ -25,7 +25,7 @@ public class CSVDataProvider {
     }
 
     /**
-     * Lee datos de pasajeros desde el archivo CSV correspondiente con 5 días hacia adelante en el viaje.
+     * Lee datos de pasajeros desde el archivo CSV correspondiente con 5 días hacia adelante en el viaje y sin datos de pago.
      */
     public static Object[][] readDatosPasajerosBlankPaymentData() {
         return readCSV(BASE_PATH + "datos_pasajeros_blank_payment_data.csv");

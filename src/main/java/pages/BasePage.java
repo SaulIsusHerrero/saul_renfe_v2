@@ -20,9 +20,6 @@ public class BasePage {
         PageFactory.initElements(webDriver, this);
     }
 
-    //Locators
-    protected By acceptAllCookiesButton = By.id("onetrust-accept-btn-handler");
-
     //Variables and Constants
     private final Duration TIMEOUT = Duration.ofSeconds(30);
 
@@ -88,15 +85,6 @@ public class BasePage {
             scrollElementIntoView(labelLocator);
             clickElement(labelLocator);
         }
-    }
-
-    /**
-     * Accepts all cookies in any Page.
-     */
-    public void clickAcceptAllCookiesButton() {
-        WebElement acceptButton = new WebDriverWait(webDriver, Duration.ofSeconds(5)).
-                until(ExpectedConditions.elementToBeClickable(acceptAllCookiesButton));
-        ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", acceptButton);
     }
 
     /**

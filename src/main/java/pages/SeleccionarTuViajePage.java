@@ -12,7 +12,7 @@ import org.openqa.selenium.WebDriver;
 public class SeleccionarTuViajePage extends BasePage {
 
     //Locators
-    private By seleccionaTuViajeLabel = By.xpath("//span[contains(text(), 'Selecciona tu viaje') and not(ancestor::select[@disabled])]");
+    private By seleccionaTuViajeStepper = By.xpath("//ul[@class='stepper stepper-horizontal']//li[contains(@class, 'active')]//span[contains(text(), 'Selecciona tu viaje')]");
     private By trainAvailable = By.cssSelector("div[id^='precio-viaje']:not(:has(div))");
     private By trainAvailableBasicFare = By.cssSelector("div[id^='precio-viaje']:not(:has(div))+div>div>div[class='planes-opciones']>div:nth-child(1)");
     private By selectDayRightArrow = By.cssSelector(".rescalendar_controls > button.move_to_tomorrow");
@@ -35,10 +35,9 @@ public class SeleccionarTuViajePage extends BasePage {
      * Checks if we are in the next Page "SeleccionarTuViajePage".
      */
     public void verifyYouAreInSelecionaTuViaje() {
-        waitUntilElementIsDisplayed(seleccionaTuViajeLabel, Duration.ofSeconds(10));
-        WebElement element = webDriver.findElement(seleccionaTuViajeLabel);
-        Assert.assertEquals("Selecciona tu viaje", element.getText());
-        Assert.assertTrue(element.isEnabled());
+        waitUntilElementIsDisplayed(seleccionaTuViajeStepper, Duration.ofSeconds(10));
+        Boolean youAreInSeleccionaTuViaje = webDriver.findElement(seleccionaTuViajeStepper).isEnabled();
+        Assert.assertTrue(youAreInSeleccionaTuViaje);
     }
 
     /**

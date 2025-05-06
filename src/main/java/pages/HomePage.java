@@ -12,6 +12,7 @@ import java.util.Locale;
 
 public class HomePage extends BasePage {
     // Locators
+    public By acceptAllCookiesButton = By.id("onetrust-accept-btn-handler");
     public By originInputLocator = By.xpath("//input[@id='origin']");
     public By destinationInputLocator = By.xpath("//input[@id='destination']");
     private By dateDepartureInput = By.xpath("//input[@id='first-input']");
@@ -32,11 +33,19 @@ public class HomePage extends BasePage {
 
     // Methods
     /**
+     * Accepts all cookies in any Page.
+     */
+    public void clickAcceptAllCookiesButton() {
+        WebElement acceptButton = new WebDriverWait(webDriver, Duration.ofSeconds(5)).
+                until(ExpectedConditions.elementToBeClickable(acceptAllCookiesButton));
+        ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", acceptButton);
+    }
+
+    /**
      * Types the trip origin
      * @param originStation
-     * @param expectedValue
      */
-    public void enterOrigin(String originStation, String expectedValue) {
+    public void enterOrigin(String originStation) {
         WebElement originInput = webDriver.findElement(originInputLocator);
 
         // Enter the origin
@@ -52,9 +61,8 @@ public class HomePage extends BasePage {
     /**
      * Types the trip destination
      * @param destinationStation
-     * @param expectedValue
      */
-    public void enterDestination(String destinationStation, String expectedValue) {
+    public void enterDestination(String destinationStation) {
         WebElement destinationInput = webDriver.findElement(destinationInputLocator);
 
         // Enter the destination
@@ -86,10 +94,10 @@ public class HomePage extends BasePage {
         setElementSelected(onlyDepartureRadioButtonInput, onlyDepartureRadioButtonLabel, expectedSelected);
     }
     /**
-     * Marks the 15 days ahead
+     * Marks the days ahead
      */
-    public void selectDepartureDate15DaysLater() {
-        LocalDate targetDate = LocalDate.now().plusDays(15);
+    public void selectDepartureDateDaysLater(int daysLater) {
+        LocalDate targetDate = LocalDate.now().plusDays(daysLater);
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEE. dd/MM/yy", new Locale("es", "ES"));
         WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
 
@@ -98,48 +106,6 @@ public class HomePage extends BasePage {
         int attempts = 0;
 
         // Navigate to the correct month
-        Boolean control = true;
-        while (attempts<maxAttempts) {
-            String dateLabel = webDriver.findElement(monthYearLabel).getText().toLowerCase();
-            if (dateLabel.contains(targetDate.getMonth().getDisplayName(TextStyle.FULL, new Locale("es", "ES")).toLowerCase())) {
-                while (attempts < maxAttempts) {
-                    if (dateLabel.contains(targetDate.getMonth().getDisplayName(TextStyle.FULL, new Locale("es", "ES")).toLowerCase())) {
-                        break;
-                    }
-                    webDriver.findElement(nextMonthButton).click();
-                    wait.until(ExpectedConditions.visibilityOfElementLocated(monthYearLabel));
-                    attempts++;
-                }
-            }
-            // Verificar si se encontró el mes o si se agotaron los intentos
-            if (attempts >= maxAttempts) {
-                throw new RuntimeException("No se encontró el mes objetivo después de " + maxAttempts + " intentos");
-            }
-
-            // Select the correct day
-            String dayXpath = String.format("//div[contains(@class, 'lightpick__day') and text()='%d']", targetDate.getDayOfMonth());
-            WebElement dayElement = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(dayXpath)));
-
-            // Scroll into view and click
-            ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", dayElement);
-            dayElement.click();
-        }
-    }
-
-    /**
-     * Marks the 5 days ahead
-     */
-    public void selectDepartureDate5DaysLater(int defaultDaysLater) {
-        LocalDate targetDate = LocalDate.now().plusDays(5);
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEE. dd/MM/yy", new Locale("es", "ES"));
-        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
-
-        // Límite de intentos (12 meses como máximo)
-        int maxAttempts = 12;
-        int attempts = 0;
-
-        // Navigate to the correct month
-        Boolean control = true;
         while (attempts<maxAttempts) {
             String dateLabel = webDriver.findElement(monthYearLabel).getText().toLowerCase();
             if (dateLabel.contains(targetDate.getMonth().getDisplayName(TextStyle.FULL, new Locale("es", "ES")).toLowerCase())) {
@@ -171,8 +137,8 @@ public class HomePage extends BasePage {
      * Method to click the 'Accept' button on the calendar in Home page.
      */
     public void clickAcceptButton() {
-        scrollElementIntoView(acceptButtonLocator);
         waitUntilElementIsDisplayed(acceptButtonLocator, TIMEOUT);
+        scrollElementIntoView(acceptButtonLocator);
         clickElement(acceptButtonLocator);
     }
 
