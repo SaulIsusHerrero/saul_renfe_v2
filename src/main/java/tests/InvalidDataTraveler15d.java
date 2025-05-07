@@ -8,7 +8,6 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.testng.annotations.*;
-
 import pages.*;
 import utils.CSVDataProvider;
 import utils.TemporaryDataStore;
@@ -31,6 +30,11 @@ public class InvalidDataTraveler15d {
     @DataProvider(name = "paymentData")
     public Object[][] getPaymentData() {
         return CSVDataProvider.readDatosPasajerosError15d();
+    }
+
+    @DataProvider(name = "routeData")
+    public Object[][] getRouteData() {
+        return CSVDataProvider.readPreciosTrayectos();
     }
 
     @BeforeMethod
@@ -60,6 +64,7 @@ public class InvalidDataTraveler15d {
         webDriver.get("https://www.renfe.com/es/es");
 
         // Inicialización de páginas y steps
+        steps = new Steps(webDriver);
         basePage = new BasePage(webDriver);
         homePage = new HomePage(webDriver);
         seleccionarTuViajePage = new SeleccionarTuViajePage(webDriver);
@@ -67,7 +72,6 @@ public class InvalidDataTraveler15d {
         personalizaTuViajePage = new PersonalizaTuViajePage(webDriver);
         compraPage = new CompraPage(webDriver);
         pasarelaPagoPage = new PasarelaPagoPage(webDriver);
-        steps = new Steps(webDriver);
     }
 
     @Test(dataProvider = "paymentData")
@@ -84,8 +88,6 @@ public class InvalidDataTraveler15d {
             String expiration,
             String cvv
     ) {
-
-        String totalPriceTrip = null;
         TemporaryDataStore.getInstance().set("testCase", "InvalidDataTraveler15d");
         // Bloques reutilizables (steps)
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
@@ -95,7 +97,7 @@ public class InvalidDataTraveler15d {
         seleccionarTuViajePage.selectFirstTrainAvailableAndBasicFare();
         seleccionarTuViajePage.verifyNumberOfTravelers();
         seleccionarTuViajePage.verifyFareIsBasic();
-        totalPriceTrip = seleccionarTuViajePage.verifyFareAndTotalPricesAreEquals();
+        String totalPriceTrip = seleccionarTuViajePage.verifyFareAndTotalPricesAreEquals();
         TemporaryDataStore.getInstance().set("totalPriceTrip", totalPriceTrip);
         seleccionarTuViajePage.clickSelectButton();
         seleccionarTuViajePage.popUpFareAppears();

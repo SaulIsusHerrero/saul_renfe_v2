@@ -1,7 +1,5 @@
 package tests;
 
-import java.time.Duration;
-
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -11,10 +9,17 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.testng.annotations.*;
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.Parameters;
 import pages.*;
 import steps.Steps;
 import utils.CSVDataProvider;
 import utils.TemporaryDataStore;
+
+import java.time.Duration;
 
 public class InvalidCardPaymentTest {
 
@@ -79,7 +84,7 @@ public class InvalidCardPaymentTest {
     }
 
     @Test(dataProvider = "paymentData")
-    public void InvalidCardPaymentTest(
+    public void RenfeInvalidCardPaymentTest(
             String originStation,
             String destinationStation,
             String firstName,
@@ -90,7 +95,10 @@ public class InvalidCardPaymentTest {
             String phone,
             String card,
             String expirationDate,
-            String cvv) {
+            String cvv
+    ) {
+        TemporaryDataStore.getInstance().set("testCase", "InvalidCardPaymentTest");
+        // Bloques reutilizables (steps)
         // acepta cookies y escoge estacion de origen y destino.
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
         // click en seleccionar salida de viaje y selecciona el número de días para escoger tu viaje hacia adelante (en este caso el mismo día. sólo de ida y acepta.

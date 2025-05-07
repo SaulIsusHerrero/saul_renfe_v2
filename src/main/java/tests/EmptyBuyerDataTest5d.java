@@ -137,6 +137,5 @@ public class EmptyBuyerDataTest5d {
         if (webDriver != null) {
             webDriver.quit();
         }
-        TemporaryDataStore.getInstance().clear();
     }
 }
