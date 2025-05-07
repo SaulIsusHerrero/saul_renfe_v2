@@ -84,7 +84,7 @@ public class InvalidCardPaymentTest {
     }
 
     @Test(dataProvider = "paymentData")
-    public void RenfeInvalidCardPaymentTest(
+    public void InvalidCardPaymentTest(
             String originStation,
             String destinationStation,
             String firstName,
