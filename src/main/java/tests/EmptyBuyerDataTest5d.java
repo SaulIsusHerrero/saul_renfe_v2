@@ -79,7 +79,7 @@ public class EmptyBuyerDataTest5d {
     }
 
     @Test(dataProvider = "paymentData")
-    public void testEmptyBuyerData(
+    public void EmptyBuyerDataTest5d(
             String originStation,
             String destinationStation,
             String firstName,

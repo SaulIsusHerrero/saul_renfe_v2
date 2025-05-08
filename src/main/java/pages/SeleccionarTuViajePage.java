@@ -45,7 +45,6 @@ public class SeleccionarTuViajePage extends BasePage {
      */
     public void selectFirstTrainAvailableAndBasicFare() {
         boolean control = true;
-
         while (control) {
             // Encuentra la lista de trenes disponibles
             List<WebElement> trainList = webDriver.findElements(trainAvailable);
