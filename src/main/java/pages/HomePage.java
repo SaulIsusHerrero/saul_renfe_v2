@@ -21,7 +21,7 @@ public class HomePage extends BasePage {
     private By acceptButtonLocator = By.xpath("//button[contains(text(),'Aceptar')]");
     private By buscarBilleteLocator = By.xpath("//button[@title='Buscar billete']");
     private By nextMonthButton = By.xpath("//button[contains(@class, 'lightpick__next-action')]");
-    private By monthYearLabel = By.cssSelector("span.rf-daterange-picker-alternative__month-label");
+    private final By monthYearLabel = By.cssSelector("span.rf-daterange-picker-alternative__month-label");
 
     // Variables and Constants
     private final Duration TIMEOUT = Duration.ofSeconds(30);
@@ -92,44 +92,67 @@ public class HomePage extends BasePage {
         scrollElementIntoView(onlyDepartureRadioButtonLabel);
         setElementSelected(onlyDepartureRadioButtonInput, onlyDepartureRadioButtonLabel, expectedSelected);
     }
+
+
     /**
-     * Marks the days ahead
+     * Selects a departure date a number of days ahead from the current date.
+     * @param daysLater Number of days to add to the current date
+     */
+    /**
+     * Selects a departure date a number of days ahead from the current date.
+     * @param daysLater Number of days to add to the current date
      */
     public void selectDepartureDateDaysLater(int daysLater) {
         LocalDate targetDate = LocalDate.now().plusDays(daysLater);
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEE. dd/MM/yy", new Locale("es", "ES"));
-        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
+        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMMM yyyy", new Locale("es", "ES"));
+        String targetMonthYear = targetDate.format(monthFormatter);
 
-        // Límite de intentos (12 meses como máximo)
-        int maxAttempts = 12;
+        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(15));
+        final int maxAttempts = 12;
         int attempts = 0;
 
-        // Navigate to the correct month
-        while (attempts<maxAttempts) {
-            String dateLabel = webDriver.findElement(monthYearLabel).getText().toLowerCase();
-            if (dateLabel.contains(targetDate.getMonth().getDisplayName(TextStyle.FULL, new Locale("es", "ES")).toLowerCase())) {
-                while (attempts < maxAttempts) {
-                    if (dateLabel.contains(targetDate.getMonth().getDisplayName(TextStyle.FULL, new Locale("es", "ES")).toLowerCase())) {
-                        break;
-                    }
-                    webDriver.findElement(nextMonthButton).click();
-                    wait.until(ExpectedConditions.visibilityOfElementLocated(monthYearLabel));
-                    attempts++;
-                }
-            }
-            // Verificar si se encontró el mes o si se agotaron los intentos
-            if (attempts >= maxAttempts) {
-                throw new RuntimeException("No se encontró el mes objetivo después de " + maxAttempts + " intentos");
+        while (attempts < maxAttempts) {
+            String currentMonthYear = wait.until(ExpectedConditions
+                            .visibilityOfElementLocated(monthYearLabel))
+                    .getText()
+                    .trim();
+
+            if (normalizeMonth(currentMonthYear).equals(normalizeMonth(targetMonthYear))) {
+                break;
             }
 
-            // Select the correct day
-            String dayXpath = String.format("//div[contains(@class, 'lightpick__day') and text()='%d']", targetDate.getDayOfMonth());
-            WebElement dayElement = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(dayXpath)));
+            WebElement nextButton = wait.until(ExpectedConditions.elementToBeClickable(nextMonthButton));
+            nextButton.click();
 
-            // Scroll into view and click
-            ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", dayElement);
-            dayElement.click();
+            wait.until(ExpectedConditions.not(
+                    ExpectedConditions.textToBePresentInElementLocated(monthYearLabel, currentMonthYear)));
+
+            attempts++;
         }
+
+        if (attempts >= maxAttempts) {
+            throw new RuntimeException("No se encontró el mes: " + targetMonthYear + " tras " + maxAttempts + " intentos.");
+        }
+
+        // Seleccionar el día
+        String dayXpath = String.format(
+                "//div[contains(@class, 'lightpick__day') and not(contains(@class, 'is-disabled')) and text()='%d']",
+                targetDate.getDayOfMonth());
+
+        try {
+            WebElement dayElement = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(dayXpath)));
+            dayElement.click();
+        } catch (TimeoutException e) {
+            throw new RuntimeException(
+                    "No se pudo seleccionar el día " + targetDate.getDayOfMonth() + " del mes " + targetMonthYear, e);
+        }
+
+        clickAcceptButton();
+        clickSearchTicketButton();
+    }
+
+    private String normalizeMonth(String monthText) {
+        return monthText.toLowerCase().replaceAll("[^a-záéíóúüñ0-9]", "");
     }
 
     /**
@@ -137,7 +160,6 @@ public class HomePage extends BasePage {
      */
     public void clickAcceptButton() {
         waitUntilElementIsDisplayed(acceptButtonLocator, TIMEOUT);
-        scrollElementIntoView(acceptButtonLocator);
         clickElement(acceptButtonLocator);
     }
 
@@ -145,7 +167,7 @@ public class HomePage extends BasePage {
      * Searches the selected ticket in the Home page.
      */
     public void clickSearchTicketButton() {
-        waitUntilElementIsDisplayed(buscarBilleteLocator, TIMEOUT);
+        waitUntilElementIsDisplayed(buscarBilleteLocator, Duration.ofSeconds(30));
         scrollElementIntoView(buscarBilleteLocator);
         clickElement(buscarBilleteLocator);
     }

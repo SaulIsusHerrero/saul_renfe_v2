@@ -34,9 +34,6 @@ public class Steps extends BasePage {
             homePage.selectDepartureDateDaysLater(5);  //click en el datepicker 5 más respecto al actual
         }
         homePage.clickAcceptButton();
-    }
-
-    public void searchTicket(){
         homePage.clickSearchTicketButton();
     }
 

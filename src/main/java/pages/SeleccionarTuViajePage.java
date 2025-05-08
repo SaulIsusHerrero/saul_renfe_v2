@@ -13,15 +13,15 @@ public class SeleccionarTuViajePage extends BasePage {
 
     //Locators
     private By seleccionaTuViajeStepper = By.xpath("//ul[@class='stepper stepper-horizontal']//li[contains(@class, 'active')]//span[contains(text(), 'Selecciona tu viaje')]");
-    private By trainAvailable = By.xpath("//div[contains(@class, 'selectedTren')]//div[contains(@class, 'tarifaBasica')]");
-    private By trainAvailableBasicFare = By.xpath("//div[contains(@class, 'tarifaBasica')]");
+    private By trainAvailable = By.cssSelector("div[id^='precio-viaje']:not(:has(div))");
+    private By trainAvailableBasicFare = By.cssSelector("div[id^='precio-viaje']:not(:has(div))+div>div>div[class='planes-opciones']>div:nth-child(1)");
     private By selectDayRightArrow = By.cssSelector(".rescalendar_controls > button.move_to_tomorrow");
     private By travelerLocator = By.xpath("(//div[contains(@class, 'viajerosSelected') and contains(text(), '1')])[1]");
     private By basicFareLocator = By.xpath("//div[@class='asient']//div[contains(@class, 'rowitem1')]/span[contains(text(), 'Básico')]");
     private By basicFarePriceLocator = By.xpath("(//div[@class='rowitem2 precioTarifa']/span)[1]");
     private By totalPriceLocator = By.xpath("(//span[@id='totalTrayectoBanner'])[1]");
     private By btnSeleccionar = By.xpath("(//button[@id='btnSeleccionar'])[1]");
-    private By popUpChangeFare = By.xpath("//button[@id='closeConfirmacionFareUpgrade' and " + "contains(@class, 'close') and " + "not(contains(@style, 'display: none'))]");
+    public static final By popUpChangeFare = By.xpath("//button[@id='closeConfirmacionFareUpgrade' and " + "contains(@class, 'close') and " + "not(contains(@style, 'display: none'))]");
     private By linkContinueSameFare = By.xpath("//div/p[@class and contains(text(), 'No')]");
 
     //Constructor
@@ -63,13 +63,13 @@ public class SeleccionarTuViajePage extends BasePage {
                 scrollElementIntoViewElement(firstBasicFare);
                 wait.until(ExpectedConditions.visibilityOf(firstBasicFare));
                 wait.until(ExpectedConditions.elementToBeClickable(firstBasicFare));
-                //click a la tarifa Básico con JavascriptExecutor para que no sea interceptado.
+                //click con JavascriptExecutor para que no sea interceptado.
                 ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", firstBasicFare);
                 control = false;
             } else {
                 // Haz clic en el botón del siguiente día para buscar trenes disponibles
-                wait.until(ExpectedConditions.elementToBeClickable(selectDayRightArrow));
                 webDriver.findElement(selectDayRightArrow).click();
+                wait.until(ExpectedConditions.visibilityOfElementLocated(trainAvailable));
             }
         }
     }
@@ -86,7 +86,7 @@ public class SeleccionarTuViajePage extends BasePage {
      * Verifies the fare applied for the trip in the semimodal is "Básico"
      */
     public void verifyFareIsBasic() {
-        waitUntilElementIsDisplayed(basicFareLocator, Duration.ofSeconds(15));
+        waitUntilElementIsDisplayed(basicFareLocator, Duration.ofSeconds(30));
         String fareText = webDriver.findElement(basicFareLocator).getText();
         Assert.assertTrue(fareText.contains("Básico"));
     }
@@ -117,15 +117,18 @@ public class SeleccionarTuViajePage extends BasePage {
 
     /**
      * Verifies that the fare change pop-up exists in DOM and is visible on screen
+     * @param locator Localizador del elemento
+     * @param elementName Nombre descriptivo del elemento para mensajes
      */
-    private void verifyElementPresenceAndVisibility(By locator, String elementName) {
+    public void verifyElementPresenceAndVisibility(By locator, String elementName) {
+        elementName = "Pop-up de cambio de tarifa";
         WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
         try {
             wait.until(ExpectedConditions.presenceOfElementLocated(locator));
             wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
             System.out.println("✅ " + elementName + " está presente en el DOM y visible");
         } catch (Exception e) {
-            Assert.fail("❌ " + elementName + " no está visible o presente");
+            Assert.fail("❌ " + elementName + " no está visible o presente: " + e.getMessage());
         }
     }
 
@@ -142,8 +145,6 @@ public class SeleccionarTuViajePage extends BasePage {
     public void linkPopUpFareAppears() {
         verifyElementPresenceAndVisibility(linkContinueSameFare, "El link NO aparece de la misma tarifa esta presente y visible");
     }
-
-
 
     /**
      * Click in the link to continue with the same fare

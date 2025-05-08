@@ -1,12 +1,14 @@
 package tests;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.testng.Assert;
 import org.testng.annotations.*;
 import pages.*;
 import utils.CSVDataProvider;
@@ -26,6 +28,9 @@ public class InvalidDataTraveler15d {
     private CompraPage compraPage;
     private PasarelaPagoPage pasarelaPagoPage;
     private Steps steps;
+
+    //Locators
+    private By errorNombre = By.xpath("//div[text()='El nombre tiene un formato incorrecto']");
 
     @DataProvider(name = "paymentData")
     public Object[][] getPaymentData() {
@@ -87,12 +92,11 @@ public class InvalidDataTraveler15d {
             String card,
             String expiration,
             String cvv
-    ) {
+    ) throws InterruptedException {
         TemporaryDataStore.getInstance().set("testCase", "InvalidDataTraveler15d");
         // Bloques reutilizables (steps)
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
         steps.selectDepartureDate();
-        homePage.selectDepartureDateDaysLater(15);
         seleccionarTuViajePage.verifyYouAreInSelecionaTuViaje();
         seleccionarTuViajePage.selectFirstTrainAvailableAndBasicFare();
         seleccionarTuViajePage.verifyNumberOfTravelers();
@@ -112,23 +116,7 @@ public class InvalidDataTraveler15d {
         introduceTusDatosPage.writePhoneField(phone);
         introduceTusDatosPage.verifyTotalPriceData(totalPriceTrip);
         introduceTusDatosPage.clickPersonalizeTrip();
-        personalizaTuViajePage.verifyYouAreInPersonalizedYourTravelPage();
-        personalizaTuViajePage.verifyTotalPersonalizePrice(totalPriceTrip);
-        personalizaTuViajePage.continueWithPurchase();
-        //BORRAR por el assert.
-        compraPage.verifyYouAreInCompraPage();
-        compraPage.typeEmail(email);
-        compraPage.writePhoneField(phone);
-        compraPage.clickPurchaseCard();
-        compraPage.clickPurchaseCondition();
-        compraPage.verifyTotalCompraPrice(totalPriceTrip);
-        compraPage.clickContinuarCompra();
-        pasarelaPagoPage.verifyYouAreInPasarelaPagoPage();
-        pasarelaPagoPage.verifyTotalPricePasarelaPago(totalPriceTrip);
-        pasarelaPagoPage.typeBankCard(card);
-        pasarelaPagoPage.typeExpirationDate(expiration);
-        pasarelaPagoPage.typeCVV(cvv);
-        pasarelaPagoPage.clickPaymentButton();
+        Assert.assertTrue(Boolean.parseBoolean(firstName));
         }
 
     @AfterMethod

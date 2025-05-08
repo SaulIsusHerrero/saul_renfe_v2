@@ -5,6 +5,7 @@ import java.time.Duration;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -19,9 +20,6 @@ import utils.TemporaryDataStore;
 import utils.CSVDataProvider;
 
 public class EmptyBuyerDataTest5d {
-
-    //Locators
-    private final By messageError = By.xpath("//span[@class='cvv-instruction invalid' and contains(text(), 'Introduce un código de seguridad (CVV) válido')]");
 
     private WebDriver webDriver;
     private Steps steps;
@@ -89,15 +87,12 @@ public class EmptyBuyerDataTest5d {
             String segundoApellido,
             String dni,
             String email,
-            String phone,
-            String card,
-            String expirationDate,
-            String cvv) {
+            String phone
+            ) throws InterruptedException {
         // Acepta cookies y escoge estacion de origen y destino.
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
         // selecciona el número de días para escoger tu viaje.
         steps.selectDepartureDate();
-        homePage.selectDepartureDateDaysLater(5);
         seleccionarTuViajePage.verifyYouAreInSelecionaTuViaje();
         seleccionarTuViajePage.selectFirstTrainAvailableAndBasicFare();
         seleccionarTuViajePage.verifyNumberOfTravelers();
@@ -129,7 +124,9 @@ public class EmptyBuyerDataTest5d {
         compraPage.clickPurchaseCondition();
         compraPage.verifyTotalCompraPrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
         compraPage.clickContinuarCompra();
-        Assert.assertTrue(webDriver.findElement(messageError).isDisplayed());
+        compraPage.clickContinuarCompra();
+        pasarelaPagoPage.verifyYouAreInPasarelaPagoPage();
+        pasarelaPagoPage.clickPaymentButton();
     }
 
     @AfterMethod

@@ -18,7 +18,6 @@ public class IntroduceTusDatosPage extends BasePage {
     private By emailField = By.xpath("//input[@id='email0']");
     private By totalPriceDataLocator = By.xpath("//span[@id='totalTrayecto']");
     private By btnPersonalizar = By.cssSelector("#btn-responsive > #submitpersonaliza");
-    private By errorNombre = By.xpath("//div[text()='El nombre tiene un formato incorrecto']");
 
     //Constructor
     public IntroduceTusDatosPage(WebDriver webDriver) {
@@ -118,7 +117,5 @@ public class IntroduceTusDatosPage extends BasePage {
         scrollElementIntoView(btnPersonalizar);
         waitUntilElementIsDisplayed(btnPersonalizar, Duration.ofSeconds(5));
         clickElement(btnPersonalizar);
-        Assert.assertTrue(webDriver.findElement(errorNombre).isDisplayed());
     }
-
 }
