@@ -23,8 +23,6 @@ import static pages.SeleccionarTuViajePage.popUpChangeFare;
 
 public class InvalidCardPaymentTest {
     private WebDriver webDriver;
-    private BasePage basePage;
-    private HomePage homePage;
     private SeleccionarTuViajePage seleccionarTuViajePage;
     private IntroduceTusDatosPage introduceTusDatosPage;
     private PersonalizaTuViajePage personalizaTuViajePage;
@@ -68,8 +66,6 @@ public class InvalidCardPaymentTest {
         webDriver.manage().window().maximize();
         webDriver.get("https://www.renfe.com/es/es");
 
-        basePage = new BasePage(webDriver);
-        homePage = new HomePage(webDriver);
         seleccionarTuViajePage = new SeleccionarTuViajePage(webDriver);
         introduceTusDatosPage = new IntroduceTusDatosPage(webDriver);
         personalizaTuViajePage = new PersonalizaTuViajePage(webDriver);

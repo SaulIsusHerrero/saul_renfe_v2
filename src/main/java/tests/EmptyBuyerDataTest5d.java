@@ -23,8 +23,6 @@ public class EmptyBuyerDataTest5d {
 
     private WebDriver webDriver;
     private Steps steps;
-    private BasePage basePage;
-    private HomePage homePage;
     private SeleccionarTuViajePage seleccionarTuViajePage;
     private IntroduceTusDatosPage introduceTusDatosPage;
     private PersonalizaTuViajePage personalizaTuViajePage;
@@ -69,8 +67,6 @@ public class EmptyBuyerDataTest5d {
 
         // Inicialización de páginas y steps
         steps = new Steps(webDriver);
-        basePage = new BasePage(webDriver);
-        homePage = new HomePage(webDriver);
         seleccionarTuViajePage = new SeleccionarTuViajePage(webDriver);
         introduceTusDatosPage = new IntroduceTusDatosPage(webDriver);
         personalizaTuViajePage = new PersonalizaTuViajePage(webDriver);

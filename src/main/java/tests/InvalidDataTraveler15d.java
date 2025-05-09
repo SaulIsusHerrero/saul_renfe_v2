@@ -20,13 +20,8 @@ import java.time.Duration;
 public class InvalidDataTraveler15d {
 
     private WebDriver webDriver;
-    private BasePage basePage;
-    private HomePage homePage;
     private SeleccionarTuViajePage seleccionarTuViajePage;
     private IntroduceTusDatosPage introduceTusDatosPage;
-    private PersonalizaTuViajePage personalizaTuViajePage;
-    private CompraPage compraPage;
-    private PasarelaPagoPage pasarelaPagoPage;
     private Steps steps;
 
     //Locators
@@ -70,13 +65,8 @@ public class InvalidDataTraveler15d {
 
         // Inicialización de páginas y steps
         steps = new Steps(webDriver);
-        basePage = new BasePage(webDriver);
-        homePage = new HomePage(webDriver);
         seleccionarTuViajePage = new SeleccionarTuViajePage(webDriver);
         introduceTusDatosPage = new IntroduceTusDatosPage(webDriver);
-        personalizaTuViajePage = new PersonalizaTuViajePage(webDriver);
-        compraPage = new CompraPage(webDriver);
-        pasarelaPagoPage = new PasarelaPagoPage(webDriver);
     }
 
     @Test(dataProvider = "paymentData")
