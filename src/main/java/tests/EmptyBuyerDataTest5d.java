@@ -28,6 +28,8 @@ public class EmptyBuyerDataTest5d {
     private PersonalizaTuViajePage personalizaTuViajePage;
     private CompraPage compraPage;
     private PasarelaPagoPage pasarelaPagoPage;
+    private HomePage homePage;
+
 
     @DataProvider(name = "paymentData")
     public Object[][] getPaymentData() {
@@ -72,6 +74,7 @@ public class EmptyBuyerDataTest5d {
         personalizaTuViajePage = new PersonalizaTuViajePage(webDriver);
         compraPage = new CompraPage(webDriver);
         pasarelaPagoPage = new PasarelaPagoPage(webDriver);
+        homePage = new HomePage(webDriver);
     }
 
     @Test(dataProvider = "paymentData")
@@ -85,10 +88,12 @@ public class EmptyBuyerDataTest5d {
             String email,
             String phone
             ) throws InterruptedException {
-        // Acepta cookies y escoge estacion de origen y destino.
+        // Bloques reutilizables (steps)
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
-        // selecciona el número de días para escoger tu viaje.
         steps.selectDepartureDate();
+        homePage.selectDepartureDateDaysLater(5);
+        homePage.clickAcceptButton();
+        homePage.clickSearchTicketButton();
         seleccionarTuViajePage.verifyYouAreInSelecionaTuViaje();
         seleccionarTuViajePage.selectFirstTrainAvailableAndBasicFare();
         seleccionarTuViajePage.verifyNumberOfTravelers();

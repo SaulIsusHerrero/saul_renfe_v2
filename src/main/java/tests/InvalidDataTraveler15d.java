@@ -20,6 +20,7 @@ import java.time.Duration;
 public class InvalidDataTraveler15d {
 
     private WebDriver webDriver;
+    private HomePage homePage;
     private SeleccionarTuViajePage seleccionarTuViajePage;
     private IntroduceTusDatosPage introduceTusDatosPage;
     private Steps steps;
@@ -67,6 +68,7 @@ public class InvalidDataTraveler15d {
         steps = new Steps(webDriver);
         seleccionarTuViajePage = new SeleccionarTuViajePage(webDriver);
         introduceTusDatosPage = new IntroduceTusDatosPage(webDriver);
+        homePage = new HomePage(webDriver);
     }
 
     @Test(dataProvider = "paymentData")
@@ -78,15 +80,15 @@ public class InvalidDataTraveler15d {
             String segundoApellido,
             String dni,
             String email,
-            String phone,
-            String card,
-            String expiration,
-            String cvv
+            String phone
     ) throws InterruptedException {
         TemporaryDataStore.getInstance().set("testCase", "InvalidDataTraveler15d");
         // Bloques reutilizables (steps)
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
         steps.selectDepartureDate();
+        homePage.selectDepartureDateDaysLater(15);
+        homePage.clickAcceptButton();
+        homePage.clickSearchTicketButton();
         seleccionarTuViajePage.verifyYouAreInSelecionaTuViaje();
         seleccionarTuViajePage.selectFirstTrainAvailableAndBasicFare();
         seleccionarTuViajePage.verifyNumberOfTravelers();

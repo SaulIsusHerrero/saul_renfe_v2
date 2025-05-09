@@ -93,11 +93,6 @@ public class HomePage extends BasePage {
         setElementSelected(onlyDepartureRadioButtonInput, onlyDepartureRadioButtonLabel, expectedSelected);
     }
 
-
-    /**
-     * Selects a departure date a number of days ahead from the current date.
-     * @param daysLater Number of days to add to the current date
-     */
     /**
      * Selects a departure date a number of days ahead from the current date.
      * @param daysLater Number of days to add to the current date
@@ -146,9 +141,6 @@ public class HomePage extends BasePage {
             throw new RuntimeException(
                     "No se pudo seleccionar el día " + targetDate.getDayOfMonth() + " del mes " + targetMonthYear, e);
         }
-
-        clickAcceptButton();
-        clickSearchTicketButton();
     }
 
     private String normalizeMonth(String monthText) {

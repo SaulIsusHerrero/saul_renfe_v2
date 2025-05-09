@@ -43,7 +43,7 @@ public class SeleccionarTuViajePage extends BasePage {
     /**
      * Encuentra el primer tren disponible en el primer día posible con la tarifa Básica
      */
-    public void selectFirstTrainAvailableAndBasicFare() {
+    public void selectFirstTrainAvailableAndBasicFare() throws InterruptedException {
         boolean control = true;
         while (control) {
             // Encuentra la lista de trenes disponibles
