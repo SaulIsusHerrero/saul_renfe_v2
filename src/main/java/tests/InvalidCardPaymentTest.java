@@ -17,10 +17,9 @@ import utils.TemporaryDataStore;
 
 import java.time.Duration;
 
-public class InvalidCardPaymentTest {
+import static pages.BasePage.TIMEOUT;
 
-    //Variables and Constants
-    public Duration TIMEOUT = Duration.ofSeconds(10);
+public class InvalidCardPaymentTest {
 
     private WebDriver webDriver;
     private SeleccionarTuViajePage seleccionarTuViajePage;

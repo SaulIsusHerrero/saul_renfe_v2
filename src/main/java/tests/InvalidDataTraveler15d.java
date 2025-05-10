@@ -15,10 +15,9 @@ import utils.TemporaryDataStore;
 import steps.Steps;
 import java.time.Duration;
 
-public class InvalidDataTraveler15d {
+import static pages.BasePage.TIMEOUT;
 
-    //Variables and Constants
-    public Duration TIMEOUT = Duration.ofSeconds(10);
+public class InvalidDataTraveler15d {
 
     private WebDriver webDriver;
     private HomePage homePage;

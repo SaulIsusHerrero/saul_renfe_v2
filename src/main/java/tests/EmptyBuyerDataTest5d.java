@@ -17,10 +17,9 @@ import utils.CSVDataProvider;
 
 import java.time.Duration;
 
-public class EmptyBuyerDataTest5d {
+import static pages.BasePage.TIMEOUT;
 
-    //Variables and Constants
-    public Duration TIMEOUT = Duration.ofSeconds(10);
+public class EmptyBuyerDataTest5d {
 
     private WebDriver webDriver;
     private Steps steps;

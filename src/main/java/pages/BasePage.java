@@ -21,7 +21,7 @@ public class BasePage {
     }
 
     //Variables and Constants
-    public Duration TIMEOUT = Duration.ofSeconds(10);
+    public static final Duration TIMEOUT = Duration.ofSeconds(10);
 
     /**
      * Writes text inside a given element locator.
