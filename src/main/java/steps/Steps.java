@@ -5,7 +5,6 @@ import org.openqa.selenium.WebDriver;
 import pages.BasePage;
 import pages.HomePage;
 import utils.TemporaryDataStore;
-import resources;
 
 public class Steps extends BasePage {
 
