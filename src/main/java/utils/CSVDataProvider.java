@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CSVDataProvider {
-    private static final String DATA_DIR = Paths.get("src", "main", "java","utils","data").toString();
+    private static final String DATA_DIR = Paths.get("src", "main", "java","resources").toString();
 
     public static Object[][] readDatosPasajeros() {
         return readCSVFile("datos_pasajeros.csv");
