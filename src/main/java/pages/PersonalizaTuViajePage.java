@@ -4,8 +4,6 @@ import org.testng.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-import java.time.Duration;
-
 public class PersonalizaTuViajePage extends BasePage {
     //Locators
     private By personalizaTuViajeStepper = By.xpath("//ul[@class='stepper stepper-horizontal']//li[contains(@class, 'active')]//span[contains(text(), 'Personaliza tu viaje')]");
@@ -23,7 +21,7 @@ public class PersonalizaTuViajePage extends BasePage {
      * Assert that I am on the right page and is enabled “Personaliza tu viaje” page
      */
     public void verifyYouAreInPersonalizedYourTravelPage() {
-        waitUntilElementIsDisplayed(personalizaTuViajeStepper, Duration.ofSeconds(10));
+        waitUntilElementIsDisplayed(personalizaTuViajeStepper, TIMEOUT);
         Assert.assertTrue(webDriver.findElement(personalizaTuViajeStepper).isEnabled(), "No está hablitado este step");
     }
 
@@ -31,7 +29,7 @@ public class PersonalizaTuViajePage extends BasePage {
      * Clicks on continues with the purchase
      */
     public void continueWithPurchase(){
-        waitUntilElementIsDisplayed(btnContinuarPersonalize, Duration.ofSeconds(15));
+        waitUntilElementIsDisplayed(btnContinuarPersonalize, TIMEOUT);
         scrollElementIntoView(btnContinuarPersonalize);
         clickElement(btnContinuarPersonalize);
     }
@@ -41,7 +39,7 @@ public class PersonalizaTuViajePage extends BasePage {
      * @param totalPriceTrip Precio obtenido previamente, ya normalizado
      */
     public void verifyTotalPersonalizePrice(String totalPriceTrip) {
-        waitUntilElementIsDisplayed(totalPricePersonalizeLocator, Duration.ofSeconds(15));
+        waitUntilElementIsDisplayed(totalPricePersonalizeLocator, TIMEOUT);
 
         // Normaliza el precio de la nueva página
         String totalPricePersonalize = normalizePrice(webDriver.findElement(totalPricePersonalizeLocator).getText());

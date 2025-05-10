@@ -3,9 +3,6 @@ package pages;
 import org.testng.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-
-import java.time.Duration;
 
 public class IntroduceTusDatosPage extends BasePage {
     //Locators
@@ -30,7 +27,7 @@ public class IntroduceTusDatosPage extends BasePage {
      * Assert que estoy en la Page y esta habilitada “introduce tus datos”
      */
     public void verifyYouAreInIntroduceYourDataPage() {
-        waitUntilElementIsDisplayed(introduceTusDatosStepper, Duration.ofSeconds(10));
+        waitUntilElementIsDisplayed(introduceTusDatosStepper, TIMEOUT);
         Assert.assertTrue(webDriver.findElement(introduceTusDatosStepper).isEnabled(),"No está habilitado este step");
     }
 
@@ -40,7 +37,7 @@ public class IntroduceTusDatosPage extends BasePage {
      * @param firstName as a string
      */
     public void writeFirstNameField(String firstName) {
-        waitUntilElementIsDisplayed(firstNameField, Duration.ofSeconds(15));
+        waitUntilElementIsDisplayed(firstNameField, TIMEOUT);
         setElementText(firstNameField, firstName);
     }
 
@@ -50,7 +47,7 @@ public class IntroduceTusDatosPage extends BasePage {
      * @param primerApellido as a string
      */
     public void writeFirstSurnameField(String primerApellido) {
-        waitUntilElementIsDisplayed(firstSurnameField, Duration.ofSeconds(15));
+        waitUntilElementIsDisplayed(firstSurnameField, TIMEOUT);
         setElementText(firstSurnameField, primerApellido);
     }
 
@@ -60,7 +57,7 @@ public class IntroduceTusDatosPage extends BasePage {
      * @param segundoApellido as a string
      */
     public void writeSecondSurnameField(String segundoApellido) {
-        waitUntilElementIsDisplayed(secondSurnameField, Duration.ofSeconds(15));
+        waitUntilElementIsDisplayed(secondSurnameField, TIMEOUT);
         setElementText(secondSurnameField, segundoApellido);
     }
 
@@ -70,7 +67,7 @@ public class IntroduceTusDatosPage extends BasePage {
      * @param dni as a string
      */
     public void writeDNIField(String dni) {
-        waitUntilElementIsDisplayed(dniField, Duration.ofSeconds(15));
+        waitUntilElementIsDisplayed(dniField, TIMEOUT);
         setElementText(dniField, dni);
     }
 
@@ -80,7 +77,7 @@ public class IntroduceTusDatosPage extends BasePage {
      * @param email as a string
      */
     public void writeEmailField(String email) {
-        waitUntilElementIsDisplayed(emailField, Duration.ofSeconds(15));
+        waitUntilElementIsDisplayed(emailField, TIMEOUT);
         setElementText(emailField, email);
     }
 
@@ -90,7 +87,7 @@ public class IntroduceTusDatosPage extends BasePage {
      * @param phone as a string
      */
     public void writePhoneField(String phone) {
-        waitUntilElementIsDisplayed(telefonoField, Duration.ofSeconds(15));
+        waitUntilElementIsDisplayed(telefonoField, TIMEOUT);
         setElementText(telefonoField, phone);
     }
 
@@ -99,7 +96,7 @@ public class IntroduceTusDatosPage extends BasePage {
      * @param totalPriceTrip Precio obtenido previamente, ya normalizado
      */
     public void verifyTotalPriceData(String totalPriceTrip) {
-        waitUntilElementIsDisplayed(totalPriceDataLocator, Duration.ofSeconds(15));
+        waitUntilElementIsDisplayed(totalPriceDataLocator, TIMEOUT);
 
         // Normaliza el precio de la nueva página
         String totalPriceData = normalizePrice(webDriver.findElement(totalPriceDataLocator).getText());
@@ -115,7 +112,7 @@ public class IntroduceTusDatosPage extends BasePage {
      */
     public void clickPersonalizeTrip() {
         scrollElementIntoView(btnPersonalizar);
-        waitUntilElementIsDisplayed(btnPersonalizar, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(btnPersonalizar, TIMEOUT);
         clickElement(btnPersonalizar);
     }
 }

@@ -1,7 +1,5 @@
 package tests;
 
-import java.time.Duration;
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -10,18 +8,20 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.*;
-
 import io.github.bonigarcia.wdm.WebDriverManager;
-
 import pages.*;
 
 import steps.Steps;
 import utils.CSVDataProvider;
 import utils.TemporaryDataStore;
 
-import static pages.SeleccionarTuViajePage.popUpChangeFare;
+import java.time.Duration;
 
 public class InvalidCardPaymentTest {
+
+    //Variables and Constants
+    public Duration TIMEOUT = Duration.ofSeconds(10);
+
     private WebDriver webDriver;
     private SeleccionarTuViajePage seleccionarTuViajePage;
     private IntroduceTusDatosPage introduceTusDatosPage;
@@ -62,7 +62,7 @@ public class InvalidCardPaymentTest {
                 throw new IllegalArgumentException("Browser not supported: " + browser);
         }
 
-        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        webDriver.manage().timeouts().implicitlyWait(TIMEOUT);
         webDriver.manage().window().maximize();
         webDriver.get("https://www.renfe.com/es/es");
 
@@ -84,20 +84,21 @@ public class InvalidCardPaymentTest {
             String dni,
             String email,
             String phone,
+            String emailBuyer,
+            String phoneBuyer,
             String card,
             String expiration,
             String cvv) throws InterruptedException {
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
         steps.selectDepartureDate();
         seleccionarTuViajePage.verifyYouAreInSelecionaTuViaje();
-        seleccionarTuViajePage.selectFirstTrainAvailableAndBasicFare();
+        seleccionarTuViajePage.selectFirstValidBasicFareTrain();
         seleccionarTuViajePage.verifyNumberOfTravelers();
         seleccionarTuViajePage.verifyFareIsBasic();
         String totalPriceTrip = seleccionarTuViajePage.verifyFareAndTotalPricesAreEquals();
         TemporaryDataStore.getInstance().set("totalPriceTrip", totalPriceTrip);
         seleccionarTuViajePage.clickSelectButton();
-        seleccionarTuViajePage.verifyElementPresenceAndVisibility(popUpChangeFare, "Cambio de tarifa");
-        seleccionarTuViajePage.popUpFareAppears();
+        seleccionarTuViajePage.verifyElementPresenceAndVisibilityPopUpChangeFare(seleccionarTuViajePage.popUpChangeFare, "El PopUp cambio de tarifa está presente y visible");
         seleccionarTuViajePage.linkPopUpFareAppears();
         seleccionarTuViajePage.clickLinkContinueSameFare();
         introduceTusDatosPage.verifyYouAreInIntroduceYourDataPage();
@@ -112,12 +113,13 @@ public class InvalidCardPaymentTest {
         personalizaTuViajePage.verifyYouAreInPersonalizedYourTravelPage();
         personalizaTuViajePage.verifyTotalPersonalizePrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
         personalizaTuViajePage.continueWithPurchase();
-        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10)); // espera explicita para Firefox
+        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT); // espera explicita para Firefox
         compraPage.verifyYouAreInCompraPage();
-        wait = new WebDriverWait(webDriver, Duration.ofSeconds(10)); // espera explicita para Firefox
-        compraPage.typeEmail(email);
-        compraPage.writePhoneField(phone);
+        wait = new WebDriverWait(webDriver, TIMEOUT); // espera explicita para Firefox
+        compraPage.typeEmail(emailBuyer);
+        compraPage.writePhoneField(phoneBuyer);
         compraPage.clickPurchaseCard();
+        compraPage.clickNewCard();
         compraPage.clickPurchaseCondition();
         compraPage.verifyTotalCompraPrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
         compraPage.clickContinuarCompra();

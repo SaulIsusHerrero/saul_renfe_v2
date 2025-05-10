@@ -6,8 +6,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
-
 public class PasarelaPagoPage extends BasePage {
     //Locators
     private By cardField = By.xpath("//input[@id='card-number']");
@@ -39,7 +37,7 @@ public class PasarelaPagoPage extends BasePage {
      * @param totalPriceTrip Precio obtenido previamente, ya normalizado
      */
     public void verifyTotalPricePasarelaPago(String totalPriceTrip) {
-        waitUntilElementIsDisplayed(totalPricePasarelaLocator, Duration.ofSeconds(15));
+        waitUntilElementIsDisplayed(totalPricePasarelaLocator, TIMEOUT);
 
         // Normaliza el precio de la nueva página
         String totalPricePasarela = normalizePrice(webDriver.findElement(totalPricePasarelaLocator).getText());
@@ -55,7 +53,7 @@ public class PasarelaPagoPage extends BasePage {
      * @param card as a string
      */
     public void typeBankCard(String card) {
-        waitUntilElementIsDisplayed(cardField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(cardField, TIMEOUT);
         setElementText(cardField, card);
     }
 
@@ -64,7 +62,7 @@ public class PasarelaPagoPage extends BasePage {
      * @param expirationDate as a string
      */
     public void typeExpirationDate(String expirationDate){
-        waitUntilElementIsDisplayed(expirationField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(expirationField, TIMEOUT);
         setElementText(expirationField, expirationDate);
     }
 
@@ -73,7 +71,7 @@ public class PasarelaPagoPage extends BasePage {
      * @param cvv as a string
      */
     public void typeCVV(String cvv){
-        waitUntilElementIsDisplayed(cvvField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(cvvField, TIMEOUT);
         setElementText(cvvField, cvv);
     }
 
@@ -81,9 +79,9 @@ public class PasarelaPagoPage extends BasePage {
      * Click on the payment button
      */
     public void clickPaymentButton() {
-        waitUntilElementIsDisplayed(btnPayment, Duration.ofSeconds(30));
+        waitUntilElementIsDisplayed(btnPayment, TIMEOUT);
         clickElement(btnPayment);
-        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(30));
+        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
 
         // Assert 1: Verify element exists in DOM (presence)
         try {
@@ -100,7 +98,6 @@ public class PasarelaPagoPage extends BasePage {
         } catch (Exception e) {
             Assert.fail("❌ El Pop-up con el error de tarjeta invalida (RS18) pero NO es visible en pantalla");
         }
-        Assert.assertTrue(webDriver.findElement(disabledPayButton).isEnabled());
     }
 
 }

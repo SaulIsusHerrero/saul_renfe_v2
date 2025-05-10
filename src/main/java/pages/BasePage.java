@@ -21,7 +21,7 @@ public class BasePage {
     }
 
     //Variables and Constants
-    private final Duration TIMEOUT = Duration.ofSeconds(30);
+    public Duration TIMEOUT = Duration.ofSeconds(10);
 
     /**
      * Writes text inside a given element locator.
@@ -89,12 +89,11 @@ public class BasePage {
 
     /**
      * Waits until an element is displayed in any Page.
-     *
+     * @param TIMEOUT Duration
      * @param locator By
-     * @param TIMEOUT
      */
     public void waitUntilElementIsDisplayed(By locator, Duration TIMEOUT) {
-        WebDriverWait wait = new WebDriverWait(webDriver, this.TIMEOUT);  // Usa la constante
+        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);  // Usa la constante
         wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 

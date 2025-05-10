@@ -1,11 +1,7 @@
 package tests;
 
-import java.time.Duration;
-
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -19,7 +15,12 @@ import steps.Steps;
 import utils.TemporaryDataStore;
 import utils.CSVDataProvider;
 
+import java.time.Duration;
+
 public class EmptyBuyerDataTest5d {
+
+    //Variables and Constants
+    public Duration TIMEOUT = Duration.ofSeconds(10);
 
     private WebDriver webDriver;
     private Steps steps;
@@ -63,7 +64,7 @@ public class EmptyBuyerDataTest5d {
                 throw new IllegalArgumentException("Browser not supported: " + browser);
         }
 
-        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        webDriver.manage().timeouts().implicitlyWait(TIMEOUT);
         webDriver.manage().window().maximize();
         webDriver.get("https://www.renfe.com/es/es");
 
@@ -88,20 +89,18 @@ public class EmptyBuyerDataTest5d {
             String email,
             String phone
             ) throws InterruptedException {
+        TemporaryDataStore.getInstance().set("testCase", "InvalidDataTraveler15d");
         // Bloques reutilizables (steps)
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
         steps.selectDepartureDate();
-        homePage.selectDepartureDateDaysLater(5);
-        homePage.clickAcceptButton();
-        homePage.clickSearchTicketButton();
         seleccionarTuViajePage.verifyYouAreInSelecionaTuViaje();
-        seleccionarTuViajePage.selectFirstTrainAvailableAndBasicFare();
+        seleccionarTuViajePage.selectFirstValidBasicFareTrain();
         seleccionarTuViajePage.verifyNumberOfTravelers();
         seleccionarTuViajePage.verifyFareIsBasic();
         String totalPriceTrip = seleccionarTuViajePage.verifyFareAndTotalPricesAreEquals();
         TemporaryDataStore.getInstance().set("totalPriceTrip", totalPriceTrip);
         seleccionarTuViajePage.clickSelectButton();
-        seleccionarTuViajePage.popUpFareAppears();
+        seleccionarTuViajePage.verifyElementPresenceAndVisibilityPopUpChangeFare(seleccionarTuViajePage.popUpChangeFare, "El PopUp cambio de tarifa está presente y visible");
         seleccionarTuViajePage.linkPopUpFareAppears();
         seleccionarTuViajePage.clickLinkContinueSameFare();
         introduceTusDatosPage.verifyYouAreInIntroduceYourDataPage();
@@ -116,9 +115,9 @@ public class EmptyBuyerDataTest5d {
         personalizaTuViajePage.verifyYouAreInPersonalizedYourTravelPage();
         personalizaTuViajePage.verifyTotalPersonalizePrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
         personalizaTuViajePage.continueWithPurchase();
-        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10)); // espera explicita para Firefox
+        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT); // espera explicita para Firefox
         compraPage.verifyYouAreInCompraPage();
-        wait = new WebDriverWait(webDriver, Duration.ofSeconds(10)); // espera explicita para Firefox
+        wait = new WebDriverWait(webDriver, TIMEOUT); // espera explicita para Firefox
         compraPage.typeEmail(email);
         compraPage.writePhoneField(phone);
         compraPage.clickPurchaseCard();
@@ -128,6 +127,7 @@ public class EmptyBuyerDataTest5d {
         compraPage.clickContinuarCompra();
         pasarelaPagoPage.verifyYouAreInPasarelaPagoPage();
         pasarelaPagoPage.clickPaymentButton();
+        Assert.assertTrue(webDriver.findElement(pasarelaPagoPage.disabledPayButton).isEnabled());
     }
 
     @AfterMethod

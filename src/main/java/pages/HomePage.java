@@ -4,11 +4,12 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.TextStyle;
 import java.util.Locale;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 public class HomePage extends BasePage {
     // Locators
@@ -21,10 +22,8 @@ public class HomePage extends BasePage {
     private By acceptButtonLocator = By.xpath("//button[contains(text(),'Aceptar')]");
     private By buscarBilleteLocator = By.xpath("//button[@title='Buscar billete']");
     private By nextMonthButton = By.xpath("//button[contains(@class, 'lightpick__next-action')]");
+    private By nextDay = By.xpath("//div[contains(@class, 'lightpick__day') and not(contains(@class, 'is-disabled')) and text()='%d']");
     private final By monthYearLabel = By.cssSelector("span.rf-daterange-picker-alternative__month-label");
-
-    // Variables and Constants
-    private final Duration TIMEOUT = Duration.ofSeconds(30);
 
     // Constructor
     public HomePage(WebDriver webDriver) {
@@ -36,8 +35,9 @@ public class HomePage extends BasePage {
      * Accepts all cookies in any Page.
      */
     public void clickAcceptAllCookiesButton() {
-        WebElement acceptButton = new WebDriverWait(webDriver, Duration.ofSeconds(5)).until(ExpectedConditions.elementToBeClickable(acceptAllCookiesButton));
-        ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", acceptButton);
+        waitUntilElementIsDisplayed(acceptAllCookiesButton, TIMEOUT);
+        scrollElementIntoView(acceptAllCookiesButton);
+        clickElement(acceptAllCookiesButton);
     }
 
     /**
@@ -78,7 +78,7 @@ public class HomePage extends BasePage {
      * Clicks on the departure date calendar in the Home page
      */
     public void selectDepartureDate() {
-        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
         WebElement button = wait.until(ExpectedConditions.visibilityOfElementLocated(dateDepartureInput));
         button.click();
     }
@@ -88,63 +88,39 @@ public class HomePage extends BasePage {
      * @param expectedSelected boolean with the expected selected state of the element
      */
     public void clickSoloIdaButtonSelected(boolean expectedSelected) {
-        waitUntilElementIsDisplayed(onlyDepartureRadioButtonLabel, Duration.ofSeconds(30));
+        waitUntilElementIsDisplayed(onlyDepartureRadioButtonLabel, TIMEOUT);
         scrollElementIntoView(onlyDepartureRadioButtonLabel);
         setElementSelected(onlyDepartureRadioButtonInput, onlyDepartureRadioButtonLabel, expectedSelected);
     }
 
     /**
-     * Selects a departure date a number of days ahead from the current date.
-     * @param daysLater Number of days to add to the current date
+     * Selects a departure date, a number of days ahead from the current date.
+     * @param diasDespues Number of days to add to the current date
      */
-    public void selectDepartureDateDaysLater(int daysLater) {
-        LocalDate targetDate = LocalDate.now().plusDays(daysLater);
-        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMMM yyyy", new Locale("es", "ES"));
-        String targetMonthYear = targetDate.format(monthFormatter);
+    public void selectDateDaysLater(WebDriver webDriver, int diasDespues) {
+        // 1. Configura el formato en español
+        Locale espanol = new Locale("es", "ES");
+        DateTimeFormatter formatoMes = DateTimeFormatter.ofPattern("MMMM", espanol);
+        DateTimeFormatter formatoMesAnio = DateTimeFormatter.ofPattern("MMMM yyyy", espanol);
 
-        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(15));
-        final int maxAttempts = 12;
-        int attempts = 0;
+        // 2. Calcula la fecha objetivo (hoy + días)
+        LocalDate fechaObjetivo = LocalDate.now().plusDays(diasDespues);
+        int dia = fechaObjetivo.getDayOfMonth();
+        String mes = fechaObjetivo.format(formatoMes).toLowerCase(); // "mayo"
+        String mesAnio = fechaObjetivo.format(formatoMesAnio).toLowerCase(); // "mayo 2025"
 
-        while (attempts < maxAttempts) {
-            String currentMonthYear = wait.until(ExpectedConditions
-                            .visibilityOfElementLocated(monthYearLabel))
-                    .getText()
-                    .trim();
-
-            if (normalizeMonth(currentMonthYear).equals(normalizeMonth(targetMonthYear))) {
-                break;
-            }
-
-            WebElement nextButton = wait.until(ExpectedConditions.elementToBeClickable(nextMonthButton));
-            nextButton.click();
-
-            wait.until(ExpectedConditions.not(
-                    ExpectedConditions.textToBePresentInElementLocated(monthYearLabel, currentMonthYear)));
-
-            attempts++;
-        }
-
-        if (attempts >= maxAttempts) {
-            throw new RuntimeException("No se encontró el mes: " + targetMonthYear + " tras " + maxAttempts + " intentos.");
-        }
-
-        // Seleccionar el día
-        String dayXpath = String.format(
-                "//div[contains(@class, 'lightpick__day') and not(contains(@class, 'is-disabled')) and text()='%d']",
-                targetDate.getDayOfMonth());
-
-        try {
-            WebElement dayElement = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(dayXpath)));
-            dayElement.click();
-        } catch (TimeoutException e) {
-            throw new RuntimeException(
-                    "No se pudo seleccionar el día " + targetDate.getDayOfMonth() + " del mes " + targetMonthYear, e);
-        }
+        // 3. Navega al mes/año correcto
+        navegarAlMesAnio(webDriver, mesAnio);
     }
 
-    private String normalizeMonth(String monthText) {
-        return monthText.toLowerCase().replaceAll("[^a-záéíóúüñ0-9]", "");
+    private void navegarAlMesAnio(WebDriver driver, String mesAnioObjetivo) {
+        while (true) {
+            String mesAnioActual = driver.findElement(By.cssSelector(".datepicker-switch")).getText().toLowerCase();
+            if (mesAnioActual.equals(mesAnioObjetivo)) {
+                break;
+            }
+            driver.findElement(By.cssSelector(".next")).click(); // Flecha "siguiente mes"
+        }
     }
 
     /**
@@ -152,6 +128,7 @@ public class HomePage extends BasePage {
      */
     public void clickAcceptButton() {
         waitUntilElementIsDisplayed(acceptButtonLocator, TIMEOUT);
+        scrollElementIntoView(buscarBilleteLocator);
         clickElement(acceptButtonLocator);
     }
 
@@ -159,7 +136,7 @@ public class HomePage extends BasePage {
      * Searches the selected ticket in the Home page.
      */
     public void clickSearchTicketButton() {
-        waitUntilElementIsDisplayed(buscarBilleteLocator, Duration.ofSeconds(30));
+        waitUntilElementIsDisplayed(buscarBilleteLocator, TIMEOUT);
         scrollElementIntoView(buscarBilleteLocator);
         clickElement(buscarBilleteLocator);
     }

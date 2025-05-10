@@ -1,7 +1,6 @@
 package tests;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -14,19 +13,18 @@ import pages.*;
 import utils.CSVDataProvider;
 import utils.TemporaryDataStore;
 import steps.Steps;
-
 import java.time.Duration;
 
 public class InvalidDataTraveler15d {
+
+    //Variables and Constants
+    public Duration TIMEOUT = Duration.ofSeconds(10);
 
     private WebDriver webDriver;
     private HomePage homePage;
     private SeleccionarTuViajePage seleccionarTuViajePage;
     private IntroduceTusDatosPage introduceTusDatosPage;
     private Steps steps;
-
-    //Locators
-    private By errorNombre = By.xpath("//div[text()='El nombre tiene un formato incorrecto']");
 
     @DataProvider(name = "paymentData")
     public Object[][] getPaymentData() {
@@ -60,7 +58,7 @@ public class InvalidDataTraveler15d {
                 throw new IllegalArgumentException("Browser not supported: " + browser);
         }
 
-        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        webDriver.manage().timeouts().implicitlyWait(TIMEOUT);
         webDriver.manage().window().maximize();
         webDriver.get("https://www.renfe.com/es/es");
 
@@ -86,17 +84,14 @@ public class InvalidDataTraveler15d {
         // Bloques reutilizables (steps)
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
         steps.selectDepartureDate();
-        homePage.selectDepartureDateDaysLater(15);
-        homePage.clickAcceptButton();
-        homePage.clickSearchTicketButton();
         seleccionarTuViajePage.verifyYouAreInSelecionaTuViaje();
-        seleccionarTuViajePage.selectFirstTrainAvailableAndBasicFare();
+        seleccionarTuViajePage.selectFirstValidBasicFareTrain();
         seleccionarTuViajePage.verifyNumberOfTravelers();
         seleccionarTuViajePage.verifyFareIsBasic();
         String totalPriceTrip = seleccionarTuViajePage.verifyFareAndTotalPricesAreEquals();
         TemporaryDataStore.getInstance().set("totalPriceTrip", totalPriceTrip);
         seleccionarTuViajePage.clickSelectButton();
-        seleccionarTuViajePage.popUpFareAppears();
+        seleccionarTuViajePage.verifyElementPresenceAndVisibilityPopUpChangeFare(seleccionarTuViajePage.popUpChangeFare, "El PopUp cambio de tarifa está presente y visible");
         seleccionarTuViajePage.linkPopUpFareAppears();
         seleccionarTuViajePage.clickLinkContinueSameFare();
         introduceTusDatosPage.verifyYouAreInIntroduceYourDataPage();
