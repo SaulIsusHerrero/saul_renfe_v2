@@ -115,4 +115,5 @@ public class IntroduceTusDatosPage extends BasePage {
         waitUntilElementIsDisplayed(btnPersonalizar, TIMEOUT);
         clickElement(btnPersonalizar);
     }
+
 }
