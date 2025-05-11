@@ -82,9 +82,9 @@ public class EmptyBuyerDataTest5d {
             String firstName,
             String primerApellido,
             String segundoApellido,
+            String dni,
             String email,
             String phone,
-            String dni,
             String emailBuyer,
             String phoneBuyer
             ) throws InterruptedException {
