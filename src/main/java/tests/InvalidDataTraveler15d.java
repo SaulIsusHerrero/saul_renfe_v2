@@ -1,34 +1,32 @@
 package tests;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.*;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import pages.*;
-import steps.Steps;
 import utils.CSVDataProvider;
 import utils.TemporaryDataStore;
+import steps.Steps;
 
 import static pages.BasePage.TIMEOUT;
 
-public class InvalidCardPaymentTest {
+public class InvalidDataTraveler15d {
 
     private WebDriver webDriver;
+    private HomePage homePage;
     private SeleccionarTuViajePage seleccionarTuViajePage;
     private IntroduceTusDatosPage introduceTusDatosPage;
-    private PersonalizaTuViajePage personalizaTuViajePage;
-    private CompraPage compraPage;
-    private PasarelaPagoPage pasarelaPagoPage;
     private Steps steps;
 
     @DataProvider(name = "paymentData")
     public Object[][] getPaymentData() {
-        return CSVDataProvider.readDatosPasajeros();
+        return CSVDataProvider.readDatosPasajerosError15d();
     }
 
     @DataProvider(name = "routeData")
@@ -41,8 +39,8 @@ public class InvalidCardPaymentTest {
     public void setup(@Optional("chrome") String browser) {
         switch (browser.toLowerCase()) {
             case "chrome":
+                WebDriverManager.chromedriver().setup();
                 ChromeOptions chromeOptions = new ChromeOptions();
-                chromeOptions.addArguments("--incognito");
                 webDriver = new ChromeDriver(chromeOptions);
                 break;
             case "firefox":
@@ -62,29 +60,26 @@ public class InvalidCardPaymentTest {
         webDriver.manage().window().maximize();
         webDriver.get("https://www.renfe.com/es/es");
 
+        // Inicialización de páginas y steps
+        steps = new Steps(webDriver);
         seleccionarTuViajePage = new SeleccionarTuViajePage(webDriver);
         introduceTusDatosPage = new IntroduceTusDatosPage(webDriver);
-        personalizaTuViajePage = new PersonalizaTuViajePage(webDriver);
-        compraPage = new CompraPage(webDriver);
-        pasarelaPagoPage = new PasarelaPagoPage(webDriver);
-        steps = new Steps(webDriver);
+        homePage = new HomePage(webDriver);
     }
 
     @Test(dataProvider = "paymentData")
-    public void InvalidCardPaymentTest(
+    public void InvalidDataTraveler15d(
             String originStation,
             String destinationStation,
-            String firstName,
+            String firstNameError,
             String primerApellido,
             String segundoApellido,
             String dni,
             String email,
-            String phone,
-            String emailBuyer,
-            String phoneBuyer,
-            String card,
-            String expiration,
-            String cvv) throws InterruptedException {
+            String phone
+    ) throws InterruptedException {
+        TemporaryDataStore.getInstance().set("testCase", "InvalidDataTraveler15d");
+        // Bloques reutilizables (steps)
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
         steps.selectDepartureDate();
         seleccionarTuViajePage.verifyYouAreInSelecionaTuViaje();
@@ -98,34 +93,16 @@ public class InvalidCardPaymentTest {
         seleccionarTuViajePage.linkPopUpFareAppears();
         seleccionarTuViajePage.clickLinkContinueSameFare();
         introduceTusDatosPage.verifyYouAreInIntroduceYourDataPage();
-        introduceTusDatosPage.writeFirstNameField(firstName);
+        introduceTusDatosPage.writeFirstNameField(firstNameError);
         introduceTusDatosPage.writeFirstSurnameField(primerApellido);
         introduceTusDatosPage.writeSecondSurnameField(segundoApellido);
         introduceTusDatosPage.writeDNIField(dni);
         introduceTusDatosPage.writeEmailField(email);
         introduceTusDatosPage.writePhoneField(phone);
-        introduceTusDatosPage.verifyTotalPriceData((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
+        introduceTusDatosPage.verifyTotalPriceData(totalPriceTrip);
         introduceTusDatosPage.clickPersonalizeTrip();
-        personalizaTuViajePage.verifyYouAreInPersonalizedYourTravelPage();
-        personalizaTuViajePage.verifyTotalPersonalizePrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
-        personalizaTuViajePage.continueWithPurchase();
-        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT); // espera explicita para Firefox
-        compraPage.verifyYouAreInCompraPage();
-        wait = new WebDriverWait(webDriver, TIMEOUT); // espera explicita para Firefox
-        compraPage.typeEmail(emailBuyer);
-        compraPage.writePhoneField(phoneBuyer);
-        compraPage.clickPurchaseCard();
-        compraPage.clickNewCard();
-        compraPage.clickPurchaseCondition();
-        compraPage.verifyTotalCompraPrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
-        compraPage.clickContinuarCompra();
-        pasarelaPagoPage.verifyYouAreInPasarelaPagoPage();
-        pasarelaPagoPage.verifyTotalPricePasarelaPago((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
-        pasarelaPagoPage.typeBankCard(card);
-        pasarelaPagoPage.typeExpirationDate(expiration);
-        pasarelaPagoPage.typeCVV(cvv);
-        pasarelaPagoPage.clickPaymentButton();
-    }
+        Assert.assertTrue(Boolean.parseBoolean(firstNameError));
+        }
 
     @AfterMethod
     public void tearDown() {

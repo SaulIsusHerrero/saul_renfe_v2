@@ -7,7 +7,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.*;
-import org.testng.Assert;
+
 import java.time.Duration;
 
 public class BasePage {
@@ -20,11 +20,8 @@ public class BasePage {
         PageFactory.initElements(webDriver, this);
     }
 
-    //Locators
-    protected By acceptAllCookiesButton = By.id("onetrust-accept-btn-handler");
-
     //Variables and Constants
-    private final Duration TIMEOUT = Duration.ofSeconds(30);
+    public static final Duration TIMEOUT = Duration.ofSeconds(10);
 
     /**
      * Writes text inside a given element locator.
@@ -71,7 +68,7 @@ public class BasePage {
      * Desplaza el elemento a la vista
      */
     void scrollElementIntoViewElement(WebElement element) {
-        ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", element);
+        ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
     }
 
     /**
@@ -91,23 +88,13 @@ public class BasePage {
     }
 
     /**
-     * Accepts all cookies in any Page.
-     */
-    public void clickAcceptAllCookiesButton() {
-        WebElement acceptButton = new WebDriverWait(webDriver, Duration.ofSeconds(5)).
-                until(ExpectedConditions.elementToBeClickable(acceptAllCookiesButton));
-        ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", acceptButton);
-    }
-
-    /**
      * Waits until an element is displayed in any Page.
+     * @param TIMEOUT Duration
      * @param locator By
-     * @param timeout long
      */
-    public void waitUntilElementIsDisplayed(By locator, Duration timeout) {
-        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(5));
-        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-        Assert.assertTrue(element.isDisplayed(),"The element" + element + "is not displayed");
+    public void waitUntilElementIsDisplayed(By locator, Duration TIMEOUT) {
+        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);  // Usa la constante
+        wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
     /**
@@ -140,8 +127,8 @@ public class BasePage {
      */
     public String normalizePrice(String priceText) {
         return priceText.trim()
-                .replaceAll("\\s+", "")  // Elimina espacios
-                .replace(".", ",")       // Asegura coma como separador decimal
-                .replaceAll(",(\\d)€", ",$10€");  // Asegura dos decimales
+                .replaceAll("\\s+", "")
+                .replace(".", ",")
+                .replaceAll(",(\\d)€", ",$10€");
     }
 }

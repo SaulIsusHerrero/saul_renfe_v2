@@ -1,12 +1,11 @@
 package pages;
 
-import org.junit.Assert;
+import org.openqa.selenium.TimeoutException;
+import org.testng.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.time.Duration;
 
 public class PasarelaPagoPage extends BasePage {
     //Locators
@@ -16,6 +15,7 @@ public class PasarelaPagoPage extends BasePage {
     private By cvvField = By.xpath("//input[@id='card-cvv']");
     private By btnPayment = By.xpath("//button[@class='btn btn-lg btn-accept validColor']");
     private By popUpError = By.xpath("//div[@id='myModalBody']//li[contains(text(), 'Tarjeta no soportada (RS18)')]");
+    public By disabledPayButton = By.xpath("//button[@class='btn btn-lg btn-accept' and @disabled]");
 
     //Constructor
     public PasarelaPagoPage(WebDriver webDriver) {
@@ -27,10 +27,17 @@ public class PasarelaPagoPage extends BasePage {
     /**
      * Assert I am in the "pasarela de pago" Page
      */
+    // En tu PasarelaPagoPage o donde hagas la verificación:
     public void verifyYouAreInPasarelaPagoPage() {
-        String currentURL = webDriver.getCurrentUrl();
-        String expectedURL = "https://sis.redsys.es/sis/realizarPago";
-        Assert.assertEquals("Error: La url que esta cargada en la web es: " + currentURL + ", sin embargo se esperaba:" + expectedURL, currentURL,expectedURL);
+        String actualUrl = webDriver.getCurrentUrl().trim();
+        String expectedUrlPattern = "sis.redsys.es/sis/realizarPago";
+
+        try {
+            new WebDriverWait(webDriver, TIMEOUT)
+                    .until(ExpectedConditions.urlContains(expectedUrlPattern));
+        } catch (TimeoutException e) {
+            Assert.fail("La URL no contiene '" + expectedUrlPattern + "' después de 15 segundos. URL actual: " + actualUrl);
+        }
     }
 
     /**
@@ -38,7 +45,7 @@ public class PasarelaPagoPage extends BasePage {
      * @param totalPriceTrip Precio obtenido previamente, ya normalizado
      */
     public void verifyTotalPricePasarelaPago(String totalPriceTrip) {
-        waitUntilElementIsDisplayed(totalPricePasarelaLocator, Duration.ofSeconds(15));
+        waitUntilElementIsDisplayed(totalPricePasarelaLocator, TIMEOUT);
 
         // Normaliza el precio de la nueva página
         String totalPricePasarela = normalizePrice(webDriver.findElement(totalPricePasarelaLocator).getText());
@@ -54,17 +61,17 @@ public class PasarelaPagoPage extends BasePage {
      * @param card as a string
      */
     public void typeBankCard(String card) {
-        waitUntilElementIsDisplayed(cardField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(cardField, TIMEOUT);
         setElementText(cardField, card);
     }
 
     /**
      * Type the Expiration Date in the textbox on the "Pasarela de pago" page.
-     * @param expiration as a string
+     * @param expirationDate as a string
      */
-    public void typeExpirationDate(String expiration){
-        waitUntilElementIsDisplayed(expirationField, Duration.ofSeconds(5));
-        setElementText(expirationField, expiration);
+    public void typeExpirationDate(String expirationDate){
+        waitUntilElementIsDisplayed(expirationField, TIMEOUT);
+        setElementText(expirationField, expirationDate);
     }
 
     /**
@@ -72,7 +79,7 @@ public class PasarelaPagoPage extends BasePage {
      * @param cvv as a string
      */
     public void typeCVV(String cvv){
-        waitUntilElementIsDisplayed(cvvField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(cvvField, TIMEOUT);
         setElementText(cvvField, cvv);
     }
 
@@ -80,9 +87,9 @@ public class PasarelaPagoPage extends BasePage {
      * Click on the payment button
      */
     public void clickPaymentButton() {
-        waitUntilElementIsDisplayed(btnPayment, Duration.ofSeconds(30));
+        waitUntilElementIsDisplayed(btnPayment, TIMEOUT);
         clickElement(btnPayment);
-        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(30));
+        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
 
         // Assert 1: Verify element exists in DOM (presence)
         try {
@@ -92,7 +99,7 @@ public class PasarelaPagoPage extends BasePage {
             Assert.fail("❌ El Pop-up NO existe en el DOM");
         }
 
-        // Assert 2: Verify element is actually visible on screen
+        // Assert 2: Verify the element is actually visible on screen
         try {
             wait.until(ExpectedConditions.visibilityOfElementLocated(popUpError));
             System.out.println("✅ El Pop-up con el error de tarjeta invalida (RS18) es visible en pantalla");

@@ -2,67 +2,82 @@ package utils;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
-
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CSVDataProvider {
-    private static final String BASE_PATH = Paths.get("src", "main", "java", "utils", "data").toAbsolutePath().toString() + "/";
-    /**
-     * Lee datos de pasajeros desde el archivo CSV correspondiente
-     */
+    private static final String DATA_DIR = Paths.get("src", "main", "java","resources").toString();
+
     public static Object[][] readDatosPasajeros() {
-        return readCSV(BASE_PATH + "datos_pasajeros.csv");
+        return readCSVFile("datos_pasajeros.csv");
     }
 
-    /**
-     * Lee precios de trayectos desde el archivo CSV correspondiente
-     */
+    public static Object[][] readDatosPasajerosError15d() {
+        return readCSVFile("datos_pasajeros_error_15d.csv");
+    }
+
+    public static Object[][] readDatosPasajerosBlankPaymentData5d() {
+        return readCSVFile("datos_pasajeros_blank_payment_data_5d.csv");
+    }
+
     public static Object[][] readPreciosTrayectos() {
-        return readCSV(BASE_PATH + "precios_trayectos.csv");
+        return readCSVFile("precios_trayectos.csv");
     }
 
-    /**
-     * Método genérico para leer cualquier archivo CSV
-     * @param filePath Ruta completa del archivo CSV
-     */
-    public static Object[][] readCSV(String filePath) {
-        try (CSVReader reader = new CSVReader(new FileReader(filePath))) {
-            List<String[]> data = reader.readAll();
+    private static Object[][] readCSVFile(String filename) {
+        Path filePath = Paths.get(DATA_DIR, filename);
 
-            if (data.isEmpty()) {
-                throw new RuntimeException("El archivo CSV está vacío: " + filePath);
+        // Verificar que el archivo existe
+        if (!Files.exists(filePath)) {
+            throw new RuntimeException("Archivo no encontrado: " + filePath);
+        }
+
+        // Verificar que no esté vacío
+        try {
+            if (Files.size(filePath) == 0) {
+                throw new RuntimeException("Archivo vacío: " + filePath);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Error verificando tamaño del archivo: " + filePath, e);
+        }
+
+        try (CSVReader reader = new CSVReader(new FileReader(filePath.toFile()))) {
+            List<String[]> allData = reader.readAll()
+                    .stream()
+                    .filter(row -> !Arrays.stream(row).allMatch(String::isEmpty)) // Filtrar filas vacías
+                    .collect(Collectors.toList());
+
+            if (allData.isEmpty()) {
+                throw new RuntimeException("No hay datos válidos en el archivo CSV: " + filePath);
             }
 
-            int startRow = hasHeader(data) ? 1 : 0;
-            Object[][] testData = new Object[data.size() - startRow][];
+            // Determinar si hay encabezados (asumimos que la primera fila es encabezado si contiene texto)
+            boolean hasHeader = Arrays.stream(allData.get(0))
+                    .anyMatch(cell -> cell != null && !cell.trim().isEmpty() && cell.matches(".*[a-zA-Z].*"));
 
-            for (int i = startRow; i < data.size(); i++) {
-                testData[i - startRow] = data.get(i);
+            int startRow = hasHeader ? 1 : 0;
+            int rowCount = allData.size() - startRow;
+
+            if (rowCount == 0) {
+                throw new RuntimeException("Solo hay encabezados en el archivo CSV: " + filePath);
+            }
+
+            // Convertir a array bidimensional
+            Object[][] testData = new Object[rowCount][];
+            for (int i = startRow; i < allData.size(); i++) {
+                testData[i - startRow] = allData.get(i);
             }
 
             return testData;
+
         } catch (IOException | CsvException e) {
-            throw new RuntimeException("Error al leer el archivo CSV: " + filePath, e);
+            throw new RuntimeException("Error leyendo archivo CSV: " + filePath, e);
         }
-    }
-
-    /**
-     * Metodo para obtener rutas relativas (opcional)
-     */
-    public static String getRelativePath(String fileName) {
-        return Paths.get("src", "main", "java", "utils", "data", fileName).toString();
-    }
-
-    private static boolean hasHeader(List<String[]> data) {
-        if (data.isEmpty()) return false;
-        for (String cell : data.get(0)) {
-            if (cell.matches(".*[a-zA-Z].*")) {
-                return true;
-            }
-        }
-        return false;
     }
 }

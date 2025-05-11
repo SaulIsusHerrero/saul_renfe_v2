@@ -1,15 +1,12 @@
 package pages;
 
-import org.junit.Assert;
+import org.testng.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-
-import java.time.Duration;
 
 public class PersonalizaTuViajePage extends BasePage {
     //Locators
-    private By personalizaTuViajeLabel = By.xpath("//span[contains(text(), 'Personaliza tu viaje') and not(ancestor::select[@disabled])]");
+    private By personalizaTuViajeStepper = By.xpath("//ul[@class='stepper stepper-horizontal']//li[contains(@class, 'active')]//span[contains(text(), 'Personaliza tu viaje')]");
     private By btnContinuarPersonalize = By.xpath("//button[@id='submitFormaPago']");
     private By totalPricePersonalizeLocator = By.xpath("//span[@id='totalTrayecto']");
 
@@ -24,10 +21,17 @@ public class PersonalizaTuViajePage extends BasePage {
      * Assert that I am on the right page and is enabled “Personaliza tu viaje” page
      */
     public void verifyYouAreInPersonalizedYourTravelPage() {
-        waitUntilElementIsDisplayed(personalizaTuViajeLabel, Duration.ofSeconds(15));
-        WebElement element = webDriver.findElement(personalizaTuViajeLabel);
-        Assert.assertEquals("Personaliza tu viaje", element.getText());
-        Assert.assertTrue(webDriver.findElement(personalizaTuViajeLabel).isEnabled());
+        waitUntilElementIsDisplayed(personalizaTuViajeStepper, TIMEOUT);
+        Assert.assertTrue(webDriver.findElement(personalizaTuViajeStepper).isEnabled(), "No está hablitado este step");
+    }
+
+    /**
+     * Clicks on continues with the purchase
+     */
+    public void continueWithPurchase(){
+        waitUntilElementIsDisplayed(btnContinuarPersonalize, TIMEOUT);
+        scrollElementIntoView(btnContinuarPersonalize);
+        clickElement(btnContinuarPersonalize);
     }
 
     /**
@@ -35,7 +39,7 @@ public class PersonalizaTuViajePage extends BasePage {
      * @param totalPriceTrip Precio obtenido previamente, ya normalizado
      */
     public void verifyTotalPersonalizePrice(String totalPriceTrip) {
-        waitUntilElementIsDisplayed(totalPricePersonalizeLocator, Duration.ofSeconds(15));
+        waitUntilElementIsDisplayed(totalPricePersonalizeLocator, TIMEOUT);
 
         // Normaliza el precio de la nueva página
         String totalPricePersonalize = normalizePrice(webDriver.findElement(totalPricePersonalizeLocator).getText());
@@ -44,15 +48,6 @@ public class PersonalizaTuViajePage extends BasePage {
         totalPriceTrip = normalizePrice(totalPriceTrip);
 
         Assert.assertEquals(totalPricePersonalize, totalPriceTrip);
-    }
-
-    /**
-     * Clicks on continues with the purchase
-     */
-    public void continueWithPurchase(){
-        waitUntilElementIsDisplayed(btnContinuarPersonalize, Duration.ofSeconds(15));
-        scrollElementIntoView(btnContinuarPersonalize);
-        clickElement(btnContinuarPersonalize);
     }
 
 }
