@@ -72,8 +72,7 @@ public class CompraPage extends BasePage {
          WebElement cardToClick = webDriver.findElement(newCard);
          wait.until(ExpectedConditions.visibilityOf(cardToClick));
          wait.until(ExpectedConditions.elementToBeClickable(cardToClick));
-         //click con JavascriptExecutor para que no sea interceptado.
-         ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", cardToClick);
+         cardToClick.click();
      }
 
     /**

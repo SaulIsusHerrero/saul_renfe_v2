@@ -1,5 +1,6 @@
 package pages;
 
+import org.openqa.selenium.TimeoutException;
 import org.testng.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -26,10 +27,17 @@ public class PasarelaPagoPage extends BasePage {
     /**
      * Assert I am in the "pasarela de pago" Page
      */
+    // En tu PasarelaPagoPage o donde hagas la verificación:
     public void verifyYouAreInPasarelaPagoPage() {
-        String currentURL = webDriver.getCurrentUrl();
-        String expectedURL = "https://sis.redsys.es/sis/realizarPago";
-        Assert.assertEquals("Error: La url que esta cargada en la web es: " + currentURL + ", sin embargo se esperaba:" + expectedURL, currentURL,expectedURL);
+        String actualUrl = webDriver.getCurrentUrl().trim();
+        String expectedUrlPattern = "sis.redsys.es/sis/realizarPago";
+
+        try {
+            new WebDriverWait(webDriver, TIMEOUT)
+                    .until(ExpectedConditions.urlContains(expectedUrlPattern));
+        } catch (TimeoutException e) {
+            Assert.fail("La URL no contiene '" + expectedUrlPattern + "' después de 15 segundos. URL actual: " + actualUrl);
+        }
     }
 
     /**

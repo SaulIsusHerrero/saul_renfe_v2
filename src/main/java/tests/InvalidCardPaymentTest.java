@@ -10,12 +10,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.*;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import pages.*;
-
 import steps.Steps;
 import utils.CSVDataProvider;
 import utils.TemporaryDataStore;
-
-import java.time.Duration;
 
 import static pages.BasePage.TIMEOUT;
 
@@ -44,8 +41,8 @@ public class InvalidCardPaymentTest {
     public void setup(@Optional("chrome") String browser) {
         switch (browser.toLowerCase()) {
             case "chrome":
-                WebDriverManager.chromedriver().setup();
                 ChromeOptions chromeOptions = new ChromeOptions();
+                chromeOptions.addArguments("--incognito");
                 webDriver = new ChromeDriver(chromeOptions);
                 break;
             case "firefox":

@@ -68,7 +68,7 @@ public class BasePage {
      * Desplaza el elemento a la vista
      */
     void scrollElementIntoViewElement(WebElement element) {
-        ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", element);
+        ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
     }
 
     /**

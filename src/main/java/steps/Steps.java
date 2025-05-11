@@ -24,17 +24,23 @@ public class Steps extends BasePage {
     }
 
     public void selectDepartureDate() throws InterruptedException {
-
         HomePage homePage = new HomePage(webDriver);
         homePage.selectDepartureDate();
-        homePage.clickSoloIdaButtonSelected(true); //From the moment, all the test cases require only one way ticket
+        homePage.clickSoloIdaButtonSelected(true);
 
-        //In case test: InvalidDataTraveler15d or EmptyBuyerDataTest5d
-        if ("InvalidDataTraveler15d".equalsIgnoreCase((String) TemporaryDataStore.getInstance().get("totalPriceTrip"))) {
+        // Verificar usando la clave "testCase" en lugar de "totalPriceTrip"
+        String testCase = (String) TemporaryDataStore.getInstance().get("testCase");
+
+        if ("InvalidDataTraveler15d".equalsIgnoreCase(testCase)) {
+            TemporaryDataStore.getInstance().get("totalPriceTrip");
             homePage.selectDateDaysLater(webDriver, 15);
-        } else if ("EmptyBuyerDataTest5d".equalsIgnoreCase((String) TemporaryDataStore.getInstance().get("totalPriceTrip"))) {
+        } else if ("EmptyBuyerDataTest5d".equalsIgnoreCase(testCase)) {
+            TemporaryDataStore.getInstance().get("totalPriceTrip");
             homePage.selectDateDaysLater(webDriver, 5);
+        } else{
+            System.out.println("El precio del trayecto no es 0");
         }
+
         homePage.clickAcceptButton();
         homePage.clickSearchTicketButton();
     }

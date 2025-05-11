@@ -15,8 +15,6 @@ import steps.Steps;
 import utils.TemporaryDataStore;
 import utils.CSVDataProvider;
 
-import java.time.Duration;
-
 import static pages.BasePage.TIMEOUT;
 
 public class EmptyBuyerDataTest5d {
@@ -84,11 +82,13 @@ public class EmptyBuyerDataTest5d {
             String firstName,
             String primerApellido,
             String segundoApellido,
-            String dni,
             String email,
-            String phone
+            String phone,
+            String dni,
+            String emailBuyer,
+            String phoneBuyer
             ) throws InterruptedException {
-        TemporaryDataStore.getInstance().set("testCase", "InvalidDataTraveler15d");
+        TemporaryDataStore.getInstance().set("testCase", "EmptyBuyerDataTest5d");
         // Bloques reutilizables (steps)
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
         steps.selectDepartureDate();
@@ -117,16 +117,15 @@ public class EmptyBuyerDataTest5d {
         WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT); // espera explicita para Firefox
         compraPage.verifyYouAreInCompraPage();
         wait = new WebDriverWait(webDriver, TIMEOUT); // espera explicita para Firefox
-        compraPage.typeEmail(email);
-        compraPage.writePhoneField(phone);
+        compraPage.typeEmail(emailBuyer);
+        compraPage.writePhoneField(phoneBuyer);
         compraPage.clickPurchaseCard();
         compraPage.clickPurchaseCondition();
         compraPage.verifyTotalCompraPrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
         compraPage.clickContinuarCompra();
-        compraPage.clickContinuarCompra();
         pasarelaPagoPage.verifyYouAreInPasarelaPagoPage();
         pasarelaPagoPage.clickPaymentButton();
-        Assert.assertTrue(webDriver.findElement(pasarelaPagoPage.disabledPayButton).isEnabled());
+        Assert.assertTrue(!webDriver.findElement(pasarelaPagoPage.disabledPayButton).isEnabled());
     }
 
     @AfterMethod

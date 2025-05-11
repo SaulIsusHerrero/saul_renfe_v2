@@ -13,7 +13,6 @@ import pages.*;
 import utils.CSVDataProvider;
 import utils.TemporaryDataStore;
 import steps.Steps;
-import java.time.Duration;
 
 import static pages.BasePage.TIMEOUT;
 
@@ -72,7 +71,7 @@ public class InvalidDataTraveler15d {
     public void InvalidDataTraveler15d(
             String originStation,
             String destinationStation,
-            String firstName,
+            String firstNameError,
             String primerApellido,
             String segundoApellido,
             String dni,
@@ -94,7 +93,7 @@ public class InvalidDataTraveler15d {
         seleccionarTuViajePage.linkPopUpFareAppears();
         seleccionarTuViajePage.clickLinkContinueSameFare();
         introduceTusDatosPage.verifyYouAreInIntroduceYourDataPage();
-        introduceTusDatosPage.writeFirstNameField(firstName);
+        introduceTusDatosPage.writeFirstNameField(firstNameError);
         introduceTusDatosPage.writeFirstSurnameField(primerApellido);
         introduceTusDatosPage.writeSecondSurnameField(segundoApellido);
         introduceTusDatosPage.writeDNIField(dni);
@@ -102,7 +101,7 @@ public class InvalidDataTraveler15d {
         introduceTusDatosPage.writePhoneField(phone);
         introduceTusDatosPage.verifyTotalPriceData(totalPriceTrip);
         introduceTusDatosPage.clickPersonalizeTrip();
-        Assert.assertTrue(Boolean.parseBoolean(firstName));
+        Assert.assertTrue(Boolean.parseBoolean(firstNameError));
         }
 
     @AfterMethod
