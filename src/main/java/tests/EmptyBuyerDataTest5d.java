@@ -120,11 +120,11 @@ public class EmptyBuyerDataTest5d {
         compraPage.typeEmail(emailBuyer);
         compraPage.writePhoneField(phoneBuyer);
         compraPage.clickPurchaseCard();
+        compraPage.clickNewCard();
         compraPage.clickPurchaseCondition();
         compraPage.verifyTotalCompraPrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
         compraPage.clickContinuarCompra();
         pasarelaPagoPage.verifyYouAreInPasarelaPagoPage();
-        pasarelaPagoPage.clickPaymentButton();
         Assert.assertTrue(!webDriver.findElement(pasarelaPagoPage.disabledPayButton).isEnabled());
     }
 

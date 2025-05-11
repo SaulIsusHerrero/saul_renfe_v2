@@ -15,7 +15,7 @@ public class PasarelaPagoPage extends BasePage {
     private By cvvField = By.xpath("//input[@id='card-cvv']");
     private By btnPayment = By.xpath("//button[@class='btn btn-lg btn-accept validColor']");
     private By popUpError = By.xpath("//div[@id='myModalBody']//li[contains(text(), 'Tarjeta no soportada (RS18)')]");
-    public final By disabledPayButton = By.xpath("private final By disabledAcceptButton = By.xpath('//button[@class='btn btn-lg btn-accept' and @disabled]');");
+    public By disabledPayButton = By.xpath("//button[@class='btn btn-lg btn-accept' and @disabled]");
 
     //Constructor
     public PasarelaPagoPage(WebDriver webDriver) {
