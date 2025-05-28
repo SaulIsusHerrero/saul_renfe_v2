@@ -20,7 +20,7 @@ public class PersonalizaTuViajePage extends BasePage {
     /**
      * Assert that I am on the right page and is enabled “Personaliza tu viaje” page
      */
-    public void verifyYouAreInPersonalizedYourTravelPage() {
+    public void verifyYouAreInPersonalizeYourTravelPage() {
         waitUntilElementIsDisplayed(personalizaTuViajeStepper, TIMEOUT);
         Assert.assertTrue(webDriver.findElement(personalizaTuViajeStepper).isEnabled(), "No está hablitado este step");
     }
@@ -38,7 +38,7 @@ public class PersonalizaTuViajePage extends BasePage {
      * Verify the ticket price.
      * @param totalPriceTrip Precio obtenido previamente, ya normalizado
      */
-    public void verifyTotalPersonalizePrice(String totalPriceTrip) {
+    public void verifyTotalPrice(String totalPriceTrip) {
         waitUntilElementIsDisplayed(totalPricePersonalizeLocator, TIMEOUT);
 
         // Normaliza el precio de la nueva página

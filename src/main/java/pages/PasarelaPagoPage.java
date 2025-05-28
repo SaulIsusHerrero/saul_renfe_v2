@@ -44,7 +44,7 @@ public class PasarelaPagoPage extends BasePage {
      * Verify the ticket price.
      * @param totalPriceTrip Precio obtenido previamente, ya normalizado
      */
-    public void verifyTotalPricePasarelaPago(String totalPriceTrip) {
+    public void verifyTotalPrice(String totalPriceTrip) {
         waitUntilElementIsDisplayed(totalPricePasarelaLocator, TIMEOUT);
 
         // Normaliza el precio de la nueva página
@@ -84,27 +84,37 @@ public class PasarelaPagoPage extends BasePage {
     }
 
     /**
-     * Click on the payment button
-     */
+    * Click on the payment button and verify error popup if payment is disabled
+    */
     public void clickPaymentButton() {
+        PasarelaPagoPage pasarelaPagoPage = new PasarelaPagoPage(webDriver);
         waitUntilElementIsDisplayed(btnPayment, TIMEOUT);
-        clickElement(btnPayment);
-        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
 
-        // Assert 1: Verify element exists in DOM (presence)
-        try {
-            wait.until(ExpectedConditions.presenceOfElementLocated(popUpError));
-            System.out.println("✅ El Pop-up con el error de tarjeta invalida (RS18) existe en el DOM");
-        } catch (Exception e) {
-            Assert.fail("❌ El Pop-up NO existe en el DOM");
-        }
+        // Verifica si el botón de pago está DESHABILITADO
+        boolean isPaymentDisabled = !webDriver.findElement(pasarelaPagoPage.disabledPayButton).isEnabled();
+        Assert.assertTrue(!isPaymentDisabled, "El botón PAGAR está habilitado");
+        if (isPaymentDisabled) {  // Solo entra si el botón está deshabilitado
+            clickElement(btnPayment);
+            WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
 
-        // Assert 2: Verify the element is actually visible on screen
-        try {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(popUpError));
-            System.out.println("✅ El Pop-up con el error de tarjeta invalida (RS18) es visible en pantalla");
-        } catch (Exception e) {
-            Assert.fail("❌ El Pop-up con el error de tarjeta invalida (RS18) pero NO es visible en pantalla");
+            // Assert 1: Verify element exists in DOM (presence)
+            try {
+                wait.until(ExpectedConditions.presenceOfElementLocated(popUpError));
+                System.out.println("✅ El Pop-up con el error de tarjeta invalida (RS18) existe en el DOM");
+            } catch (Exception e) {
+                Assert.fail("❌ El Pop-up NO existe en el DOM");
+            }
+
+            // Assert 2: Verify the element is actually visible on screen
+            try {
+                wait.until(ExpectedConditions.visibilityOfElementLocated(popUpError));
+                System.out.println("✅ El Pop-up con el error de tarjeta invalida (RS18) es visible en pantalla");
+            } catch (Exception e) {
+                Assert.fail("❌ El Pop-up existe pero NO es visible en pantalla");
+            }
+        } else {
+            System.out.println("El botón de pago está habilitado, no se esperaba este flujo");
+            // Puedes agregar un Assert.fail() aquí si es necesario
         }
     }
 

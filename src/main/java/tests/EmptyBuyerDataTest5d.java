@@ -86,46 +86,27 @@ public class EmptyBuyerDataTest5d {
             String email,
             String phone,
             String emailBuyer,
-            String phoneBuyer
+            String phoneBuyer,
+            String card,
+            String expiration,
+            String cvv
             ) throws InterruptedException {
         TemporaryDataStore.getInstance().set("testCase", "EmptyBuyerDataTest5d");
         // Bloques reutilizables (steps)
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
         steps.selectDepartureDate();
-        seleccionarTuViajePage.verifyYouAreInSelecionaTuViaje();
-        seleccionarTuViajePage.selectFirstValidBasicFareTrain();
-        seleccionarTuViajePage.verifyNumberOfTravelers();
-        seleccionarTuViajePage.verifyFareIsBasic();
-        String totalPriceTrip = seleccionarTuViajePage.verifyFareAndTotalPricesAreEquals();
-        TemporaryDataStore.getInstance().set("totalPriceTrip", totalPriceTrip);
-        seleccionarTuViajePage.clickSelectButton();
-        seleccionarTuViajePage.verifyElementPresenceAndVisibilityPopUpChangeFare(seleccionarTuViajePage.popUpChangeFare, "El PopUp cambio de tarifa está presente y visible");
-        seleccionarTuViajePage.linkPopUpFareAppears();
-        seleccionarTuViajePage.clickLinkContinueSameFare();
-        introduceTusDatosPage.verifyYouAreInIntroduceYourDataPage();
-        introduceTusDatosPage.writeFirstNameField(firstName);
-        introduceTusDatosPage.writeFirstSurnameField(primerApellido);
-        introduceTusDatosPage.writeSecondSurnameField(segundoApellido);
-        introduceTusDatosPage.writeDNIField(dni);
-        introduceTusDatosPage.writeEmailField(email);
-        introduceTusDatosPage.writePhoneField(phone);
-        introduceTusDatosPage.verifyTotalPriceData((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
-        introduceTusDatosPage.clickPersonalizeTrip();
-        personalizaTuViajePage.verifyYouAreInPersonalizedYourTravelPage();
-        personalizaTuViajePage.verifyTotalPersonalizePrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
-        personalizaTuViajePage.continueWithPurchase();
-        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT); // espera explicita para Firefox
-        compraPage.verifyYouAreInCompraPage();
-        wait = new WebDriverWait(webDriver, TIMEOUT); // espera explicita para Firefox
-        compraPage.typeEmail(emailBuyer);
-        compraPage.writePhoneField(phoneBuyer);
-        compraPage.clickPurchaseCard();
-        compraPage.clickNewCard();
-        compraPage.clickPurchaseCondition();
-        compraPage.verifyTotalCompraPrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
-        compraPage.clickContinuarCompra();
-        pasarelaPagoPage.verifyYouAreInPasarelaPagoPage();
-        Assert.assertTrue(!webDriver.findElement(pasarelaPagoPage.disabledPayButton).isEnabled());
+        steps.selectTrainAndFare();
+        steps.getAndStoreDynamicPrice();
+        steps.verifyAndConfirmTravel();
+        steps.clickPopUpAndLinkAppear();
+        steps.introduceYourData(firstName, primerApellido, segundoApellido, dni, email, phone);
+        steps.verifyPriceIsEqualInData();
+        steps.confirmMyData();
+        steps.verifyPriceIsEqualInPersonalize();
+        steps.confirmPersonalization();
+        steps.verifyPriceIsEqualInCompra();
+        steps.confirmPaymentData(emailBuyer, phoneBuyer);
+        steps.payment(card, expiration, cvv);
     }
 
     @AfterMethod

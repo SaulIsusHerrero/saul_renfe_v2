@@ -1,5 +1,10 @@
 package pages;
 
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.Color;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -15,6 +20,8 @@ public class IntroduceTusDatosPage extends BasePage {
     private By emailField = By.xpath("//input[@id='email0']");
     private By totalPriceDataLocator = By.xpath("//span[@id='totalTrayecto']");
     private By btnPersonalizar = By.cssSelector("#btn-responsive > #submitpersonaliza");
+    private By errorName = By.xpath("//div[text()='El nombre tiene un formato incorrecto']");
+
 
     //Constructor
     public IntroduceTusDatosPage(WebDriver webDriver) {
@@ -95,7 +102,7 @@ public class IntroduceTusDatosPage extends BasePage {
      * Verify the ticket price.
      * @param totalPriceTrip Precio obtenido previamente, ya normalizado
      */
-    public void verifyTotalPriceData(String totalPriceTrip) {
+    public void verifyTotalPrice(String totalPriceTrip) {
         waitUntilElementIsDisplayed(totalPriceDataLocator, TIMEOUT);
 
         // Normaliza el precio de la nueva página
@@ -108,12 +115,30 @@ public class IntroduceTusDatosPage extends BasePage {
     }
 
     /**
-     * Clic "Personalizar viaje" button
-     */
+    * Clic "Personalizar viaje" button y verifica mensaje de error
+    */
     public void clickPersonalizeTrip() {
         scrollElementIntoView(btnPersonalizar);
         waitUntilElementIsDisplayed(btnPersonalizar, TIMEOUT);
         clickElement(btnPersonalizar);
+
+        // Verifica si el mensaje de error está visible (assert true) para el text field name
+        boolean isErrorDisplayed = !webDriver.findElements(errorName).isEmpty();
+        WebElement errorMessage = webDriver.findElement(errorName);
+        Assert.assertTrue(isErrorDisplayed, "El mensaje de error debería mostrarse");
+
+        // 2. Obtener el color del texto (desde CSS externo)
+        String colorRgba = errorMessage.getCssValue("color"); // Ej: "rgba(255, 0, 0, 1)" (rojo)
+        Color errorColor = Color.fromString(colorRgba); // Convertir a objeto Color
+
+        // 3. Definir el color rojo esperado (en formato HEX o RGB)
+        Color expectedRed = Color.fromString("#ff0000"); // Rojo puro en HEX
+        // O bien: Color expectedRed = new Color(255, 0, 0, 1); // RGBA
+
+        // 4. Assert: Comparar el color del mensaje con el rojo esperado
+        Assert.assertEquals(errorColor, expectedRed, "El mensaje de error debería ser rojo");
     }
 
+
 }
+

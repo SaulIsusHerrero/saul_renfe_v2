@@ -71,7 +71,7 @@ public class InvalidDataTraveler15d {
     public void InvalidDataTraveler15d(
             String originStation,
             String destinationStation,
-            String firstNameError,
+            String firstName,
             String primerApellido,
             String segundoApellido,
             String dni,
@@ -82,26 +82,13 @@ public class InvalidDataTraveler15d {
         // Bloques reutilizables (steps)
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
         steps.selectDepartureDate();
-        seleccionarTuViajePage.verifyYouAreInSelecionaTuViaje();
-        seleccionarTuViajePage.selectFirstValidBasicFareTrain();
-        seleccionarTuViajePage.verifyNumberOfTravelers();
-        seleccionarTuViajePage.verifyFareIsBasic();
-        String totalPriceTrip = seleccionarTuViajePage.verifyFareAndTotalPricesAreEquals();
-        TemporaryDataStore.getInstance().set("totalPriceTrip", totalPriceTrip);
-        seleccionarTuViajePage.clickSelectButton();
-        seleccionarTuViajePage.verifyElementPresenceAndVisibilityPopUpChangeFare(seleccionarTuViajePage.popUpChangeFare, "El PopUp cambio de tarifa está presente y visible");
-        seleccionarTuViajePage.linkPopUpFareAppears();
-        seleccionarTuViajePage.clickLinkContinueSameFare();
-        introduceTusDatosPage.verifyYouAreInIntroduceYourDataPage();
-        introduceTusDatosPage.writeFirstNameField(firstNameError);
-        introduceTusDatosPage.writeFirstSurnameField(primerApellido);
-        introduceTusDatosPage.writeSecondSurnameField(segundoApellido);
-        introduceTusDatosPage.writeDNIField(dni);
-        introduceTusDatosPage.writeEmailField(email);
-        introduceTusDatosPage.writePhoneField(phone);
-        introduceTusDatosPage.verifyTotalPriceData(totalPriceTrip);
-        introduceTusDatosPage.clickPersonalizeTrip();
-        Assert.assertTrue(Boolean.parseBoolean(firstNameError));
+        steps.selectTrainAndFare();
+        steps.getAndStoreDynamicPrice();
+        steps.verifyAndConfirmTravel();
+        steps.clickPopUpAndLinkAppear();
+        steps.introduceYourData(firstName, primerApellido, segundoApellido, dni, email, phone);
+        steps.verifyPriceIsEqualInData();
+        steps.confirmMyData();
         }
 
     @AfterMethod

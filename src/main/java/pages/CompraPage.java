@@ -87,7 +87,7 @@ public class CompraPage extends BasePage {
      * Verify the ticket price.
      * @param totalPriceTrip Precio obtenido previamente, ya normalizado
      */
-    public void verifyTotalCompraPrice(String totalPriceTrip) {
+    public void verifyTotalPrice(String totalPriceTrip) {
         waitUntilElementIsDisplayed(totalPriceCompraLocator, TIMEOUT);
 
         // Normaliza el precio de la nueva página

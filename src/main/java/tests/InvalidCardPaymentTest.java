@@ -6,13 +6,11 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.*;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import pages.*;
 import steps.Steps;
 import utils.CSVDataProvider;
-import utils.TemporaryDataStore;
 
 import static pages.BasePage.TIMEOUT;
 
@@ -87,44 +85,18 @@ public class InvalidCardPaymentTest {
             String cvv) throws InterruptedException {
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
         steps.selectDepartureDate();
-        seleccionarTuViajePage.verifyYouAreInSelecionaTuViaje();
-        seleccionarTuViajePage.selectFirstValidBasicFareTrain();
-        seleccionarTuViajePage.verifyNumberOfTravelers();
-        seleccionarTuViajePage.verifyFareIsBasic();
-        String totalPriceTrip = seleccionarTuViajePage.verifyFareAndTotalPricesAreEquals();
-        TemporaryDataStore.getInstance().set("totalPriceTrip", totalPriceTrip);
-        seleccionarTuViajePage.clickSelectButton();
-        seleccionarTuViajePage.verifyElementPresenceAndVisibilityPopUpChangeFare(seleccionarTuViajePage.popUpChangeFare, "El PopUp cambio de tarifa está presente y visible");
-        seleccionarTuViajePage.linkPopUpFareAppears();
-        seleccionarTuViajePage.clickLinkContinueSameFare();
-        introduceTusDatosPage.verifyYouAreInIntroduceYourDataPage();
-        introduceTusDatosPage.writeFirstNameField(firstName);
-        introduceTusDatosPage.writeFirstSurnameField(primerApellido);
-        introduceTusDatosPage.writeSecondSurnameField(segundoApellido);
-        introduceTusDatosPage.writeDNIField(dni);
-        introduceTusDatosPage.writeEmailField(email);
-        introduceTusDatosPage.writePhoneField(phone);
-        introduceTusDatosPage.verifyTotalPriceData((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
-        introduceTusDatosPage.clickPersonalizeTrip();
-        personalizaTuViajePage.verifyYouAreInPersonalizedYourTravelPage();
-        personalizaTuViajePage.verifyTotalPersonalizePrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
-        personalizaTuViajePage.continueWithPurchase();
-        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT); // espera explicita para Firefox
-        compraPage.verifyYouAreInCompraPage();
-        wait = new WebDriverWait(webDriver, TIMEOUT); // espera explicita para Firefox
-        compraPage.typeEmail(emailBuyer);
-        compraPage.writePhoneField(phoneBuyer);
-        compraPage.clickPurchaseCard();
-        compraPage.clickNewCard();
-        compraPage.clickPurchaseCondition();
-        compraPage.verifyTotalCompraPrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
-        compraPage.clickContinuarCompra();
-        pasarelaPagoPage.verifyYouAreInPasarelaPagoPage();
-        pasarelaPagoPage.verifyTotalPricePasarelaPago((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
-        pasarelaPagoPage.typeBankCard(card);
-        pasarelaPagoPage.typeExpirationDate(expiration);
-        pasarelaPagoPage.typeCVV(cvv);
-        pasarelaPagoPage.clickPaymentButton();
+        steps.selectTrainAndFare();
+        steps.getAndStoreDynamicPrice();
+        steps.verifyAndConfirmTravel();
+        steps.clickPopUpAndLinkAppear();
+        steps.introduceYourData(firstName, primerApellido, segundoApellido, dni, email, phone);
+        steps.verifyPriceIsEqualInData();
+        steps.confirmMyData();
+        steps.verifyPriceIsEqualInPersonalize();
+        steps.confirmPersonalization();
+        steps.verifyPriceIsEqualInCompra();
+        steps.confirmPaymentData(emailBuyer, phoneBuyer);
+        steps.payment(card, expiration, cvv);
     }
 
     @AfterMethod

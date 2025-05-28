@@ -1,21 +1,21 @@
 package steps;
 
 import org.openqa.selenium.WebDriver;
-
-import pages.BasePage;
-import pages.HomePage;
+import pages.*;
 import utils.TemporaryDataStore;
 
 public class Steps extends BasePage {
+
+    private final TemporaryDataStore dataStore;
 
     public Steps(WebDriver webDriver) {
         // Empty constructor
         super(webDriver); //Calls to the constructor from parent class and their variable
         this.webDriver = webDriver; //Current instance
+        this.dataStore = TemporaryDataStore.getInstance();
     }
 
     public void performSearchOriginAndDestinationStation(String originStation, String destinationStation) {
-
         new HomePage(webDriver).clickAcceptAllCookiesButton();
         HomePage homePage = new HomePage(webDriver);
         homePage.enterOrigin(originStation);
@@ -43,6 +43,91 @@ public class Steps extends BasePage {
 
         homePage.clickAcceptButton();
         homePage.clickSearchTicketButton();
+    }
+
+    public void selectTrainAndFare(){
+        new SeleccionarTuViajePage(webDriver).verifyYouAreInSelecionaTuViaje();
+        new SeleccionarTuViajePage(webDriver).selectFirstValidBasicFareTrain();
+    }
+
+    public String getAndStoreDynamicPrice() {
+        SeleccionarTuViajePage seleccionarTuViajePage = new SeleccionarTuViajePage(webDriver);
+        // Obtiene el precio dinámico de la página
+        String totalPriceTrip = seleccionarTuViajePage.verifyFareAndTotalPricesAreEquals();
+        // Almacena el precio en TemporaryDataStore
+        TemporaryDataStore.getInstance().set("totalPriceTrip", totalPriceTrip);
+        return totalPriceTrip; // Opcional: devuelve el precio si lo necesitas directamente
+    }
+
+    public void verifyAndConfirmTravel(){
+        new SeleccionarTuViajePage(webDriver).verifyNumberOfTravelers();
+        new SeleccionarTuViajePage(webDriver).verifyFareIsBasic();
+        new SeleccionarTuViajePage(webDriver).verifyFareAndTotalPricesAreEquals();
+        new SeleccionarTuViajePage(webDriver).clickSelectButton();
+    }
+
+    public void clickPopUpAndLinkAppear(){
+        SeleccionarTuViajePage seleccionarTuViajePage = new SeleccionarTuViajePage(webDriver);
+        new SeleccionarTuViajePage(webDriver).verifyElementPresenceAndVisibilityPopUpChangeFare(seleccionarTuViajePage.popUpChangeFare, "El PopUp cambio de tarifa está presente y visible");
+        new SeleccionarTuViajePage(webDriver).linkPopUpFareAppears();
+        new SeleccionarTuViajePage(webDriver).clickLinkContinueSameFare();
+    }
+
+    public void introduceYourData(String firstName,String primerApellido,String segundoApellido,String dni,String email,String phone){
+        IntroduceTusDatosPage introduceTusDatosPage = new IntroduceTusDatosPage(webDriver);
+        introduceTusDatosPage.verifyYouAreInIntroduceYourDataPage();
+        introduceTusDatosPage.writeFirstNameField(firstName);
+        introduceTusDatosPage.writeFirstSurnameField(primerApellido);
+        introduceTusDatosPage.writeSecondSurnameField(segundoApellido);
+        introduceTusDatosPage.writeDNIField(dni);
+        introduceTusDatosPage.writeEmailField(email);
+        introduceTusDatosPage.writePhoneField(phone);
+    }
+
+    public void verifyPriceIsEqualInData(){
+        IntroduceTusDatosPage introduceTusDatosPage = new IntroduceTusDatosPage(webDriver);
+        introduceTusDatosPage.verifyTotalPrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
+    }
+
+
+    public void confirmMyData(){
+        new IntroduceTusDatosPage(webDriver).clickPersonalizeTrip();
+    }
+
+    public void verifyPriceIsEqualInPersonalize(){
+        PersonalizaTuViajePage personalizaTuViajePage = new PersonalizaTuViajePage(webDriver);
+        personalizaTuViajePage.verifyTotalPrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
+    }
+
+    public void confirmPersonalization(){
+        new PersonalizaTuViajePage(webDriver).verifyYouAreInPersonalizeYourTravelPage();
+        new PersonalizaTuViajePage(webDriver).continueWithPurchase();
+    }
+
+    public void verifyPriceIsEqualInCompra(){
+        CompraPage compraPage = new CompraPage(webDriver);
+        compraPage.verifyTotalPrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
+    }
+
+    public void confirmPaymentData(String emailBuyer, String phoneBuyer){
+        new CompraPage(webDriver).verifyYouAreInCompraPage();
+        CompraPage compraPage = new CompraPage(webDriver);
+        compraPage.typeEmail(emailBuyer);
+        compraPage.writePhoneField(phoneBuyer);
+        compraPage.clickPurchaseCard();
+        compraPage.clickNewCard();
+        compraPage.clickPurchaseCondition();
+        compraPage.clickContinuarCompra();
+    }
+
+    public void payment(String card, String expiration, String cvv){
+        new PasarelaPagoPage(webDriver).verifyYouAreInPasarelaPagoPage();
+        PasarelaPagoPage pasarelaPagoPage = new PasarelaPagoPage(webDriver);
+        pasarelaPagoPage.verifyTotalPrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
+        pasarelaPagoPage.typeBankCard(card);
+        pasarelaPagoPage.typeExpirationDate(expiration);
+        pasarelaPagoPage.typeCVV(cvv);
+        pasarelaPagoPage.clickPaymentButton();
     }
 
 }
