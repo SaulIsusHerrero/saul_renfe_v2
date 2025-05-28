@@ -81,7 +81,7 @@ public class InvalidCardPaymentTest {
             String emailBuyer,
             String phoneBuyer,
             String card,
-            String expiration,
+            String expirationDate,
             String cvv) throws InterruptedException {
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
         steps.selectDepartureDate();
@@ -96,7 +96,7 @@ public class InvalidCardPaymentTest {
         steps.confirmPersonalization();
         steps.verifyPriceIsEqualInCompra();
         steps.confirmPaymentData(emailBuyer, phoneBuyer);
-        steps.payment(card, expiration, cvv);
+        steps.payment(card, expirationDate, cvv);
     }
 
     @AfterMethod
