@@ -1,33 +1,29 @@
 package tests;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Assert;
 import org.testng.annotations.*;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import pages.*;
 import steps.Steps;
-import utils.TemporaryDataStore;
 import utils.CSVDataProvider;
+import utils.TemporaryDataStore;
 
 import static pages.BasePage.TIMEOUT;
 
 public class EmptyBuyerDataTest5d {
 
     private WebDriver webDriver;
-    private Steps steps;
     private SeleccionarTuViajePage seleccionarTuViajePage;
     private IntroduceTusDatosPage introduceTusDatosPage;
     private PersonalizaTuViajePage personalizaTuViajePage;
     private CompraPage compraPage;
     private PasarelaPagoPage pasarelaPagoPage;
-    private HomePage homePage;
-
+    private Steps steps;
 
     @DataProvider(name = "paymentData")
     public Object[][] getPaymentData() {
@@ -65,32 +61,26 @@ public class EmptyBuyerDataTest5d {
         webDriver.manage().window().maximize();
         webDriver.get("https://www.renfe.com/es/es");
 
-        // Inicialización de páginas y steps
-        steps = new Steps(webDriver);
         seleccionarTuViajePage = new SeleccionarTuViajePage(webDriver);
         introduceTusDatosPage = new IntroduceTusDatosPage(webDriver);
-        personalizaTuViajePage = new PersonalizaTuViajePage(webDriver);
-        compraPage = new CompraPage(webDriver);
-        pasarelaPagoPage = new PasarelaPagoPage(webDriver);
-        homePage = new HomePage(webDriver);
+        steps = new Steps(webDriver);
     }
 
     @Test(dataProvider = "paymentData")
-    public void EmptyBuyerDataTest5d(
-            String originStation,
-            String destinationStation,
-            String firstName,
-            String primerApellido,
-            String segundoApellido,
-            String dni,
-            String email,
-            String phone,
-            String emailBuyer,
-            String phoneBuyer,
-            String card,
-            String expirationDate,
-            String cvv
-            ) throws InterruptedException {
+    public void EmptyBuyerDataTest5d (
+    String originStation,
+    String destinationStation,
+    String firstName,
+    String primerApellido,
+    String segundoApellido,
+    String dni,
+    String email,
+    String phone,
+    String emailBuyer,
+    String phoneBuyer,
+    String card,
+    String expirationDate,
+    String cvv) throws InterruptedException {
         TemporaryDataStore.getInstance().set("testCase", "EmptyBuyerDataTest5d");
         // Bloques reutilizables (steps)
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);

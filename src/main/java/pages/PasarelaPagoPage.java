@@ -1,6 +1,7 @@
 package pages;
 
 import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -13,7 +14,7 @@ public class PasarelaPagoPage extends BasePage {
     private By expirationField = By.xpath("//input[@id='card-expiration']");
     private By totalPricePasarelaLocator = By.xpath("//div[@class='right']");
     private By cvvField = By.xpath("//input[@id='card-cvv']");
-    private By btnPayment = By.xpath("//button[@class='btn btn-lg btn-accept validColor']");
+    private By btnPayment = By.xpath("//button[@onclick='javascript:pago()']");
     private By popUpError = By.xpath("//div[@id='myModalBody']//li[contains(text(), 'Tarjeta no soportada (RS18)')]");
     private By disabledPaymentButton = By.xpath("//button[@class='btn btn-lg btn-accept' and @disabled]");
 
@@ -83,30 +84,44 @@ public class PasarelaPagoPage extends BasePage {
         setElementText(cvvField, cvv);
     }
 
-
     /**
      * Click on the payment button with state verification:
      * - If button is enabled or disabled
      */
     public void clickPaymentButton() {
         WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
-        clickElement(btnPayment);
-        // Assert 1: Verify element exists in DOM (presence)
-            try {
-                wait.until(ExpectedConditions.presenceOfElementLocated(popUpError));
-                System.out.println("✅ El Pop-up con el error de tarjeta invalida (RS18) existe en el DOM");
-            } catch (Exception e) {
-                Assert.fail("❌ El Pop-up NO existe en el DOM");
-            }
 
-        // Assert 2: Verify the element is actually visible on screen
-            try {
-                wait.until(ExpectedConditions.visibilityOfElementLocated(popUpError));
-                System.out.println("✅ El Pop-up con el error de tarjeta invalida (RS18) es visible en pantalla");
-            } catch (Exception e) {
-                Assert.fail("❌ El Pop-up existe pero NO es visible en pantalla");
-            }
+        // Esperar a que el botón esté presente en el DOM
+        wait.until(ExpectedConditions.presenceOfElementLocated(btnPayment));
+
+        // Obtener el botón real
+        WebElement paymentButton = webDriver.findElement(btnPayment);
+
+        // Verificar si el botón está habilitado
+        if (!paymentButton.isEnabled()) {
+            Assert.fail("❌ El botón de pago está deshabilitado, no se puede continuar.");
+        }
+
+        // Hacer clic
+        paymentButton.click();
+
+        // Verificar presencia del pop-up de error de tarjeta inválida
+        try {
+            wait.until(ExpectedConditions.presenceOfElementLocated(popUpError));
+            System.out.println("✅ El Pop-up con el error de tarjeta inválida (RS18) existe en el DOM");
+        } catch (Exception e) {
+            Assert.fail("❌ El Pop-up NO existe en el DOM después de hacer clic en pagar.");
+        }
+
+        // Verificar visibilidad
+        try {
+            wait.until(ExpectedConditions.visibilityOfElementLocated(popUpError));
+            System.out.println("✅ El Pop-up con el error de tarjeta inválida (RS18) es visible en pantalla");
+        } catch (Exception e) {
+            Assert.fail("❌ El Pop-up existe pero NO es visible en pantalla");
         }
     }
+
+}
 
 

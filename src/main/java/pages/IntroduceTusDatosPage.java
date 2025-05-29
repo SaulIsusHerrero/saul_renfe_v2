@@ -1,13 +1,10 @@
 package pages;
 
-import org.jspecify.annotations.Nullable;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-
-import java.util.List;
 
 public class IntroduceTusDatosPage extends BasePage {
     //Locators
@@ -116,10 +113,35 @@ public class IntroduceTusDatosPage extends BasePage {
         Assert.assertEquals(totalPriceData, totalPriceTrip);
     }
 
-    public void clickPersonalizeTrip() {
+    /**
+     * Click in Personalize trip to follow the process.
+     * @return boolean
+     */
+    public boolean clickPersonalizeTrip() {
         scrollElementIntoView(btnPersonalizar);
         waitUntilElementIsDisplayed(btnPersonalizar, TIMEOUT);
         clickElement(btnPersonalizar);
+
+        // Espera para ver si aparece un posible mensaje de error
+        WebDriverWait wait = new WebDriverWait(webDriver,TIMEOUT);
+        try {
+            WebElement error = wait.until(ExpectedConditions.visibilityOfElementLocated(errorName));
+
+            // Si aparece, verificar texto y color
+            String texto = error.getText().trim();
+            Assert.assertEquals(texto, "El nombre tiene un formato incorrecto");
+
+            String color = error.getCssValue("color");
+            Color actual = Color.fromString(color);
+            Color esperado = Color.fromString("#ff0000");
+            Assert.assertEquals(actual, esperado, "El color del mensaje de error debería ser rojo");
+
+            return false; // No se continúa con el flujo
+
+        } catch (TimeoutException e) {
+            // No apareció error en el nombre, por tanto, podemos continuar
+            return true;
+        }
     }
 
 }
