@@ -23,12 +23,12 @@ public class Steps extends BasePage {
 
     }
 
-    public void selectDepartureDate() throws InterruptedException {
+    public void selectDepartureDate() {
         HomePage homePage = new HomePage(webDriver);
         homePage.selectDepartureDate();
         homePage.clickSoloIdaButtonSelected(true);
 
-        // Verificar usando la clave "testCase" en lugar de "totalPriceTrip"
+        // Verificar usando la clave "testCase"
         String testCase = (String) TemporaryDataStore.getInstance().get("testCase");
 
         if ("InvalidDataTraveler15d".equalsIgnoreCase(testCase)) {
@@ -50,13 +50,12 @@ public class Steps extends BasePage {
         new SeleccionarTuViajePage(webDriver).selectFirstValidBasicFareTrain();
     }
 
-    public String getAndStoreDynamicPrice() {
+    public void getAndStoreDynamicPrice() {
         SeleccionarTuViajePage seleccionarTuViajePage = new SeleccionarTuViajePage(webDriver);
         // Obtiene el precio dinámico de la página
         String totalPriceTrip = seleccionarTuViajePage.verifyFareAndTotalPricesAreEquals();
         // Almacena el precio en TemporaryDataStore
         TemporaryDataStore.getInstance().set("totalPriceTrip", totalPriceTrip);
-        return totalPriceTrip; // Opcional: devuelve el precio si lo necesitas directamente
     }
 
     public void verifyAndConfirmTravel(){
@@ -73,7 +72,12 @@ public class Steps extends BasePage {
         new SeleccionarTuViajePage(webDriver).clickLinkContinueSameFare();
     }
 
-    public void introduceYourData(String firstName,String primerApellido,String segundoApellido,String dni,String email,String phone){
+    public void verifyPriceIsEqualInData(){
+        IntroduceTusDatosPage introduceTusDatosPage = new IntroduceTusDatosPage(webDriver);
+        introduceTusDatosPage.verifyTotalPrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
+    }
+
+    public void introduceYourDataAndConfirm(String firstName,String primerApellido,String segundoApellido,String dni,String email,String phone){
         IntroduceTusDatosPage introduceTusDatosPage = new IntroduceTusDatosPage(webDriver);
         introduceTusDatosPage.verifyYouAreInIntroduceYourDataPage();
         introduceTusDatosPage.writeFirstNameField(firstName);
@@ -82,16 +86,7 @@ public class Steps extends BasePage {
         introduceTusDatosPage.writeDNIField(dni);
         introduceTusDatosPage.writeEmailField(email);
         introduceTusDatosPage.writePhoneField(phone);
-    }
-
-    public void verifyPriceIsEqualInData(){
-        IntroduceTusDatosPage introduceTusDatosPage = new IntroduceTusDatosPage(webDriver);
-        introduceTusDatosPage.verifyTotalPrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
-    }
-
-
-    public void confirmMyData(){
-        new IntroduceTusDatosPage(webDriver).clickPersonalizeTrip();
+        introduceTusDatosPage.clickPersonalizeTrip();
     }
 
     public void verifyPriceIsEqualInPersonalize(){
@@ -120,12 +115,12 @@ public class Steps extends BasePage {
         compraPage.clickContinuarCompra();
     }
 
-    public void payment(String card, String expiration, String cvv){
+    public void payment(String bankCard, String expirationDate, String cvv){
         new PasarelaPagoPage(webDriver).verifyYouAreInPasarelaPagoPage();
         PasarelaPagoPage pasarelaPagoPage = new PasarelaPagoPage(webDriver);
         pasarelaPagoPage.verifyTotalPrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
-        pasarelaPagoPage.typeBankCard(card);
-        pasarelaPagoPage.typeExpirationDate(expiration);
+        pasarelaPagoPage.typeBankCard(bankCard);
+        pasarelaPagoPage.typeExpirationDate(expirationDate);
         pasarelaPagoPage.typeCVV(cvv);
         pasarelaPagoPage.clickPaymentButton();
     }

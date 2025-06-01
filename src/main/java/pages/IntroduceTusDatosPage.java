@@ -37,6 +37,23 @@ public class IntroduceTusDatosPage extends BasePage {
     }
 
     /**
+     * Verify the ticket price.
+     *
+     * @param totalPriceTrip Precio obtenido previamente, ya normalizado
+     */
+    public void verifyTotalPrice(String totalPriceTrip) {
+        waitUntilElementIsDisplayed(totalPriceDataLocator, TIMEOUT);
+
+        // Normaliza el precio de la nueva página
+        String totalPriceData = normalizePrice(webDriver.findElement(totalPriceDataLocator).getText());
+
+        // El precio recibido ya debería estar normalizado, pero por seguridad:
+        totalPriceTrip = normalizePrice(totalPriceTrip);
+
+        Assert.assertEquals(totalPriceData, totalPriceTrip);
+    }
+
+    /**
      * type the name in the textbox on the "Introduce tus datos" page.
      *
      * @param firstName as a string
@@ -91,36 +108,9 @@ public class IntroduceTusDatosPage extends BasePage {
      *
      * @param phone as a string
      */
-    public void writePhoneField(String phone) {
+    public boolean writePhoneField(String phone) {
         waitUntilElementIsDisplayed(telefonoField, TIMEOUT);
         setElementText(telefonoField, phone);
-    }
-
-    /**
-     * Verify the ticket price.
-     *
-     * @param totalPriceTrip Precio obtenido previamente, ya normalizado
-     */
-    public void verifyTotalPrice(String totalPriceTrip) {
-        waitUntilElementIsDisplayed(totalPriceDataLocator, TIMEOUT);
-
-        // Normaliza el precio de la nueva página
-        String totalPriceData = normalizePrice(webDriver.findElement(totalPriceDataLocator).getText());
-
-        // El precio recibido ya debería estar normalizado, pero por seguridad:
-        totalPriceTrip = normalizePrice(totalPriceTrip);
-
-        Assert.assertEquals(totalPriceData, totalPriceTrip);
-    }
-
-    /**
-     * Click in Personalize trip to follow the process.
-     * @return boolean
-     */
-    public boolean clickPersonalizeTrip() {
-        scrollElementIntoView(btnPersonalizar);
-        waitUntilElementIsDisplayed(btnPersonalizar, TIMEOUT);
-        clickElement(btnPersonalizar);
 
         // Espera para ver si aparece un posible mensaje de error
         WebDriverWait wait = new WebDriverWait(webDriver,TIMEOUT);
@@ -135,13 +125,23 @@ public class IntroduceTusDatosPage extends BasePage {
             Color actual = Color.fromString(color);
             Color esperado = Color.fromString("#ff0000");
             Assert.assertEquals(actual, esperado, "El color del mensaje de error debería ser rojo");
-
+            wait = new WebDriverWait(webDriver, TIMEOUT);
+            System.out.println("El campo nombre tiene el dato inválido, por tanto, NO es posible seguir con el flujo");
             return false; // No se continúa con el flujo
-
-        } catch (TimeoutException e) {
+        }   catch (TimeoutException e) {
             // No apareció error en el nombre, por tanto, podemos continuar
             return true;
         }
+    }
+
+    /**
+     * Click in Personalize trip to follow the process.
+     * @return boolean
+     */
+    public void clickPersonalizeTrip() {
+        scrollElementIntoView(btnPersonalizar);
+        waitUntilElementIsDisplayed(btnPersonalizar, TIMEOUT);
+        clickElement(btnPersonalizar);
     }
 
 }

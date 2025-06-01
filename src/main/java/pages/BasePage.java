@@ -1,12 +1,9 @@
 package pages;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.openqa.selenium.*;
 
 import java.time.Duration;
 
@@ -65,9 +62,11 @@ public class BasePage {
     }
 
     /**
-     * Desplaza el elemento a la vista
+     * Scrolls a given element locator to the center of the screen.
+     *
+     * @param element WebElement
      */
-    void scrollElementIntoViewElement(WebElement element) {
+    public void scrollElementIntoViewElement(WebElement element) {
         ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
     }
 
@@ -93,30 +92,8 @@ public class BasePage {
      * @param locator By
      */
     public void waitUntilElementIsDisplayed(By locator, Duration TIMEOUT) {
-        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);  // Usa la constante
+        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
         wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-    }
-
-    /**
-     * Returns "true" or "false" depending on if a given element locator currently appears or not
-     *
-     * @param locator By with the locator of the element
-     */
-    public boolean isElementDisplayed(By locator) {
-        try {
-            return webDriver.findElement(locator).isDisplayed();
-        } catch (NoSuchElementException e) {
-            return false;
-        }
-    }
-
-    /**
-     * Returns the text inside a given element locator
-     *
-     * @param locator By with the locator of the element
-     */
-    public String getElementText(By locator) {
-        return webDriver.findElement(locator).getText();
     }
 
     /**

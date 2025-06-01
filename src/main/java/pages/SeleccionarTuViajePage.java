@@ -79,8 +79,8 @@ public class SeleccionarTuViajePage extends BasePage {
      */
     public void verifyNumberOfTravelers() {
         waitUntilElementIsDisplayed(travelerLocator, TIMEOUT);
-        String traveler1 = webDriver.findElement(travelerLocator).getText();
-        Assert.assertTrue(traveler1.contains("1"));
+        String traveler = webDriver.findElement(travelerLocator).getText();
+        Assert.assertTrue(traveler.contains("1"));
     }
 
     /**

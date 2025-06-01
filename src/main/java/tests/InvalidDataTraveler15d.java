@@ -10,6 +10,7 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.testng.annotations.*;
 import pages.*;
 import utils.CSVDataProvider;
+import utils.DriverManager;
 import utils.TemporaryDataStore;
 import steps.Steps;
 
@@ -36,32 +37,18 @@ public class InvalidDataTraveler15d {
     @BeforeMethod
     @Parameters("browser")
     public void setup(@Optional("chrome") String browser) {
-        switch (browser.toLowerCase()) {
-            case "chrome":
-                WebDriverManager.chromedriver().setup();
-                ChromeOptions chromeOptions = new ChromeOptions();
-                webDriver = new ChromeDriver(chromeOptions);
-                break;
-            case "firefox":
-                WebDriverManager.firefoxdriver().setup();
-                FirefoxOptions firefoxOptions = new FirefoxOptions();
-                webDriver = new FirefoxDriver(firefoxOptions);
-                break;
-            case "edge":
-                WebDriverManager.edgedriver().setup();
-                webDriver = new EdgeDriver();
-                break;
-            default:
-                throw new IllegalArgumentException("Browser not supported: " + browser);
-        }
-
+        webDriver = DriverManager.getDriver(browser);
         webDriver.manage().timeouts().implicitlyWait(TIMEOUT);
         webDriver.manage().window().maximize();
         webDriver.get("https://www.renfe.com/es/es");
 
-        // Inicialización de páginas y steps
-        steps = new Steps(webDriver);
         seleccionarTuViajePage = new SeleccionarTuViajePage(webDriver);
+        introduceTusDatosPage = new IntroduceTusDatosPage(webDriver);
+        steps = new Steps(webDriver);
+
+    // Inicialización de páginas y steps
+    steps = new Steps(webDriver);
+    seleccionarTuViajePage = new SeleccionarTuViajePage(webDriver);
         introduceTusDatosPage = new IntroduceTusDatosPage(webDriver);
         homePage = new HomePage(webDriver);
     }
@@ -75,8 +62,7 @@ public class InvalidDataTraveler15d {
             String segundoApellido,
             String dni,
             String email,
-            String phone
-    ) throws InterruptedException {
+            String phone) {
         TemporaryDataStore.getInstance().set("testCase", "InvalidDataTraveler15d");
         // Bloques reutilizables (steps)
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
@@ -85,9 +71,8 @@ public class InvalidDataTraveler15d {
         steps.getAndStoreDynamicPrice();
         steps.verifyAndConfirmTravel();
         steps.clickPopUpAndLinkAppear();
-        steps.introduceYourData(firstName, primerApellido, segundoApellido, dni, email, phone);
         steps.verifyPriceIsEqualInData();
-        steps.confirmMyData();
+        steps.introduceYourDataAndConfirm(firstName, primerApellido, segundoApellido, dni, email, phone);
         }
 
     @AfterMethod

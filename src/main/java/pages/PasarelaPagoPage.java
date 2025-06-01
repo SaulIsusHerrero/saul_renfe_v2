@@ -56,11 +56,11 @@ public class PasarelaPagoPage extends BasePage {
 
     /**
      * Type the card in the textbox on the "Pasarela de pago" page.
-     * @param card as a string
+     * @param bankCard as a string
      */
-    public void typeBankCard(String card) {
+    public void typeBankCard(String bankCard) {
         waitUntilElementIsDisplayed(cardNumber, TIMEOUT);
-        setElementText(cardNumber, card);
+        setElementText(cardNumber, bankCard);
     }
 
     /**
@@ -95,14 +95,16 @@ public class PasarelaPagoPage extends BasePage {
 
         // Obtener el botón real
         WebElement paymentButton = webDriver.findElement(btnPayment);
+        wait = new WebDriverWait(webDriver, TIMEOUT);
 
         // Verificar si el botón está habilitado
         if (!paymentButton.isEnabled()) {
-            Assert.fail("❌ El botón de pago está deshabilitado, no se puede continuar.");
+            Assert.fail("❌ Faltan los datos de pago, por tanto, el botón 'PAGAR' está deshabilitado.");
         }
 
         // Hacer clic
         paymentButton.click();
+        wait = new WebDriverWait(webDriver, TIMEOUT);
 
         // Verificar presencia del pop-up de error de tarjeta inválida
         try {
@@ -122,5 +124,3 @@ public class PasarelaPagoPage extends BasePage {
     }
 
 }
-
-
