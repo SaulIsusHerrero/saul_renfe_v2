@@ -24,7 +24,7 @@
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
-            <version>6.1.0</version> <!-- Usa la última versión disponible -->
+            <version>5.9.1</version> <!-- Usa la última versión disponible -->
         </dependency>
         <!-- Dependencia de Selenium -->
         <dependency>
