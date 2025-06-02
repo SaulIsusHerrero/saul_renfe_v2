@@ -23,6 +23,9 @@ public class Steps extends BasePage {
 
     }
 
+    /**
+     * 
+     */
     public void selectDepartureDate() {
         HomePage homePage = new HomePage(webDriver);
         homePage.selectDepartureDate();
