@@ -9,7 +9,7 @@ import org.openqa.selenium.WebDriver;
 
 public class CompraPage extends BasePage {
     //Locators
-    private By compraStepper = By.xpath("//ul[@class='stepper stepper-horizontal']//li[contains(@class, 'active')]//span[contains(text(), 'Compra')]");
+    private By compraStepper = By.xpath("//li[contains(@class, 'active')]//span[contains(text(), 'Compra')]");
     private By emailField = By.xpath("//input[@id='inputEmail']");
     private By telefonoField = By.xpath("//input[@id='telefonoComprador']");
     private By cardInput = By.xpath("//input[@id='datosPago_cdgoFormaPago_tarjetaRedSys']");

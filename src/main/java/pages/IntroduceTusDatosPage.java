@@ -8,7 +8,7 @@ import org.testng.Assert;
 
 public class IntroduceTusDatosPage extends BasePage {
     //Locators
-    private By introduceTusDatosStepper = By.xpath("//ul[@class='stepper stepper-horizontal']//li[contains(@class, 'active')]//span[contains(text(), 'Introduce tus datos')]");
+    private By introduceTusDatosStepper = By.xpath("//li[contains(@class, 'active')]//span[contains(text(), 'Introduce tus datos')]");
     private By firstNameField = By.xpath("//input[@id='nombre0']");
     private By firstSurnameField = By.xpath("//input[@id='apellido10']");
     private By secondSurnameField = By.xpath("//input[@id='apellido20']");
@@ -32,7 +32,6 @@ public class IntroduceTusDatosPage extends BasePage {
      * Assert que estoy en la Page y esta habilitada “introduce tus datos”
      */
     public void verifyYouAreInIntroduceYourDataPage() {
-        waitUntilElementIsDisplayed(introduceTusDatosStepper, TIMEOUT);
         Assert.assertTrue(webDriver.findElement(introduceTusDatosStepper).isEnabled(), "No está habilitado este step");
     }
 
