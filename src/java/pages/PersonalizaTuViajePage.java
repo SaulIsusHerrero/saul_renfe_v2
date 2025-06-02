@@ -6,7 +6,7 @@ import org.openqa.selenium.WebDriver;
 
 public class PersonalizaTuViajePage extends BasePage {
     //Locators
-    private By personalizaTuViajeStepper = By.xpath("//ul[@class='stepper stepper-horizontal']//li[contains(@class, 'active')]//span[contains(text(), 'Personaliza tu viaje')]");
+    private By personalizaTuViajeStepper = By.xpath("//li[contains(@class, 'active')]//span[contains(text(), 'Personaliza tu viaje')]");
     private By btnContinuarPersonalize = By.xpath("//button[@id='submitFormaPago']");
     private By totalPricePersonalizeLocator = By.xpath("//span[@id='totalTrayecto']");
 

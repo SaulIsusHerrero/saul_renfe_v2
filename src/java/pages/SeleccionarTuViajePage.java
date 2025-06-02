@@ -11,7 +11,7 @@ import org.openqa.selenium.WebDriver;
 public class SeleccionarTuViajePage extends BasePage {
 
     //Locators
-    private By seleccionaTuViajeStepper = By.xpath("//ul[@class='stepper stepper-horizontal']//li[contains(@class, 'active')]//span[contains(text(), 'Selecciona tu viaje')]");
+    private By seleccionaTuViajeStepper = By.xpath("//li[contains(@class, 'active')]//span[contains(text(), 'Selecciona tu viaje')]");
     private By trainAvailable =  By.cssSelector("div[id^='precio-viaje']");
     private By trainAvailableBasicFare = By.cssSelector("[data-titulo-tarifa='Básico']");
     private By selectDayRightArrow = By.cssSelector(".rescalendar_controls > button.move_to_tomorrow");
