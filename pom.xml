@@ -22,7 +22,6 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>${testng.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <!-- Selenium -->
@@ -44,7 +43,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.36</version>
-            <scope>test</scope>
         </dependency>
 
         <!-- CSV reader -->
@@ -78,7 +76,7 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>src/java/tests</source>
+                                <source>src/test/java/tests</source>
                             </sources>
                         </configuration>
                     </execution>
