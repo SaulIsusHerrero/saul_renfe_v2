@@ -59,6 +59,10 @@ public class InvalidCardPaymentTest {
         steps = new Steps(webDriver);
     }
 
+    /*
+    E2E client select first available train and try to pay with an incorrect credit card
+    Check pop up error message appears explaining the error in the payment data.
+     */
     @Test(dataProvider = "paymentData")
     public void InvalidCardPaymentTest(
             String originStation,

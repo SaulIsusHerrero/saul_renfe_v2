@@ -40,6 +40,12 @@ public class EmptyBuyerDataTest5d {
     steps = new Steps(webDriver);
     }
 
+    /*
+    Este caso de prueba, selecciona origen, destino, viaje de solo ida, con fecha de salida 5 dias + dia actual,
+    primer tren disponible el primer dia de la modalidad basica,
+    rellena datos basicos del pasajero y deja los datos de compra de la tarjeta vacios.
+    Comprueba que el botón "Pagar" no se habilita.
+     */
     @Test(dataProvider = "paymentData")
     public void EmptyBuyerDataTest5d (
     String originStation,

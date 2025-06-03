@@ -53,6 +53,12 @@ public class InvalidDataTraveler15d {
         homePage = new HomePage(webDriver);
     }
 
+    /*
+    E2E cliente selecciona el primer tren disponible, solo de ida, con fecha dentro dentro de 15 dias,
+    y al llegar a la parte de datos personales,  elegir un campo sobre el que intruducir un dato no valido y
+    rellenar el resto de los campos con datos validos.
+    Comprobar que aparece un mensaje de error indicando que el dato introducido no es valido. También el color.
+     */
     @Test(dataProvider = "paymentData")
     public void InvalidDataTraveler15d(
             String originStation,
