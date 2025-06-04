@@ -123,7 +123,14 @@ public class Steps extends BasePage {
         introduceTusDatosPage.writeDNIField(dni);
         introduceTusDatosPage.writeEmailField(email);
         introduceTusDatosPage.writePhoneField(phone);
-        introduceTusDatosPage.clickPersonalizeTrip();
+
+        String testCase = (String) TemporaryDataStore.getInstance().get("testCase");
+
+        if ("InvalidDataTraveler15d".equalsIgnoreCase(testCase)) {
+            introduceTusDatosPage.checkErrorInDataField();
+        }else {
+            introduceTusDatosPage.clickPersonalizeTrip();
+        }
     }
 
     /**
@@ -189,7 +196,18 @@ public class Steps extends BasePage {
         pasarelaPagoPage.typeBankCard(bankCard);
         pasarelaPagoPage.typeExpirationDate(expirationDate);
         pasarelaPagoPage.typeCVV(cvv);
-        pasarelaPagoPage.clickPaymentButton();
+        //pasarelaPagoPage.clickPaymentButton();
+        String testCase = (String) TemporaryDataStore.getInstance().get("testCase");
+
+        if ("InvalidCardPaymentTest".equalsIgnoreCase(testCase)) {
+            pasarelaPagoPage.checkEnabledButton();
+            pasarelaPagoPage.clickButtonPagar();
+            pasarelaPagoPage.checkPoupUpError();
+        }else if( "EmptyBuyerDataTest5d".equalsIgnoreCase(testCase)) {
+            pasarelaPagoPage.checkDisabledButton();
+        }
+
+
     }
 
 }

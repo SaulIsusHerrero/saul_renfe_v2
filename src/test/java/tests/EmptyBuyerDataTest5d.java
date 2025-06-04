@@ -13,8 +13,6 @@ import static pages.BasePage.TIMEOUT;
 public class EmptyBuyerDataTest5d {
 
     private WebDriver webDriver;
-    private SeleccionarTuViajePage seleccionarTuViajePage;
-    private IntroduceTusDatosPage introduceTusDatosPage;
     private Steps steps;
 
     @DataProvider(name = "paymentData")
@@ -35,8 +33,6 @@ public class EmptyBuyerDataTest5d {
         webDriver.manage().window().maximize();
         webDriver.get("https://www.renfe.com/es/es");
 
-    seleccionarTuViajePage = new SeleccionarTuViajePage(webDriver);
-    introduceTusDatosPage = new IntroduceTusDatosPage(webDriver);
     steps = new Steps(webDriver);
     }
 
@@ -76,6 +72,8 @@ public class EmptyBuyerDataTest5d {
         steps.verifyPriceIsEqualInCompra();
         steps.confirmPaymentData(emailBuyer, phoneBuyer);
         steps.payment(bankCard, expirationDate, cvv);
+
+
     }
 
     @AfterMethod

@@ -12,17 +12,13 @@ import pages.*;
 import steps.Steps;
 import utils.CSVDataProvider;
 import utils.DriverManager;
+import utils.TemporaryDataStore;
 
 import static pages.BasePage.TIMEOUT;
 
 public class InvalidCardPaymentTest {
 
     private WebDriver webDriver;
-    private SeleccionarTuViajePage seleccionarTuViajePage;
-    private IntroduceTusDatosPage introduceTusDatosPage;
-    private PersonalizaTuViajePage personalizaTuViajePage;
-    private CompraPage compraPage;
-    private PasarelaPagoPage pasarelaPagoPage;
     private Steps steps;
 
     @DataProvider(name = "paymentData")
@@ -43,19 +39,12 @@ public class InvalidCardPaymentTest {
         webDriver.manage().window().maximize();
         webDriver.get("https://www.renfe.com/es/es");
 
-        seleccionarTuViajePage = new SeleccionarTuViajePage(webDriver);
-        introduceTusDatosPage = new IntroduceTusDatosPage(webDriver);
         steps = new Steps(webDriver);
 
         webDriver.manage().timeouts().implicitlyWait(TIMEOUT);
         webDriver.manage().window().maximize();
         webDriver.get("https://www.renfe.com/es/es");
 
-        seleccionarTuViajePage = new SeleccionarTuViajePage(webDriver);
-        introduceTusDatosPage = new IntroduceTusDatosPage(webDriver);
-        personalizaTuViajePage = new PersonalizaTuViajePage(webDriver);
-        compraPage = new CompraPage(webDriver);
-        pasarelaPagoPage = new PasarelaPagoPage(webDriver);
         steps = new Steps(webDriver);
     }
 
@@ -78,6 +67,7 @@ public class InvalidCardPaymentTest {
             String bankCard,
             String expirationDate,
             String cvv) {
+        TemporaryDataStore.getInstance().set("testCase", "InvalidCardPaymentTest");
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
         steps.selectDepartureDate();
         steps.selectTrainAndFare();

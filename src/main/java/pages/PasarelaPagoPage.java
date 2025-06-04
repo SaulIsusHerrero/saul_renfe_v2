@@ -83,11 +83,7 @@ public class PasarelaPagoPage extends BasePage {
         setElementText(cvvField, cvv);
     }
 
-    /**
-     * Click on the payment button with state verification:
-     * - If button is enabled or disabled
-     */
-    public void clickPaymentButton() {
+    public void checkEnabledButton() {
         WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
 
         // Esperar a que el botón esté presente en el DOM
@@ -102,17 +98,34 @@ public class PasarelaPagoPage extends BasePage {
             Assert.fail("❌ Faltan los datos de pago, por tanto, el botón 'PAGAR' está deshabilitado.");
         }
 
-        // Hacer clic
-        paymentButton.click();
+    }
+
+    public void checkDisabledButton() {
+        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
+
+        // Esperar a que el botón esté presente en el DOM
+        wait.until(ExpectedConditions.presenceOfElementLocated(btnPayment));
+
+        // Obtener el botón real
+        WebElement paymentButton = webDriver.findElement(btnPayment);
         wait = new WebDriverWait(webDriver, TIMEOUT);
 
-        // Verificar presencia del pop-up de error de tarjeta inválida
-        try {
-            wait.until(ExpectedConditions.presenceOfElementLocated(popUpError));
-            System.out.println("✅ El Pop-up con el error de tarjeta inválida (RS18) existe en el DOM");
-        } catch (Exception e) {
-            Assert.fail("❌ El Pop-up NO existe en el DOM después de hacer clic en pagar.");
+        // Verificar si el botón está habilitado
+        if (paymentButton.isEnabled()) {
+            Assert.fail("❌ Faltan los datos de pago, por tanto, el botón 'PAGAR' está deshabilitado.");
         }
+
+    }
+
+    public void  clickButtonPagar() {
+        // Hacer clic
+        WebElement paymentButton = webDriver.findElement(btnPayment);
+        paymentButton.click();
+    }
+
+    public void  checkPoupUpError() {
+
+        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
 
         // Verificar visibilidad
         try {

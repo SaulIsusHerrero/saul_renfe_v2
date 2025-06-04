@@ -107,30 +107,25 @@ public class IntroduceTusDatosPage extends BasePage {
      *
      * @param phone as a string
      */
-    public boolean writePhoneField(String phone) {
+    public void writePhoneField(String phone) {
         waitUntilElementIsDisplayed(telefonoField, TIMEOUT);
         setElementText(telefonoField, phone);
+    }
 
-        // Espera para ver si aparece un posible mensaje de error
+    public void checkErrorInDataField() {
+
         WebDriverWait wait = new WebDriverWait(webDriver,TIMEOUT);
-        try {
-            WebElement error = wait.until(ExpectedConditions.visibilityOfElementLocated(errorName));
+        WebElement error = wait.until(ExpectedConditions.visibilityOfElementLocated(errorName));
 
-            // Si aparece, verificar texto y color
-            String texto = error.getText().trim();
-            Assert.assertEquals(texto, "El nombre tiene un formato incorrecto");
+        // Si aparece, verificar texto y color
+        String texto = error.getText().trim();
+        Assert.assertEquals(texto, "El nombre tiene un formato incorrecto");
 
-            String color = error.getCssValue("color");
-            Color actual = Color.fromString(color);
-            Color esperado = Color.fromString("#ff0000");
-            Assert.assertEquals(actual, esperado, "El color del mensaje de error debería ser rojo");
-            wait = new WebDriverWait(webDriver, TIMEOUT);
-            System.out.println("El campo nombre tiene el dato inválido, por tanto, NO es posible seguir con el flujo");
-            return false; // No se continúa con el flujo
-        }   catch (TimeoutException e) {
-            // No apareció error en el nombre, por tanto, podemos continuar
-            return true;
-        }
+        String color = error.getCssValue("color");
+        Color actual = Color.fromString(color);
+        Color esperado = Color.fromString("#ff0000");
+        Assert.assertEquals(actual, esperado, "El color del mensaje de error debería ser rojo");
+        System.out.println("El campo nombre tiene el dato inválido, por tanto, NO es posible seguir con el flujo");
     }
 
     /**

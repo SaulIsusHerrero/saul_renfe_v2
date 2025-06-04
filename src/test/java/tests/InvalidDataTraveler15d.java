@@ -19,9 +19,6 @@ import static pages.BasePage.TIMEOUT;
 public class InvalidDataTraveler15d {
 
     private WebDriver webDriver;
-    private HomePage homePage;
-    private SeleccionarTuViajePage seleccionarTuViajePage;
-    private IntroduceTusDatosPage introduceTusDatosPage;
     private Steps steps;
 
     @DataProvider(name = "paymentData")
@@ -41,16 +38,10 @@ public class InvalidDataTraveler15d {
         webDriver.manage().timeouts().implicitlyWait(TIMEOUT);
         webDriver.manage().window().maximize();
         webDriver.get("https://www.renfe.com/es/es");
-
-        seleccionarTuViajePage = new SeleccionarTuViajePage(webDriver);
-        introduceTusDatosPage = new IntroduceTusDatosPage(webDriver);
         steps = new Steps(webDriver);
 
     // Inicialización de páginas y steps
     steps = new Steps(webDriver);
-    seleccionarTuViajePage = new SeleccionarTuViajePage(webDriver);
-        introduceTusDatosPage = new IntroduceTusDatosPage(webDriver);
-        homePage = new HomePage(webDriver);
     }
 
     /*
