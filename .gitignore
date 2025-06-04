@@ -12,3 +12,4 @@ target/classes/pages/BasePage.class
 .idea/vcs.xml
 /target
 .idea/csv-editor.xml
+.idea/modules.xml
