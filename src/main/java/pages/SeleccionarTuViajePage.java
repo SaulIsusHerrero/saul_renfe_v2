@@ -22,6 +22,8 @@ public class SeleccionarTuViajePage extends BasePage {
     private By btnSeleccionar = By.xpath("(//button[@id='btnSeleccionar'])[1]");
     public  By popUpChangeFare = By.xpath("//button[@id='closeConfirmacionFareUpgrade' and " + "contains(@class, 'close') and " + "not(contains(@style, 'display: none'))]");
     private By linkContinueSameFare = By.xpath("//div/p[@class and contains(text(), 'No')]");
+    private By popupIncidenciaLocator = By.xpath("//div[contains(@class, 'viaje-incidencia-style')]");
+    private By closepopupIncidenciaLocator = By.xpath("(//h6[contains(@class, 'estilo-titulo-modal') and contains(text(), 'Viaje con incidencia')]/ancestor::div[contains(@class,'modal')]//button[@aria-label='Close'])[1]");
 
     //Constructor
     public SeleccionarTuViajePage(WebDriver webDriver) {
@@ -154,6 +156,12 @@ public class SeleccionarTuViajePage extends BasePage {
     public void clickLinkContinueSameFare(){
         waitUntilElementIsDisplayed(linkContinueSameFare, TIMEOUT);
         clickElement(linkContinueSameFare);
+        WebElement popupIncidencia = webDriver.findElement(popupIncidenciaLocator);
+        //Este if es por si aparece un pop up de aviso/incidencia.
+        if (popupIncidencia.isDisplayed()){
+            WebElement closePopUpAviso = webDriver.findElement(closepopupIncidenciaLocator);
+            closePopUpAviso.click();
+        }
     }
 
 }
