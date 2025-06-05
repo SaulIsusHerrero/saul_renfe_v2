@@ -1,18 +1,19 @@
 package tests;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
 import org.testng.annotations.*;
-import pages.*;
 import utils.CSVDataProvider;
 import utils.DriverManager;
 import utils.TemporaryDataStore;
 import steps.Steps;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import org.testng.ITestResult;
 
 import static pages.BasePage.TIMEOUT;
 
@@ -44,7 +45,7 @@ public class InvalidDataTraveler15d {
     steps = new Steps(webDriver);
     }
 
-    /*
+    /**
     E2E cliente selecciona el primer tren disponible, solo de ida, con fecha dentro dentro de 15 dias,
     y al llegar a la parte de datos personales,  elegir un campo sobre el que intruducir un dato no valido y
     rellenar el resto de los campos con datos validos.
@@ -73,9 +74,26 @@ public class InvalidDataTraveler15d {
         }
 
     @AfterMethod
-    public void tearDown() {
+    public void capturarPantallaSiFalla(ITestResult result) throws IOException {
+        System.out.println("🧪 Estado del test: " + result.getStatus() + " (" + result.getName() + ")");
+
+        if (result.getStatus() == ITestResult.FAILURE && webDriver != null) {
+            if (result.getThrowable() != null) {
+                System.err.println("❗ Error en test: " + result.getThrowable().getMessage());
+            }
+
+            File screenshot = ((TakesScreenshot) webDriver).getScreenshotAs(OutputType.FILE);
+            String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String testName = result.getName();
+            File destino = new File("screenshots/" + testName + "_" + timestamp + ".png");
+            destino.getParentFile().mkdirs();
+            Files.copy(screenshot.toPath(), destino.toPath());
+            System.out.println("📸 Captura guardada en: " + destino.getAbsolutePath());
+        }
+
         if (webDriver != null) {
             webDriver.quit();
         }
     }
+
 }
