@@ -101,14 +101,14 @@ public class PasarelaPagoPage extends BasePage {
     }
 
     public void checkDisabledButton() {
-        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
+        //WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
 
         // Esperar a que el botón esté presente en el DOM
-        wait.until(ExpectedConditions.presenceOfElementLocated(btnPayment));
+        //wait.until(ExpectedConditions.presenceOfElementLocated(btnPayment));
 
         // Obtener el botón real
         WebElement paymentButton = webDriver.findElement(btnPayment);
-        wait = new WebDriverWait(webDriver, TIMEOUT);
+        //wait = new WebDriverWait(webDriver, TIMEOUT);
 
         // Verificar si el botón está habilitado
         if (paymentButton.isEnabled()) {

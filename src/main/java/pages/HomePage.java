@@ -8,7 +8,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
@@ -100,11 +99,9 @@ public class HomePage extends BasePage {
      */
     public void selectDateDaysLater(WebDriver webDriver, int daysAfter) {
         LocalDate targetDate = LocalDate.now().plusDays(daysAfter);
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEE. dd/MM/yy", new Locale("es", "ES"));
         WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
 
         // Navigate to the correct month
-        DateTimeFormatter monthYearFormatter = DateTimeFormatter.ofPattern("MMMM yyyy", new Locale("es", "ES"));
         while (true) {
             String dateLabel = webDriver.findElement(monthYearLabel).getText().toLowerCase();
             if (dateLabel.contains(targetDate.getMonth().getDisplayName(TextStyle.FULL, new Locale("es", "ES")).toLowerCase())) {

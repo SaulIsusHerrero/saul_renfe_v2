@@ -125,7 +125,7 @@ public class IntroduceTusDatosPage extends BasePage {
         Color actual = Color.fromString(color);
         Color esperado = Color.fromString("#ff0000");
         Assert.assertEquals(actual, esperado, "El color del mensaje de error debería ser rojo");
-        System.out.println("El campo nombre tiene el dato inválido, por tanto, NO es posible seguir con el flujo");
+        Assert.assertFalse(actual.equals(esperado), "El campo nombre tiene el dato inválido, por tanto, NO es posible seguir con el flujo");
     }
 
     /**

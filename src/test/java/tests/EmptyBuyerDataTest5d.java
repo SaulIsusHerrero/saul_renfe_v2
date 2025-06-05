@@ -72,8 +72,6 @@ public class EmptyBuyerDataTest5d {
         steps.verifyPriceIsEqualInCompra();
         steps.confirmPaymentData(emailBuyer, phoneBuyer);
         steps.payment(bankCard, expirationDate, cvv);
-
-
     }
 
     @AfterMethod
