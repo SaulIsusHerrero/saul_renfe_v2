@@ -89,15 +89,16 @@ public class SeleccionarTuViajePage extends BasePage {
      */
     public void selectFirstTrainUnder20EurosAndBetween5To10PM() {
         WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
-        boolean found = true;
+        boolean found = false;
+        int maxAttempts = 6; // Límite de días a avanzar para evitar bucle infinito
+        int attempts = 0;
 
-        while (found) {
+        while (!found && attempts < maxAttempts) {
             // Encuentra la lista de trenes disponibles
             List<WebElement> trainList = webDriver.findElements(trainAvailable);
             List<WebElement> trainPriceList = webDriver.findElements(priceTravelLocatorList);
             List<WebElement> trainTimeList = webDriver.findElements(timeTravelLocatorList);
 
-            // Asegura que todas las listas estén alineadas
             int total = Math.min(Math.min(trainList.size(), trainPriceList.size()), trainTimeList.size());
 
             for (int i = 0; i < total; i++) {
@@ -105,37 +106,43 @@ public class SeleccionarTuViajePage extends BasePage {
                 WebElement priceElement = trainPriceList.get(i);
                 WebElement timeElement = trainTimeList.get(i);
 
-                // Normalización del formato de hora
-                String timeText = timeElement.getText().trim().replace("h", "").trim(); // Ej: "18:45"
+                // Normaliza hora
+                String timeText = timeElement.getText().trim().replace("h", "").trim();
                 LocalTime departureTime = LocalTime.parse(timeText, DateTimeFormatter.ofPattern("HH:mm"));
 
-                // Normalización del formato de precio
-                String priceText = priceElement.getText().replaceAll("[^\\d,\\.]", "").replace(",", ".").trim(); // Ej: "19.90"
+                // Normaliza precio
+                String priceText = priceElement.getText().replaceAll("[^\\d,\\.]", "").replace(",", ".").trim();
                 double price = Double.parseDouble(priceText);
 
-                // Validación de condiciones
+                // Validación
                 if (price < 20.0 &&
                         !departureTime.isBefore(LocalTime.of(17, 0)) &&
                         !departureTime.isAfter(LocalTime.of(22, 0))) {
+
                     wait.until(ExpectedConditions.visibilityOf(trainElement));
                     wait.until(ExpectedConditions.elementToBeClickable(trainElement));
                     scrollElementIntoViewElement(trainElement);
+
+                    // ✅ Clicka en la card con el 1er precio menor a 20€ encontrado
                     ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", trainElement);
-                    found = false;
+
+                    found = true;
+                    break; // salir del for
                 }
             }
+
             if (!found) {
-                // Si no se encontró tren válido, pasa al siguiente día
-                clickElement(selectDayRightArrow);
-                wait = new WebDriverWait(webDriver, TIMEOUT);
+                clickElement(selectDayRightArrow); // Avanza al siguiente día
+                wait = new WebDriverWait(webDriver, TIMEOUT); // Reinicia espera
+                attempts++; // Cuenta la iteración
             }
         }
 
+        // Si no se encontró tras N intentos, falla el test
         if (!found) {
-            Assert.fail("❌ No hay trenes disponibles con estas características, test fallido");
+            Assert.fail("❌ No hay trenes disponibles con precio < 20€ y salida entre 17:00 y 22:00 tras " + maxAttempts + " días.");
         }
     }
-
 
     /**
      * Verifies the number of travelers for the trip in the semimodal
