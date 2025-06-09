@@ -4,9 +4,13 @@ import org.testng.Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+
 
 public class SeleccionarTuViajePage extends BasePage {
 
@@ -24,6 +28,8 @@ public class SeleccionarTuViajePage extends BasePage {
     private By linkContinueSameFare = By.xpath("//div/p[@class and contains(text(), 'No')]");
     private By popupIncidenciaLocator = By.xpath("//div[contains(@class, 'viaje-incidencia-style')]");
     private By closepopupIncidenciaLocator = By.xpath("(//h6[contains(@class, 'estilo-titulo-modal') and contains(text(), 'Viaje con incidencia')]/ancestor::div[contains(@class,'modal')]//button[@aria-label='Close'])[1]");
+    private By timeTravelLocatorList = By.xpath("//div[@class='col-md-8 trenes']//h5[contains(text(), 'h')]");
+    private By priceTravelLocatorList = By.xpath("//span[@class='precio-final' and contains(text(), '€')]");
 
     //Constructor
     public SeleccionarTuViajePage(WebDriver webDriver) {
@@ -75,6 +81,61 @@ public class SeleccionarTuViajePage extends BasePage {
             }
         }
     }
+
+    /**
+     * Selecciona el primer tren disponible que cumpla:
+     * 1. Precio inferior a 20€.
+     * 2. Hora de salida entre las 17:00 (5 PM) y las 22:00 (10 PM).
+     */
+    public void selectFirstTrainUnder20EurosAndBetween5To10PM() {
+        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
+        boolean found = true;
+
+        while (found) {
+            // Encuentra la lista de trenes disponibles
+            List<WebElement> trainList = webDriver.findElements(trainAvailable);
+            List<WebElement> trainPriceList = webDriver.findElements(priceTravelLocatorList);
+            List<WebElement> trainTimeList = webDriver.findElements(timeTravelLocatorList);
+
+            // Asegura que todas las listas estén alineadas
+            int total = Math.min(Math.min(trainList.size(), trainPriceList.size()), trainTimeList.size());
+
+            for (int i = 0; i < total; i++) {
+                WebElement trainElement = trainList.get(i);
+                WebElement priceElement = trainPriceList.get(i);
+                WebElement timeElement = trainTimeList.get(i);
+
+                // Normalización del formato de hora
+                String timeText = timeElement.getText().trim().replace("h", "").trim(); // Ej: "18:45"
+                LocalTime departureTime = LocalTime.parse(timeText, DateTimeFormatter.ofPattern("HH:mm"));
+
+                // Normalización del formato de precio
+                String priceText = priceElement.getText().replaceAll("[^\\d,\\.]", "").replace(",", ".").trim(); // Ej: "19.90"
+                double price = Double.parseDouble(priceText);
+
+                // Validación de condiciones
+                if (price < 20.0 &&
+                        !departureTime.isBefore(LocalTime.of(17, 0)) &&
+                        !departureTime.isAfter(LocalTime.of(22, 0))) {
+                    wait.until(ExpectedConditions.visibilityOf(trainElement));
+                    wait.until(ExpectedConditions.elementToBeClickable(trainElement));
+                    scrollElementIntoViewElement(trainElement);
+                    ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", trainElement);
+                    found = false;
+                }
+            }
+            if (!found) {
+                // Si no se encontró tren válido, pasa al siguiente día
+                clickElement(selectDayRightArrow);
+                wait = new WebDriverWait(webDriver, TIMEOUT);
+            }
+        }
+
+        if (!found) {
+            Assert.fail("❌ No hay trenes disponibles con estas características, test fallido");
+        }
+    }
+
 
     /**
      * Verifies the number of travelers for the trip in the semimodal

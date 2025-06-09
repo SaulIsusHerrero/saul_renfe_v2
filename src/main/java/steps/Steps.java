@@ -25,7 +25,6 @@ public class Steps extends BasePage {
         HomePage homePage = new HomePage(webDriver);
         homePage.enterOrigin(originStation);
         homePage.enterDestination(destinationStation);
-
     }
 
     /**
@@ -45,12 +44,19 @@ public class Steps extends BasePage {
         } else if ("EmptyBuyerDataTest5d".equalsIgnoreCase(testCase)) {
             TemporaryDataStore.getInstance().get("totalPriceTrip");
             homePage.selectDateDaysLater(webDriver, 5);
-        } else{
+        } else {
             System.out.println("El precio del trayecto no es 0");
         }
-
         homePage.clickAcceptButton();
         homePage.clickSearchTicketButton();
+    }
+
+    /**
+     * Select train with less than 20€ price
+     */
+    public void selectTrainMinor20EurosAndBetween5To10PM(){
+        new SeleccionarTuViajePage(webDriver).verifyYouAreInSelecionaTuViaje();
+        new SeleccionarTuViajePage(webDriver).selectFirstTrainUnder20EurosAndBetween5To10PM();
     }
 
     /**
