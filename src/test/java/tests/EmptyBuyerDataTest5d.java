@@ -81,6 +81,12 @@ public class EmptyBuyerDataTest5d {
 
     }
 
+    public void clickAcceptAllCookiesButton() {
+        waitUntilElementIsDisplayed(acceptAllCookiesButton, TIMEOUT);
+        scrollElementIntoView(acceptAllCookiesButton);
+        clickElement(acceptAllCookiesButton);
+    }
+
     @AfterMethod
     public void tearDown() {
         if (webDriver != null) {
