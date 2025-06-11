@@ -231,4 +231,14 @@ public class Steps extends BasePage {
 
     }
 
+
+    public void verifyAndConfirmTravel234(){
+        new SeleccionarTuViajePage(webDriver).verifyNumberOfTravelers();
+        new SeleccionarTuViajePage(webDriver).verifyFareIsBasic();
+        new SeleccionarTuViajePage(webDriver).verifyFareAndTotalPricesAreEquals();
+        new SeleccionarTuViajePage(webDriver).clickSelectButton();
+    }
+
+    /*
+
 }
