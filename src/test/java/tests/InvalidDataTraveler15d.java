@@ -63,6 +63,8 @@ public class InvalidDataTraveler15d {
             String phone) {
         TemporaryDataStore.getInstance().set("testCase", "InvalidDataTraveler15d");
         // Bloques reutilizables (steps)
+        steps.confirmPaymentData(emailBuyer, phoneBuyer);
+        steps.payment(bankCard, expirationDate, cvv);
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
         steps.selectDepartureDate();
         steps.selectTrainAndFare();
