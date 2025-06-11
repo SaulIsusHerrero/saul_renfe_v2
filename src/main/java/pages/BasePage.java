@@ -1,9 +1,11 @@
 package pages;
 
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
 import java.time.Duration;
 
@@ -119,5 +121,26 @@ public class BasePage {
         }
 
         return cleaned;
+    }
+
+    public void clilaksjdfñaksjdfñljañas(By locator) {
+        WebElement element = webDriver.findElement(locator);
+        ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", element);
+    }
+
+    public void checkErrorInDataField() {
+
+        WebDriverWait wait = new WebDriverWait(webDriver,TIMEOUT);
+        WebElement error = wait.until(ExpectedConditions.visibilityOfElementLocated(errorName));
+
+        // Si aparece, verificar texto y color
+        String texto = error.getText().trim();
+        Assert.assertEquals(texto, "El nombre tiene un formato incorrecto");
+
+        String color = error.getCssValue("color");
+        Color actual = Color.fromString(color);
+        Color esperado = Color.fromString("#ff0000");
+        Assert.assertEquals(actual, esperado, "El color del mensaje de error debería ser rojo");
+        System.out.println("El campo nombre tiene el dato inválido, por tanto, NO es posible seguir con el flujo");
     }
 }

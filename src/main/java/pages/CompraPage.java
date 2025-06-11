@@ -1,6 +1,7 @@
 package pages;
 
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -105,6 +106,22 @@ public class CompraPage extends BasePage {
     public void clickContinuarCompra(){
         waitUntilElementIsDisplayed(btnContinuarCompra, TIMEOUT);
         clickElement(btnContinuarCompra);
+    }
+
+    public void sdfasdfasdf() {
+
+        WebDriverWait wait = new WebDriverWait(webDriver,TIMEOUT);
+        WebElement error = wait.until(ExpectedConditions.visibilityOfElementLocated(errorName));
+
+        // Si aparece, verificar texto y color
+        String texto = error.getText().trim();
+        Assert.assertEquals(texto, "El nombre tiene un formato incorrecto");
+
+        String color = error.getCssValue("color");
+        Color actual = Color.fromString(color);
+        Color esperado = Color.fromString("#ff0000");
+        Assert.assertEquals(actual, esperado, "El color del mensaje de error debería ser rojo");
+        System.out.println("El campo nombre tiene el dato inválido, por tanto, NO es posible seguir con el flujo");
     }
 
 }
