@@ -123,11 +123,6 @@ public class BasePage {
         return cleaned;
     }
 
-    public void clilaksjdfñaksjdfñljañas(By locator) {
-        WebElement element = webDriver.findElement(locator);
-        ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", element);
-    }
-
     public void checkErrorInDataField() {
 
         WebDriverWait wait = new WebDriverWait(webDriver,TIMEOUT);
@@ -143,4 +138,17 @@ public class BasePage {
         Assert.assertEquals(actual, esperado, "El color del mensaje de error debería ser rojo");
         System.out.println("El campo nombre tiene el dato inválido, por tanto, NO es posible seguir con el flujo");
     }
+
+    public void asdfasd(String totalPriceTrip) {
+        waitUntilElementIsDisplayed(totalPriceCompraLocator, TIMEOUT);
+
+        // Normaliza el precio de la nueva página
+        String totalPriceCompra = normalizePrice(webDriver.findElement(totalPriceCompraLocator).getText());
+
+        // El precio recibido ya debería estar normalizado, pero por seguridad:
+        totalPriceTrip = normalizePrice(totalPriceTrip);
+
+        Assert.assertEquals(totalPriceCompra, totalPriceTrip);
+    }
+
 }

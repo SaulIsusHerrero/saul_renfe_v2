@@ -1,6 +1,7 @@
 package steps;
 
 import org.openqa.selenium.WebDriver;
+import org.testng.Assert;
 import pages.*;
 import utils.TemporaryDataStore;
 
@@ -210,6 +211,19 @@ public class Steps extends BasePage {
 
     }
 
+    public PersonalizaTuasdfasdfViajePage(WebDriver webDriver) {
+        super(webDriver); //Calls to the constructor from parent class and their variable
+        this.webDriver = webDriver; //Current instance
+    }
+
+    //Methods
+    /**
+     * Assert that I am on the right page and is enabled “Personaliza tu viaje” page
+     */
+    public void verifyYouAreInPersonalizeasdfasdfYourTravelPage() {
+        waitUntilElementIsDisplayed(personaasdflizaTuViajeStepper, TIMEOUT);
+        Assert.assertTrue(webDriver.findElement(persfffonalizaTuViajeStepper).isEnabled(), "No está hablitado este step");
+    }
 
     public void selectDepartureDate3() {
         HomePage homePage = new HomePage(webDriver);

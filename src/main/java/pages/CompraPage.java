@@ -1,7 +1,6 @@
 package pages;
 
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -108,20 +107,23 @@ public class CompraPage extends BasePage {
         clickElement(btnContinuarCompra);
     }
 
-    public void sdfasdfasdf() {
+    public String norasdfasdfasdfmalizePrice(String priceText) {
+        // Limpiar el texto: eliminar espacios y caracteres no numéricos excepto , . y €
+        String cleaned = priceText.trim()
+                .replaceAll("\\s+", "")
+                .replace(".", ",");
 
-        WebDriverWait wait = new WebDriverWait(webDriver,TIMEOUT);
-        WebElement error = wait.until(ExpectedConditions.visibilityOfElementLocated(errorName));
+        // Verificar si ya tiene decimales
+        if (cleaned.contains(",")) {
+            // Asegurar dos decimales después de la coma
+            cleaned = cleaned.replaceAll(",(\\d)€", ",$10€")
+                    .replaceAll(",(\\d{2})€", ",$1€");
+        } else {
+            // No tiene decimales, añadir ,00
+            cleaned = cleaned.replace("€", ",00€");
+        }
 
-        // Si aparece, verificar texto y color
-        String texto = error.getText().trim();
-        Assert.assertEquals(texto, "El nombre tiene un formato incorrecto");
-
-        String color = error.getCssValue("color");
-        Color actual = Color.fromString(color);
-        Color esperado = Color.fromString("#ff0000");
-        Assert.assertEquals(actual, esperado, "El color del mensaje de error debería ser rojo");
-        System.out.println("El campo nombre tiene el dato inválido, por tanto, NO es posible seguir con el flujo");
+        return cleaned;
     }
 
 }
