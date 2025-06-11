@@ -59,6 +59,8 @@ public class EmptyBuyerDataTest5d {
     String cvv) {
         TemporaryDataStore.getInstance().set("testCase", "EmptyBuyerDataTest5d");
         // Bloques reutilizables (steps)
+        steps.clickPopUpAndLinkAppear();
+        steps.verifyPriceIsEqualInData();
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
         steps.selectDepartureDate();
         steps.selectTrainAndFare();
