@@ -52,10 +52,11 @@ public class InvalidDataTraveler15d {
      */
     @Test(dataProvider = "paymentData")
     public void InvalidDataTraveler15d(
-            String originStation,
-            String destinationStation,
-            String firstName,
-            String primerApellido,
+            String originStational,
+            String elemento1,
+            String destinationStational,
+            String first,
+            String primerApell,
             String segundoApellido,
             String dni,
             String email,
