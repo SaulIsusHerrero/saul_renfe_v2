@@ -17,6 +17,10 @@
     </properties>
 
     <dependencies>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.4.0</version>
+        <executions>
         <!-- TestNG -->
         <dependency>
             <groupId>org.testng</groupId>
