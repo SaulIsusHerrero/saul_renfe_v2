@@ -16,6 +16,14 @@ public class Steps extends BasePage {
         this.dataStore = TemporaryDataStore.getInstance();
     }
 
+    waitUntilElementIsDisplayed(totalPricePersonalizeLocator, TIMEOUT);
+
+    // Normaliza el precio de la nueva página
+    String totalPricePersonalize = normalizePrice(webDriver.findElement(totalPricePersonalizeLocator).getText());
+
+    // El precio recibido ya debería estar normalizado, pero por seguridad:
+    totalPriceTrip = normalizePrice(totalPriceTrip);
+
     /**
      * Select origin and destination stations,
      * @param originStation
