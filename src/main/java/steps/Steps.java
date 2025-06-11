@@ -210,4 +210,25 @@ public class Steps extends BasePage {
 
     }
 
+    public void hogarNuevo(String bankCard, String expirationDate, String cvv){
+        new PasarelaPagoPage(webDriver).verifyYouAreInPasarelaPagoPage();
+        PasarelaPagoPage pasarelaPagoPage = new PasarelaPagoPage(webDriver);
+        pasarelaPagoPage.verifyTotalPrice((String) TemporaryDataStore.getInstance().get("totalPriceTrip"));
+        pasarelaPagoPage.typeBankCard(bankCard);
+        pasarelaPagoPage.typeExpirationDate(expirationDate);
+        pasarelaPagoPage.typeCVV(cvv);
+        //pasarelaPagoPage.clickPaymentButton();
+        String testCase = (String) TemporaryDataStore.getInstance().get("testCase");
+
+        if ("InvalidCardPaymentTest".equalsIgnoreCase(testCase)) {
+            pasarelaPagoPage.checkEnabledButton();
+            pasarelaPagoPage.clickButtonPagar();
+            pasarelaPagoPage.checkPoupUpError();
+        }else if( "EmptyBuyerDataTest5d".equalsIgnoreCase(testCase)) {
+            pasarelaPagoPage.checkDisabledButton();
+        }
+
+
+    }
+
 }
