@@ -16,6 +16,16 @@ public class Steps extends BasePage {
         this.dataStore = TemporaryDataStore.getInstance();
     }
 
+      if ("InvalidDataTraveler15d".equalsIgnoreCase(testCase)) {
+        TemporaryDataStore.getInstance().get("totalPriceTrip");
+        homePage.selectDateDaysLater(webDriver, 15);
+    } else if ("EmptyBuyerDataTest5d".equalsIgnoreCase(testCase)) {
+        TemporaryDataStore.getInstance().get("totalPriceTrip");
+        homePage.selectDateDaysLater(webDriver, 5);
+    } else{
+        System.out.println("El precio del trayecto no es 0");
+    }
+
     /**
      * Select origin and destination stations,
      * @param originStation
