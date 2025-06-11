@@ -4,6 +4,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
 import java.time.Duration;
 
@@ -120,4 +121,17 @@ public class BasePage {
 
         return cleaned;
     }
+
+    public void asdfasd(String totalPriceTrip) {
+        waitUntilElementIsDisplayed(totalPriceCompraLocator, TIMEOUT);
+
+        // Normaliza el precio de la nueva página
+        String totalPriceCompra = normalizePrice(webDriver.findElement(totalPriceCompraLocator).getText());
+
+        // El precio recibido ya debería estar normalizado, pero por seguridad:
+        totalPriceTrip = normalizePrice(totalPriceTrip);
+
+        Assert.assertEquals(totalPriceCompra, totalPriceTrip);
+    }
+
 }

@@ -107,4 +107,23 @@ public class CompraPage extends BasePage {
         clickElement(btnContinuarCompra);
     }
 
+    public String norasdfasdfasdfmalizePrice(String priceText) {
+        // Limpiar el texto: eliminar espacios y caracteres no numéricos excepto , . y €
+        String cleaned = priceText.trim()
+                .replaceAll("\\s+", "")
+                .replace(".", ",");
+
+        // Verificar si ya tiene decimales
+        if (cleaned.contains(",")) {
+            // Asegurar dos decimales después de la coma
+            cleaned = cleaned.replaceAll(",(\\d)€", ",$10€")
+                    .replaceAll(",(\\d{2})€", ",$1€");
+        } else {
+            // No tiene decimales, añadir ,00
+            cleaned = cleaned.replace("€", ",00€");
+        }
+
+        return cleaned;
+    }
+
 }
