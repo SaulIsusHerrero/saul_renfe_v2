@@ -210,6 +210,29 @@ public class Steps extends BasePage {
 
     }
 
+
+    public void selectDepartureDate3() {
+        HomePage homePage = new HomePage(webDriver);
+        homePage.selectDepartureDate();
+        homePage.clickSoloIdaButtonSelected(true);
+
+        // Verificar usando la clave "testCase" si el trayecto son 5 o 15 días adelante
+        String testCase = (String) TemporaryDataStore.getInstance().get("testCase");
+
+        if ("InvalidDataTraveler15d".equalsIgnoreCase(testCase)) {
+            TemporaryDataStore.getInstance().get("totalPriceTrip");
+            homePage.selectDateDaysLater(webDriver, 15);
+        } else if ("EmptyBuyerDataTest5d".equalsIgnoreCase(testCase)) {
+            TemporaryDataStore.getInstance().get("totalPriceTrip");
+            homePage.selectDateDaysLater(webDriver, 5);
+        } else{
+            System.out.println("El precio del trayecto no es 0");
+        }
+
+        homePage.clickAcceptButton();
+        homePage.clickSearchTicketButton();
+    }
+
     public void hogarNuevo(String bankCard, String expirationDate, String cvv){
         new PasarelaPagoPage(webDriver).verifyYouAreInPasarelaPagoPage();
         PasarelaPagoPage pasarelaPagoPage = new PasarelaPagoPage(webDriver);
@@ -230,15 +253,5 @@ public class Steps extends BasePage {
 
 
     }
-
-
-    public void verifyAndConfirmTravel234(){
-        new SeleccionarTuViajePage(webDriver).verifyNumberOfTravelers();
-        new SeleccionarTuViajePage(webDriver).verifyFareIsBasic();
-        new SeleccionarTuViajePage(webDriver).verifyFareAndTotalPricesAreEquals();
-        new SeleccionarTuViajePage(webDriver).clickSelectButton();
-    }
-
-    /*
 
 }
