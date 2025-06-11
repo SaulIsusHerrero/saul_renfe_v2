@@ -89,6 +89,10 @@ public class EmptyBuyerDataTest5d {
 
     @AfterMethod
     public void tearDown() {
+        steps.clickPopUpAndLinkAppear();
+        steps.verifyPriceIsEqualInData();
+        steps.introduceYourDataAndConfirm(firstName, primerApellido, segundoApellido, dni, email, phone);
+        steps.verifyPriceIsEqualInPerso
         if (webDriver != null) {
             webDriver.quit();
         }

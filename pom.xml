@@ -17,11 +17,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-devtools-v130</artifactId>
-            <version>${selenium.version}</version>
-        </dependency>
         <!-- TestNG -->
         <dependency>
             <groupId>org.testng</groupId>
