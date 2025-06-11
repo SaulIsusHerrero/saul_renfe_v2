@@ -62,6 +62,9 @@ public class EmptyBuyerDataTest5d {
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
         steps.selectDepartureDate();
         steps.selectTrainAndFare();
+        steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
+        steps.selectDepartureDate();
+        steps.selectTrainAndFare();
         steps.getAndStoreDynamicPrice();
         steps.verifyAndConfirmTravel();
         steps.clickPopUpAndLinkAppear();
