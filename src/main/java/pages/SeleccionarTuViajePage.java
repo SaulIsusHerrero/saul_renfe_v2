@@ -84,17 +84,17 @@ public class SeleccionarTuViajePage extends BasePage {
 
     /**
      * Selecciona el primer tren disponible que cumpla:
-     * 1. Precio inferior a 20€.
+     * 1. Precio inferior a 50€.
      * 2. Hora de salida entre las 17:00 (5 PM) y las 22:00 (10 PM).
      */
-    public void selectFirstTrainUnder20EurosAndBetween5To10PM() {
+    public void selectFirstTrainUnder50EurosAndBetween5To10PM() {
         WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
         boolean found = false;
         int maxAttempts = 6; // Límite de días a avanzar para evitar bucle infinito
         int attempts = 0;
 
         while (!found && attempts < maxAttempts) {
-            // Encuentra la lista de trenes disponibles
+            // Encuentra la lista de trenes disponibles, precios y horarios.
             List<WebElement> trainList = webDriver.findElements(trainAvailable);
             List<WebElement> trainPriceList = webDriver.findElements(priceTravelLocatorList);
             List<WebElement> trainTimeList = webDriver.findElements(timeTravelLocatorList);
@@ -115,7 +115,7 @@ public class SeleccionarTuViajePage extends BasePage {
                 double price = Double.parseDouble(priceText);
 
                 // Validación
-                if (price < 20.0 &&
+                if (price < 50.0 &&
                         !departureTime.isBefore(LocalTime.of(17, 0)) &&
                         !departureTime.isAfter(LocalTime.of(22, 0))) {
 
@@ -123,7 +123,7 @@ public class SeleccionarTuViajePage extends BasePage {
                     wait.until(ExpectedConditions.elementToBeClickable(trainElement));
                     scrollElementIntoViewElement(trainElement);
 
-                    // ✅ Clicka en la card con el 1er precio menor a 20€ encontrado
+                    // ✅ Clicka en la card con el 1er precio menor a 50€ encontrado entre las 5 y 10 de la tarde
                     ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", trainElement);
 
                     found = true;
@@ -140,7 +140,7 @@ public class SeleccionarTuViajePage extends BasePage {
 
         // Si no se encontró tras N intentos, falla el test
         if (!found) {
-            Assert.fail("❌ No hay trenes disponibles con precio < 20€ y salida entre 17:00 y 22:00 tras " + maxAttempts + " días.");
+            Assert.fail("❌ No hay trenes disponibles con precio < a 50€ y salida entre 17:00 y 22:00 tras " + maxAttempts + " días.");
         }
     }
 

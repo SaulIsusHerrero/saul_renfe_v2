@@ -22,8 +22,8 @@ public class CSVDataProvider {
         return readCSVFile("datos_pasajeros_error_15d.csv");
     }
 
-    public static Object[][] readDatos20€Tarde() {
-        return readCSVFile("datos_pasajeros_20_evenings.csv");
+    public static Object[][] readDatos50€Tarde() {
+        return readCSVFile("datos_pasajeros_50_evenings.csv");
     }
 
     public static Object[][] readDatosPasajerosBlankPaymentData5d() {

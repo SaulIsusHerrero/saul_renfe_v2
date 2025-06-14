@@ -18,14 +18,14 @@ import java.util.Date;
 
 import static pages.BasePage.TIMEOUT;
 
-public class SelectTrainMinor20€Evenings {
+public class SelectTrainMinor50€Evenings {
 
     private WebDriver webDriver;
     private Steps steps;
 
     @DataProvider(name = "paymentData")
     public Object[][] getPaymentData() {
-        return CSVDataProvider.readDatos20€Tarde();
+        return CSVDataProvider.readDatos50€Tarde();
     }
 
     @DataProvider(name = "routeData")
@@ -46,18 +46,18 @@ public class SelectTrainMinor20€Evenings {
 
     /**
     * Seleccionar un tren de solo de ida para el dia actual y al llegar al formulario 2 donde se seleccionas el tren,
-     * buscar un tren disponible, cuyo precio sea inferior a 20 euros entre las 5 de la tarde y las 10 de la noche.
+    * buscar un tren disponible, cuyo precio sea inferior a 50 euros entre las 5 de la tarde y las 10 de la noche.
     */
     @Test(dataProvider = "paymentData")
-    public void SelectTrainMinor20€Evenings(
+    public void SelectTrainMinor50€Evenings(
             String originStation,
             String destinationStation){
 
-            TemporaryDataStore.getInstance().set("testCase", "SelectTrainMinor20€Evenings");
+            TemporaryDataStore.getInstance().set("testCase", "SelectTrainMinor50€Evenings");
 
             steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
             steps.selectDepartureDate();
-            steps.selectTrainMinor20EurosAndBetween5To10PM();
+            steps.selectTrainMinor50EurosAndBetween5To10PM();
     }
 
     @AfterMethod
