@@ -58,6 +58,9 @@ public class SelectTrainMinor50€Evenings {
             steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
             steps.selectDepartureDate();
             steps.selectTrainMinor50EurosAndBetween5To10PM();
+            steps.getAndStoreDynamicPrice();
+            steps.verifyAndConfirmTravel();
+            steps.clickPopUpAndLinkAppear();
     }
 
     @AfterMethod

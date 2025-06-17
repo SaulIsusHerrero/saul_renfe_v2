@@ -98,6 +98,7 @@ public class SeleccionarTuViajePage extends BasePage {
             List<WebElement> trainList = webDriver.findElements(trainAvailable);
             List<WebElement> trainPriceList = webDriver.findElements(priceTravelLocatorList);
             List<WebElement> trainTimeList = webDriver.findElements(timeTravelLocatorList);
+            List<WebElement> trainFare = webDriver.findElements(trainAvailableBasicFare);
 
             int total = Math.min(Math.min(trainList.size(), trainPriceList.size()), trainTimeList.size());
 
@@ -123,9 +124,15 @@ public class SeleccionarTuViajePage extends BasePage {
                     wait.until(ExpectedConditions.elementToBeClickable(trainElement));
                     scrollElementIntoViewElement(trainElement);
 
-                    // ✅ Clicka en la card con el 1er precio menor a 50€ encontrado entre las 5 y 10 de la tarde
+                    // ✅ Clicka en la card del tren con el 1er precio menor a 50€ encontrado entre las 5 y 10 de la tarde
                     ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", trainElement);
-
+                    // ✅ Clicka en la card dentro del tren con el precio encontrado anteriormente, la tarifa básica.
+                    WebElement firstBasicFare = trainFare.get(0);
+                    scrollElementIntoViewElement(firstBasicFare);
+                    wait.until(ExpectedConditions.visibilityOf(firstBasicFare));
+                    wait.until(ExpectedConditions.elementToBeClickable(firstBasicFare));
+                    //click con JavascriptExecutor para que no sea interceptado.
+                    ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", firstBasicFare);
                     found = true;
                     break; // salir del for
                 }
