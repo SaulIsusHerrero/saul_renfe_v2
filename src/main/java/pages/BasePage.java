@@ -1,13 +1,10 @@
 package pages;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.openqa.selenium.*;
-import org.testng.Assert;
+
 import java.time.Duration;
 
 public class BasePage {
@@ -20,11 +17,8 @@ public class BasePage {
         PageFactory.initElements(webDriver, this);
     }
 
-    //Locators
-    protected By acceptAllCookiesButton = By.id("onetrust-accept-btn-handler");
-
-    //Variables
-    long timeout = 5;
+    //Variables and Constants
+    public static final Duration TIMEOUT = Duration.ofSeconds(10);
 
     /**
      * Writes text inside a given element locator.
@@ -44,7 +38,6 @@ public class BasePage {
     public void clickElement(By locator) {
         WebElement element = webDriver.findElement(locator);
         ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", element);
-        //@todo Saul, ¿te has dado cuenta de esto? ¿Todos tus clicks ya van con javascript? No pasa nada, esta bien si quieres usar esta estrategia, solo que seas consciente. Borra el comentario cuando lo leas por favor
     }
 
     /**
@@ -69,10 +62,12 @@ public class BasePage {
     }
 
     /**
-     * Desplaza el elemento a la vista
+     * Scrolls a given element locator to the center of the screen.
+     *
+     * @param element WebElement
      */
-    void scrollElementIntoViewElement(WebElement element) {
-        ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", element);
+    public void scrollElementIntoViewElement(WebElement element) {
+        ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
     }
 
     /**
@@ -92,45 +87,37 @@ public class BasePage {
     }
 
     /**
-     * Accepts all cookies in any Page.
-     */
-    public void clickAcceptAllCookiesButton() {
-        WebElement acceptButton = new WebDriverWait(webDriver, Duration.ofSeconds(5)).
-                until(ExpectedConditions.elementToBeClickable(acceptAllCookiesButton));
-        ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", acceptButton);
-    }
-
-    /**
      * Waits until an element is displayed in any Page.
-     * @param locator as a By
-     * @param timeout as a long
+     * @param TIMEOUT Duration
+     * @param locator By
      */
-    public void waitUntilElementIsDisplayed(By locator, Duration timeout) {
-        //@todo Saul, lee el codigo- que esta mal aqui?
-        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(5));
-        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-        Assert.assertTrue(element.isDisplayed(),"The element" + element + "is not displayed");
+    public void waitUntilElementIsDisplayed(By locator, Duration TIMEOUT) {
+        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
     /**
-     * Returns "true" or "false" depending on if a given element locator currently appears or not
-     *
-     * @param locator By with the locator of the element
+     * Normaliza el formato del precio para asegurar que usa coma como separador decimal
+     * y siempre tenga dos decimales.
+     * @param priceText Texto del precio (ej: "66.5€", "66,50€" o "54€")
+     * @return Precio normalizado (ej: "66,50€" o "54,00€")
      */
-    public boolean isElementDisplayed(By locator) {
-        try {
-            return webDriver.findElement(locator).isDisplayed();
-        } catch (NoSuchElementException e) {
-            return false;
+    public String normalizePrice(String priceText) {
+        // Limpiar el texto: eliminar espacios y caracteres no numéricos excepto , . y €
+        String cleaned = priceText.trim()
+                .replaceAll("\\s+", "")
+                .replace(".", ",");
+
+        // Verificar si ya tiene decimales
+        if (cleaned.contains(",")) {
+            // Asegurar dos decimales después de la coma
+            cleaned = cleaned.replaceAll(",(\\d)€", ",$10€")
+                    .replaceAll(",(\\d{2})€", ",$1€");
+        } else {
+            // No tiene decimales, añadir ,00
+            cleaned = cleaned.replace("€", ",00€");
         }
-    }
 
-    /**
-     * Returns the text inside a given element locator
-     *
-     * @param locator By with the locator of the element
-     */
-    public String getElementText(By locator) {
-        return webDriver.findElement(locator).getText();
+        return cleaned;
     }
 }

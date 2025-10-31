@@ -2,50 +2,40 @@ package utils;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import java.time.Duration;
+import java.util.Locale;
 
 public class DriverManager {
-    private static WebDriver webDriver;
-    private static final String BROWSER = System.getProperty("browser", "chrome"); // Default: Chrome
 
-    //Variables
-    static Duration timeoutLong = Duration.ofSeconds(20);
+    public static WebDriver getDriver(String browser) {
+        String os = System.getProperty("os.name").toLowerCase(Locale.ROOT);
+        String driverPathPrefix;
 
-    public static WebDriver getDriver() {
-        if (webDriver == null) {
-            switch (BROWSER.toLowerCase()) {
-                case "firefox":
-                    webDriver = new ChromeDriver();
-                    FirefoxOptions firefoxOptions = new FirefoxOptions();
-                    firefoxOptions.addArguments("-private"); // Modo incógnito en Firefox
-                    webDriver = new FirefoxDriver(firefoxOptions);
-                    break;
-                case "edge":
-                    webDriver = new EdgeDriver();
-                    break;
-                case "chrome":
-                default:
-                    webDriver = new ChromeDriver();
-                    ChromeOptions chromeOptions = new ChromeOptions();
-                    chromeOptions.addArguments("--incognito");
-                    webDriver = new ChromeDriver(chromeOptions);
-                    break;
-            }
-            webDriver.manage().timeouts().implicitlyWait(timeoutLong);
-            webDriver.manage().window().maximize();
+        if (os.contains("win")) {
+            driverPathPrefix = "drivers/windows/";
+        } else if (os.contains("mac")) {
+            driverPathPrefix = "drivers/mac/";
+        } else {
+            driverPathPrefix = "drivers/linux/";
         }
-        return webDriver;
-    }
 
-    public static void closeDriver() {
-        if (webDriver != null) {
-            webDriver.quit();
-            webDriver = null;
+        switch (browser.toLowerCase(Locale.ROOT)) {
+            case "chrome":
+                System.setProperty("webdriver.chrome.driver",
+                        driverPathPrefix + (os.contains("win") ? "chromedriver.exe" : "chromedriver"));
+                return new ChromeDriver();
+            case "firefox":
+                System.setProperty("webdriver.gecko.driver",
+                        driverPathPrefix + (os.contains("win") ? "geckodriver.exe" : "geckodriver"));
+                return new FirefoxDriver();
+            case "edge":
+                System.setProperty("webdriver.edge.driver",
+                        driverPathPrefix + (os.contains("win") ? "msedgedriver.exe" : "msedgedriver"));
+                return new EdgeDriver();
+            default:
+                throw new IllegalArgumentException("Unsupported browser: " + browser);
         }
     }
-
 }
+

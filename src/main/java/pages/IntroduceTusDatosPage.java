@@ -1,13 +1,14 @@
 package pages;
 
-import org.junit.Assert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import java.time.Duration;
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.Color;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
 public class IntroduceTusDatosPage extends BasePage {
     //Locators
-    private By introduceTusDatosLabel = By.xpath("//span[contains(text(), 'Introduce tus datos') and not(ancestor::select[@disabled])]");
+    private By introduceTusDatosStepper = By.xpath("//li[contains(@class, 'active')]//span[contains(text(), 'Introduce tus datos')]");
     private By firstNameField = By.xpath("//input[@id='nombre0']");
     private By firstSurnameField = By.xpath("//input[@id='apellido10']");
     private By secondSurnameField = By.xpath("//input[@id='apellido20']");
@@ -16,9 +17,8 @@ public class IntroduceTusDatosPage extends BasePage {
     private By emailField = By.xpath("//input[@id='email0']");
     private By totalPriceDataLocator = By.xpath("//span[@id='totalTrayecto']");
     private By btnPersonalizar = By.cssSelector("#btn-responsive > #submitpersonaliza");
+    private By errorName = By.xpath("//div[@class='error-validacion' and @role='alert' and text()='El nombre tiene un formato incorrecto']");
 
-    //Instance
-    private SeleccionarTuViajePage seleccionarTuViajePage;
 
     //Constructor
     public IntroduceTusDatosPage(WebDriver webDriver) {
@@ -27,14 +27,29 @@ public class IntroduceTusDatosPage extends BasePage {
     }
 
     //Methods
+
     /**
      * Assert que estoy en la Page y esta habilitada “introduce tus datos”
      */
     public void verifyYouAreInIntroduceYourDataPage() {
-        //@todo investigar como se comprueba el texto, el tipo de assert que necesitas
-        //@todo Saúl. otro todo sin hacer
-        waitUntilElementIsDisplayed(introduceTusDatosLabel, Duration.ofSeconds(5));
-        Assert.assertTrue(webDriver.findElement(introduceTusDatosLabel).isEnabled());
+        Assert.assertTrue(webDriver.findElement(introduceTusDatosStepper).isEnabled(), "No está habilitado este step");
+    }
+
+    /**
+     * Verify the ticket price.
+     *
+     * @param totalPriceTrip Precio obtenido previamente, ya normalizado
+     */
+    public void verifyTotalPrice(String totalPriceTrip) {
+        waitUntilElementIsDisplayed(totalPriceDataLocator, TIMEOUT);
+
+        // Normaliza el precio de la nueva página
+        String totalPriceData = normalizePrice(webDriver.findElement(totalPriceDataLocator).getText());
+
+        // El precio recibido ya debería estar normalizado, pero por seguridad:
+        totalPriceTrip = normalizePrice(totalPriceTrip);
+
+        Assert.assertEquals(totalPriceData, totalPriceTrip);
     }
 
     /**
@@ -43,7 +58,7 @@ public class IntroduceTusDatosPage extends BasePage {
      * @param firstName as a string
      */
     public void writeFirstNameField(String firstName) {
-        waitUntilElementIsDisplayed(firstNameField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(firstNameField, TIMEOUT);
         setElementText(firstNameField, firstName);
     }
 
@@ -53,7 +68,7 @@ public class IntroduceTusDatosPage extends BasePage {
      * @param primerApellido as a string
      */
     public void writeFirstSurnameField(String primerApellido) {
-        waitUntilElementIsDisplayed(firstSurnameField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(firstSurnameField, TIMEOUT);
         setElementText(firstSurnameField, primerApellido);
     }
 
@@ -63,7 +78,7 @@ public class IntroduceTusDatosPage extends BasePage {
      * @param segundoApellido as a string
      */
     public void writeSecondSurnameField(String segundoApellido) {
-        waitUntilElementIsDisplayed(secondSurnameField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(secondSurnameField, TIMEOUT);
         setElementText(secondSurnameField, segundoApellido);
     }
 
@@ -73,7 +88,7 @@ public class IntroduceTusDatosPage extends BasePage {
      * @param dni as a string
      */
     public void writeDNIField(String dni) {
-        waitUntilElementIsDisplayed(dniField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(dniField, TIMEOUT);
         setElementText(dniField, dni);
     }
 
@@ -83,7 +98,7 @@ public class IntroduceTusDatosPage extends BasePage {
      * @param email as a string
      */
     public void writeEmailField(String email) {
-        waitUntilElementIsDisplayed(emailField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(emailField, TIMEOUT);
         setElementText(emailField, email);
     }
 
@@ -93,28 +108,35 @@ public class IntroduceTusDatosPage extends BasePage {
      * @param phone as a string
      */
     public void writePhoneField(String phone) {
-        waitUntilElementIsDisplayed(telefonoField, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(telefonoField, TIMEOUT);
         setElementText(telefonoField, phone);
     }
 
-    /**
-     * Verify the ticket price.
-     * @param totalPriceTrip as a String
-     */
-    public String verifyTotalPriceData(String totalPriceTrip){
-        waitUntilElementIsDisplayed(totalPriceDataLocator, Duration.ofSeconds(5));
-        String totalPriceData = webDriver.findElement(totalPriceDataLocator).getText().trim().replaceAll("\\s+", "");
-        totalPriceTrip = webDriver.findElement(totalPriceDataLocator).getText().trim().replaceAll("\\s+", "");
-        Assert.assertEquals(totalPriceData, totalPriceTrip);
-        return totalPriceTrip;
+    public void checkErrorInDataField() {
+
+        WebDriverWait wait = new WebDriverWait(webDriver,TIMEOUT);
+        WebElement error = wait.until(ExpectedConditions.visibilityOfElementLocated(errorName));
+
+        // Si aparece, verificar texto y color
+        String texto = error.getText().trim();
+        Assert.assertEquals(texto, "El nombre tiene un formato incorrecto");
+
+        String color = error.getCssValue("color");
+        Color actual = Color.fromString(color);
+        Color esperado = Color.fromString("#ff0000");
+        Assert.assertEquals(actual, esperado, "El color del mensaje de error debería ser rojo");
+        Assert.assertFalse(actual.equals(esperado), "El campo nombre tiene el dato inválido, por tanto, NO es posible seguir con el flujo");
     }
 
     /**
-     * Clic "Personalizar viaje" button
+     * Click in Personalize trip to follow the process.
+     * @return boolean
      */
     public void clickPersonalizeTrip() {
-        waitUntilElementIsDisplayed(btnPersonalizar, Duration.ofSeconds(5));
+        scrollElementIntoView(btnPersonalizar);
+        waitUntilElementIsDisplayed(btnPersonalizar, TIMEOUT);
         clickElement(btnPersonalizar);
     }
 
 }
+

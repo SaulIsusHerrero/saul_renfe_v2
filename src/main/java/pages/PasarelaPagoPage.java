@@ -1,17 +1,20 @@
 package pages;
 
-import org.junit.Assert;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebElement;
+import org.testng.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import java.time.Duration;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class PasarelaPagoPage extends BasePage {
     //Locators
-    private By cardField = By.xpath("//input[@id='card-number']");
+    private By cardNumber = By.xpath("//input[@id='card-number']");
     private By expirationField = By.xpath("//input[@id='card-expiration']");
     private By totalPricePasarelaLocator = By.xpath("//div[@class='right']");
     private By cvvField = By.xpath("//input[@id='card-cvv']");
-    private By btnPayment = By.xpath("//button[@class='btn btn-lg btn-accept validColor']");
+    private By btnPayment = By.xpath("//button[@onclick='javascript:pago()']");
     private By popUpError = By.xpath("//div[@id='myModalBody']//li[contains(text(), 'Tarjeta no soportada (RS18)')]");
 
     //Constructor
@@ -25,60 +28,112 @@ public class PasarelaPagoPage extends BasePage {
      * Assert I am in the "pasarela de pago" Page
      */
     public void verifyYouAreInPasarelaPagoPage() {
-        String currentURL = webDriver.getCurrentUrl();
-        String expectedURL = "https://sis.redsys.es/sis/realizarPago";
-        Assert.assertEquals("Error: La url que esta cargada en la web es: " + currentURL + ", sin embargo se esperaba:" + expectedURL, currentURL,expectedURL);
+        String actualUrl = webDriver.getCurrentUrl().trim();
+        String expectedUrlPattern = "sis.redsys.es/sis/realizarPago";
+        try {
+            new WebDriverWait(webDriver, TIMEOUT).until(ExpectedConditions.urlContains(expectedUrlPattern));
+        } catch (TimeoutException e) {
+            Assert.fail("La URL no contiene '" + expectedUrlPattern + "' después de 15 segundos. URL actual: " + actualUrl);
+        }
     }
 
     /**
      * Verify the ticket price.
-     * @param totalPriceTrip as a String
+     *
+     * @param totalPriceTrip Precio obtenido previamente, ya normalizado
      */
-    public String verifyTotalPricePasarelaPago(String totalPriceTrip){
-        waitUntilElementIsDisplayed(totalPricePasarelaLocator, Duration.ofSeconds(5));
-        String totalPriceData = webDriver.findElement(totalPricePasarelaLocator).getText().trim().replaceAll("\\s+", "");
-        totalPriceTrip = webDriver.findElement(totalPricePasarelaLocator).getText().trim().replaceAll("\\s+", "");
-        Assert.assertEquals(totalPriceData, totalPriceTrip);
-        return totalPriceTrip;
+    public void verifyTotalPrice(String totalPriceTrip) {
+        waitUntilElementIsDisplayed(totalPricePasarelaLocator, TIMEOUT);
+
+        // Normaliza el precio de la nueva página
+        String totalPricePasarela = normalizePrice(webDriver.findElement(totalPricePasarelaLocator).getText());
+
+        // El precio recibido ya debería estar normalizado, pero por seguridad:
+        totalPriceTrip = normalizePrice(totalPriceTrip);
+
+        Assert.assertEquals(totalPricePasarela, totalPriceTrip);
     }
 
     /**
      * Type the card in the textbox on the "Pasarela de pago" page.
-     * @param card as a string
+     * @param bankCard as a string
      */
-    public void typeBankCard(String card) {
-        waitUntilElementIsDisplayed(cardField, Duration.ofSeconds(5));
-        setElementText(cardField, card);
+    public void typeBankCard(String bankCard) {
+        waitUntilElementIsDisplayed(cardNumber, TIMEOUT);
+        setElementText(cardNumber, bankCard);
     }
 
     /**
      * Type the Expiration Date in the textbox on the "Pasarela de pago" page.
-     * @param expiration as a string
+     *
+     * @param expirationDate as a string
      */
-    public void typeExpirationDate(String expiration){
-        waitUntilElementIsDisplayed(expirationField, Duration.ofSeconds(5));
-        setElementText(expirationField, expiration);
+    public void typeExpirationDate(String expirationDate) {
+        waitUntilElementIsDisplayed(expirationField, TIMEOUT);
+        setElementText(expirationField, expirationDate);
     }
 
     /**
      * Type the CVV in the text box on the "Pasarela de pago" page
+     *
      * @param cvv as a string
      */
-    public void typeCVV(String cvv){
-        waitUntilElementIsDisplayed(cvvField, Duration.ofSeconds(5));
+    public void typeCVV(String cvv) {
+        waitUntilElementIsDisplayed(cvvField, TIMEOUT);
         setElementText(cvvField, cvv);
     }
 
-    /**
-     * Click on payment button
-     */
-    public void clickPaymentButton(){
-        waitUntilElementIsDisplayed(btnPayment, Duration.ofSeconds(5));
-        clickElement(btnPayment);
-        waitUntilElementIsDisplayed(popUpError, Duration.ofSeconds(5));
-        boolean popUpErrorExpected = isElementDisplayed(popUpError);
-        Assert.assertTrue(popUpErrorExpected);
-        //@Todo Saul- ¿Que esta comprobando este assert? ¿Estas seguro de que este selector no esta presente en el dom siempre?
+    public void checkEnabledButton() {
+        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
+
+        // Esperar a que el botón esté presente en el DOM
+        wait.until(ExpectedConditions.presenceOfElementLocated(btnPayment));
+
+        // Obtener el botón real
+        WebElement paymentButton = webDriver.findElement(btnPayment);
+        wait = new WebDriverWait(webDriver, TIMEOUT);
+
+        // Verificar si el botón está habilitado
+        if (!paymentButton.isEnabled()) {
+            Assert.fail("❌ Faltan los datos de pago, por tanto, el botón 'PAGAR' está deshabilitado.");
+        }
+
+    }
+
+    public void checkDisabledButton() {
+        //WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
+
+        // Esperar a que el botón esté presente en el DOM
+        //wait.until(ExpectedConditions.presenceOfElementLocated(btnPayment));
+
+        // Obtener el botón real
+        WebElement paymentButton = webDriver.findElement(btnPayment);
+        //wait = new WebDriverWait(webDriver, TIMEOUT);
+
+        // Verificar si el botón está habilitado
+        if (paymentButton.isEnabled()) {
+            Assert.fail("❌ Faltan los datos de pago, por tanto, el botón 'PAGAR' está deshabilitado.");
+        }
+
+    }
+
+    public void  clickButtonPagar() {
+        // Hacer clic
+        WebElement paymentButton = webDriver.findElement(btnPayment);
+        paymentButton.click();
+    }
+
+    public void  checkPoupUpError() {
+
+        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
+
+        // Verificar visibilidad
+        try {
+            wait.until(ExpectedConditions.visibilityOfElementLocated(popUpError));
+            System.out.println("✅ El Pop-up con el error de tarjeta inválida (RS18) es visible en pantalla");
+        } catch (Exception e) {
+            Assert.fail("❌ El Pop-up existe pero NO es visible en pantalla");
+        }
     }
 
 }

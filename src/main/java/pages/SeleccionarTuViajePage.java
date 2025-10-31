@@ -1,29 +1,35 @@
 package pages;
 
-import org.junit.Assert;
+import org.testng.Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import java.time.Duration;
+
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
+
 public class SeleccionarTuViajePage extends BasePage {
 
     //Locators
-    //@TODO cambiar el selector de tarifa y precio tarifa al de la semimodal
-    private By seleccionaTuViajeLabel = By.xpath("//span[contains(text(), 'Selecciona tu viaje') and not(ancestor::select[@disabled])]");
-    private By trainAvailable = By.cssSelector("div[id^='precio-viaje']:not(:has(div))");
-    private By trainAvailableBasicFare = By.cssSelector("div[id^='precio-viaje']:not(:has(div))+div>div>div[class='planes-opciones']>div:nth-child(1)");
+    private By seleccionaTuViajeStepper = By.xpath("//li[contains(@class, 'active')]//span[contains(text(), 'Selecciona tu viaje')]");
+    private By trainAvailable =  By.cssSelector("div[id^='precio-viaje']");
+    private By trainAvailableBasicFare = By.cssSelector("[data-titulo-tarifa='Básico']");
     private By selectDayRightArrow = By.cssSelector(".rescalendar_controls > button.move_to_tomorrow");
     private By travelerLocator = By.xpath("(//div[contains(@class, 'viajerosSelected') and contains(text(), '1')])[1]");
-    private By basicFareLocator = By.xpath("(//div[@class='ida-slim' and @id='banneri']//div[@class='rowitem1 viajerosSelected']/span[contains(text(), 'Básico')])[1]");
+    private By basicFareLocator = By.xpath("//div[@class='asient']//div[contains(@class, 'rowitem1')]/span[contains(text(), 'Básico')]");
     private By basicFarePriceLocator = By.xpath("(//div[@class='rowitem2 precioTarifa']/span)[1]");
     private By totalPriceLocator = By.xpath("(//span[@id='totalTrayectoBanner'])[1]");
-    private By btnSeleccionar = By.xpath("(//div[@class='rowitem2']/button[@id='btnSeleccionar' and @title='Elegir el trayecto y pasar al siguiente paso'])[1]");
-    private By popUpChangeFare = By.cssSelector("div.modal-content");
-    private By linkContinueSameFare = By.cssSelector("p#aceptarConfirmacionFareUpgrade.link-fareUpg");
+    private By btnSeleccionar = By.xpath("(//button[@id='btnSeleccionar'])[1]");
+    public  By popUpChangeFare = By.xpath("//button[@id='closeConfirmacionFareUpgrade' and " + "contains(@class, 'close') and " + "not(contains(@style, 'display: none'))]");
+    private By linkContinueSameFare = By.xpath("//div/p[@class and contains(text(), 'No')]");
+    private By popupIncidenciaLocator = By.xpath("//div[contains(@class, 'viaje-incidencia-style')]");
+    private By closepopupIncidenciaLocator = By.xpath("(//h6[contains(@class, 'estilo-titulo-modal') and contains(text(), 'Viaje con incidencia')]/ancestor::div[contains(@class,'modal')]//button[@aria-label='Close'])[1]");
+    private By timeTravelLocatorList = By.xpath("//div[@class='col-md-8 trenes']//h5[contains(text(), 'h')]");
+    private By priceTravelLocatorList = By.xpath("//span[@class='precio-final' and contains(text(), '€')]");
 
     //Constructor
     public SeleccionarTuViajePage(WebDriver webDriver) {
@@ -36,23 +42,25 @@ public class SeleccionarTuViajePage extends BasePage {
      * Checks if we are in the next Page "SeleccionarTuViajePage".
      */
     public void verifyYouAreInSelecionaTuViaje() {
-        waitUntilElementIsDisplayed(seleccionaTuViajeLabel, Duration.ofSeconds(5));
-        Assert.assertTrue(webDriver.findElement(seleccionaTuViajeLabel).isEnabled());
+        waitUntilElementIsDisplayed(seleccionaTuViajeStepper, TIMEOUT);
+        Boolean youAreInSeleccionaTuViaje = webDriver.findElement(seleccionaTuViajeStepper).isEnabled();
+        Assert.assertTrue(youAreInSeleccionaTuViaje);
     }
 
     /**
-     * Encuentra el primer tren disponible en el primer día posible con la tarifa Básica
+     * Selecciona el primer tren disponible que cumpla:
+     * 1. Tarifa "Básico".
+     * 2. No tener en cuenta que tenga badge o no.
      */
-    public void selectFirstTrainAvailableAndBasicFare() {
+    public void selectFirstValidBasicFareTrain() {
+        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
         boolean control = true;
-
         while (control) {
             // Encuentra la lista de trenes disponibles
             List<WebElement> trainList = webDriver.findElements(trainAvailable);
             List<WebElement> trainFare = webDriver.findElements(trainAvailableBasicFare);
-            WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
-
-            if (!trainList.isEmpty()) {
+            if (!trainList.isEmpty())
+            {
                 // Click on the first available train at position [0]
                 WebElement firstTrain = trainList.get(0);
                 wait.until(ExpectedConditions.visibilityOf(firstTrain));
@@ -68,9 +76,78 @@ public class SeleccionarTuViajePage extends BasePage {
                 control = false;
             } else {
                 // Haz clic en el botón del siguiente día para buscar trenes disponibles
-                webDriver.findElement(selectDayRightArrow).click();
-                wait.until(ExpectedConditions.visibilityOfElementLocated(trainAvailable));
+                clickElement(selectDayRightArrow);
+                wait = new WebDriverWait(webDriver, TIMEOUT);
             }
+        }
+    }
+
+    /**
+     * Selecciona el primer tren disponible que cumpla:
+     * 1. Precio inferior a 50€.
+     * 2. Hora de salida entre las 17:00 (5 PM) y las 22:00 (10 PM).
+     */
+    public void selectFirstTrainUnder50EurosAndBetween5To10PM() {
+        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
+        boolean found = false;
+        int maxAttempts = 6; // Límite de días a avanzar para evitar bucle infinito
+        int attempts = 0;
+
+        while (!found && attempts < maxAttempts) {
+            // Encuentra la lista de trenes disponibles, precios y horarios.
+            List<WebElement> trainList = webDriver.findElements(trainAvailable);
+            List<WebElement> trainPriceList = webDriver.findElements(priceTravelLocatorList);
+            List<WebElement> trainTimeList = webDriver.findElements(timeTravelLocatorList);
+            List<WebElement> trainFare = webDriver.findElements(trainAvailableBasicFare);
+
+            int total = Math.min(Math.min(trainList.size(), trainPriceList.size()), trainTimeList.size());
+
+            for (int i = 0; i < total; i++) {
+                WebElement trainElement = trainList.get(i);
+                WebElement priceElement = trainPriceList.get(i);
+                WebElement timeElement = trainTimeList.get(i);
+
+                // Normaliza hora
+                String timeText = timeElement.getText().trim().replace("h", "").trim();
+                LocalTime departureTime = LocalTime.parse(timeText, DateTimeFormatter.ofPattern("HH:mm"));
+
+                // Normaliza precio
+                String priceText = priceElement.getText().replaceAll("[^\\d,\\.]", "").replace(",", ".").trim();
+                double price = Double.parseDouble(priceText);
+
+                // Validación
+                if (price < 50.0 &&
+                        !departureTime.isBefore(LocalTime.of(17, 0)) &&
+                        !departureTime.isAfter(LocalTime.of(22, 0))) {
+
+                    wait.until(ExpectedConditions.visibilityOf(trainElement));
+                    wait.until(ExpectedConditions.elementToBeClickable(trainElement));
+                    scrollElementIntoViewElement(trainElement);
+
+                    // ✅ Clicka en la card del tren con el 1er precio menor a 50€ encontrado entre las 5 y 10 de la tarde
+                    ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", trainElement);
+                    // ✅ Clicka en la card dentro del tren con el precio encontrado anteriormente, la tarifa básica.
+                    WebElement firstBasicFare = trainFare.get(0);
+                    scrollElementIntoViewElement(firstBasicFare);
+                    wait.until(ExpectedConditions.visibilityOf(firstBasicFare));
+                    wait.until(ExpectedConditions.elementToBeClickable(firstBasicFare));
+                    //click con JavascriptExecutor para que no sea interceptado.
+                    ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", firstBasicFare);
+                    found = true;
+                    break; // salir del for
+                }
+            }
+
+            if (!found) {
+                clickElement(selectDayRightArrow); // Avanza al siguiente día
+                wait = new WebDriverWait(webDriver, TIMEOUT); // Reinicia espera
+                attempts++; // Cuenta la iteración
+            }
+        }
+
+        // Si no se encontró tras N intentos, falla el test
+        if (!found) {
+            Assert.fail("❌ No hay trenes disponibles con precio < a 50€ y salida entre 17:00 y 22:00 tras " + maxAttempts + " días.");
         }
     }
 
@@ -78,67 +155,88 @@ public class SeleccionarTuViajePage extends BasePage {
      * Verifies the number of travelers for the trip in the semimodal
      */
     public void verifyNumberOfTravelers() {
-        waitUntilElementIsDisplayed(travelerLocator, Duration.ofSeconds(5));
-        Assert.assertTrue(webDriver.findElement(travelerLocator).getText().contains("1"));
+        waitUntilElementIsDisplayed(travelerLocator, TIMEOUT);
+        String traveler = webDriver.findElement(travelerLocator).getText();
+        Assert.assertTrue(traveler.contains("1"));
     }
 
     /**
-     * Verifies the fare applied for the trip in the semimodal
+     * Verifies the fare applied for the trip in the semimodal is "Básico"
      */
-    public void verifyFareIsBasic(){
-        waitUntilElementIsDisplayed(basicFareLocator, Duration.ofSeconds(5));
-        Assert.assertTrue(webDriver.findElement(basicFareLocator).getText().contains("Básico"));
+    public void verifyFareIsBasic() {
+        waitUntilElementIsDisplayed(basicFareLocator, TIMEOUT);
+        String fareText = webDriver.findElement(basicFareLocator).getText();
+        Assert.assertTrue(fareText.contains("Básico"));
     }
 
     /**
-     * Verifies that the fare and the total prices applied for the trip in the semimodal are equals
-     */
+    * Verifies that the fare and the total prices applied for the trip in the semimodal are equals
+    */
     public String verifyFareAndTotalPricesAreEquals() {
-        waitUntilElementIsDisplayed(basicFarePriceLocator, Duration.ofSeconds(5));
-        waitUntilElementIsDisplayed(totalPriceLocator, Duration.ofSeconds(5));
-        String basicFarePrice = webDriver.findElement(basicFarePriceLocator).getText().trim().replaceAll("\\s+", "");
-        String totalPriceTrip = webDriver.findElement(totalPriceLocator).getText().trim().replaceAll("\\s+", "");
+        waitUntilElementIsDisplayed(basicFarePriceLocator, TIMEOUT);
+        waitUntilElementIsDisplayed(totalPriceLocator, TIMEOUT);
+
+        // Obtiene y normaliza los precios
+        String basicFarePrice = normalizePrice(webDriver.findElement(basicFarePriceLocator).getText());
+        String totalPriceTrip = normalizePrice(webDriver.findElement(totalPriceLocator).getText());
+
         Assert.assertEquals(basicFarePrice, totalPriceTrip);
         return totalPriceTrip;
     }
 
     /**
-     * clicks the Seleccionar button in the semimodal
+     * Clicks the Seleccionar button in the semimodal
      */
     public void clickSelectButton(){
-        waitUntilElementIsDisplayed(btnSeleccionar, Duration.ofSeconds(5));
-        clickElement(btnSeleccionar);
+        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
+        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(btnSeleccionar));
+        button.click();
     }
 
     /**
-     * Verifies that the pop-up to change the fare applied appears on the screen
+     * Verifies that the fare change pop-up exists in DOM and is visible on screen
+     * @param locator Localizador del elemento
+     * @param elementName Nombre descriptivo del elemento para mensajes
      */
-    public void popUpFareAppears() {
-        //@todo usar el atributo style, donde comprobar si aparece  display:none o block
-        WebElement popUpElement = webDriver.findElement(popUpChangeFare);
-        JavascriptExecutor js = (JavascriptExecutor) webDriver;
-        String displayStyle = (String) js.executeScript("return window.getComputedStyle(arguments[0]).display;", popUpElement);
-        //@todo Saúl -- como estas comprobando aqui que el pop up aparece?
-        System.out.println("✅ El Pop-up para un posible cambio de tarifa es visible en pantalla");
+    public void verifyElementPresenceAndVisibilityPopUpChangeFare(By locator, String elementName) {
+        elementName = "Pop-up de cambio de tarifa";
+        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
+        try {
+            wait.until(ExpectedConditions.presenceOfElementLocated(popUpChangeFare));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(popUpChangeFare));
+            System.out.println("✅ " + elementName + " está presente en el DOM y visible");
+        } catch (Exception e) {
+            Assert.fail("❌ " + elementName + " no está visible o presente: " + e.getMessage());
+        }
     }
 
     /**
-    * Verifies that the link to follow with the same fare appears on the screen insde the pop-up
-    */
-    public void linkContinueSameFareAppears(){
-        waitUntilElementIsDisplayed(linkContinueSameFare, Duration.ofSeconds(5));
-        boolean linkPopUpAppears = isElementDisplayed(linkContinueSameFare); //@todo comprobar que aparece el link
-        Assert.assertTrue(linkPopUpAppears);
-        //@todo Saúl - ¿recuerdas que hablamos de que aqui estas comprobando que esta disponible? Hablamos de comprobar con el texto en pantalla.
-        //Recuerda que en esta web, el selector esta presente incluso si el pop up no lo está.
+     * Verifies that the link of into the pop-up Change fare exists in DOM and is visible on screen
+     */
+    public void linkPopUpFareAppears() {
+        String elementLink = "No, quiero continuar con Básico";
+        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
+        try {
+            wait.until(ExpectedConditions.presenceOfElementLocated(linkContinueSameFare));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(linkContinueSameFare));
+            System.out.println("✅ " + elementLink + " está presente en el DOM y visible");
+        } catch (Exception e) {
+            Assert.fail("❌ " + elementLink + " no está visible o presente: " + e.getMessage());
+        }
     }
 
     /**
      * Click in the link to continue with the same fare
      */
     public void clickLinkContinueSameFare(){
-        waitUntilElementIsDisplayed(linkContinueSameFare, Duration.ofSeconds(5));
+        waitUntilElementIsDisplayed(linkContinueSameFare, TIMEOUT);
         clickElement(linkContinueSameFare);
+        WebElement popupIncidencia = webDriver.findElement(popupIncidenciaLocator);
+        //Este if es por si aparece un pop up de aviso/incidencia.
+        if (popupIncidencia.isDisplayed()){
+            WebElement closePopUpAviso = webDriver.findElement(closepopupIncidenciaLocator);
+            closePopUpAviso.click();
+        }
     }
 
 }
