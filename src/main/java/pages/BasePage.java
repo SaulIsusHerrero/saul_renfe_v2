@@ -97,25 +97,25 @@ public class BasePage {
     }
 
     /**
-     * Normaliza el formato del precio para asegurar que usa coma como separador decimal
-     * y siempre tenga dos decimales.
-     * @param priceText Texto del precio (ej: "66.5€", "66,50€" o "54€")
-     * @return Precio normalizado (ej: "66,50€" o "54,00€")
+     * Normalizes the price format to ensure it uses a comma as the decimal separator
+     * and always has two decimal places.
+     * @param priceText Price text (e.g., "66.5€", "66,50€" or "54€")
+     * @return Normalized price (e.g., "66,50€" or "54,00€")
      */
     public String normalizePrice(String priceText) {
-        // Limpiar el texto: eliminar espacios y caracteres no numéricos excepto , . y €
+        // Clean the text: remove spaces and non-numeric characters except for ',' '.' and €
         String cleaned = priceText.trim()
                 .replaceAll("\\s+", "")
                 .replace(".", ",");
 
-        // Verificar si ya tiene decimales
+        // Check if it already has decimals
         if (cleaned.contains(",")) {
-            // Asegurar dos decimales después de la coma
+        // Ensure two decimal places after the comma
             cleaned = cleaned.replaceAll(",(\\d)€", ",$10€")
                     .replaceAll(",(\\d{2})€", ",$1€");
         } else {
-            // No tiene decimales, añadir ,00
-            cleaned = cleaned.replace("€", ",00€");
+        // It has no decimals, add ,00
+        cleaned = cleaned.replace("€", ",00€");
         }
 
         return cleaned;

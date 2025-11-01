@@ -25,12 +25,12 @@ public class SelectTrainMinor50€Evenings {
 
     @DataProvider(name = "paymentData")
     public Object[][] getPaymentData() {
-        return CSVDataProvider.readDatos50€Tarde();
+        return CSVDataProvider.readData€50Evenings();
     }
 
     @DataProvider(name = "routeData")
     public Object[][] getRouteData() {
-        return CSVDataProvider.readPreciosTrayectos();
+        return CSVDataProvider.readTripPrices();
     }
 
     @BeforeMethod
@@ -45,31 +45,31 @@ public class SelectTrainMinor50€Evenings {
     }
 
     /**
-    * Seleccionar un tren de solo de ida para el dia actual y al llegar al formulario 2 donde se seleccionas el tren,
-    * buscar un tren disponible, cuyo precio sea inferior a 50 euros entre las 5 de la tarde y las 10 de la noche.
-    */
+     * Select a one-way train for the current day and, upon reaching form 2 where the train is selected,
+     * look for an available train whose price is less than 50 euros, between 5 PM and 10 PM.
+     */
     @Test(dataProvider = "paymentData")
     public void SelectTrainMinor50€Evenings(
-            String originStation,
-            String destinationStation){
+       String originStation,
+       String destinationStation){
 
-            TemporaryDataStore.getInstance().set("testCase", "SelectTrainMinor50€Evenings");
-
-            steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
-            steps.selectDepartureDate();
-            steps.selectTrainMinor50EurosAndBetween5To10PM();
-            steps.getAndStoreDynamicPrice();
-            steps.verifyAndConfirmTravel();
-            steps.clickPopUpAndLinkAppear();
+       TemporaryDataStore.getInstance().set("testCase", "SelectTrainMinor50€Evenings");
+       // Reusable components (steps)
+       steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
+       steps.selectDepartureDate();
+       steps.selectTrainMinor50EurosAndBetween5To10PM();
+       steps.getAndStoreDynamicPrice();
+       steps.verifyAndConfirmTravel();
+       steps.clickPopUpAndLinkAppear();
     }
 
     @AfterMethod
     public void capturarPantallaSiFalla(ITestResult result) throws IOException {
-        System.out.println("🧪 Estado del test: " + result.getStatus() + " (" + result.getName() + ")");
+        System.out.println("🧪 Test status: " + result.getStatus() + " (" + result.getName() + ")");
 
         if (result.getStatus() == ITestResult.FAILURE && webDriver != null) {
             if (result.getThrowable() != null) {
-                System.err.println("❗ Excepción en test: " + result.getThrowable().getMessage());
+                System.err.println("❗ Test exception: " + result.getThrowable().getMessage());
             }
 
             File screenshot = ((TakesScreenshot) webDriver).getScreenshotAs(OutputType.FILE);
@@ -78,7 +78,7 @@ public class SelectTrainMinor50€Evenings {
             File destino = new File("screenshots/" + testName + "_" + timestamp + ".png");
             destino.getParentFile().mkdirs();
             Files.copy(screenshot.toPath(), destino.toPath());
-            System.out.println("📸 Captura guardada en: " + destino.getAbsolutePath());
+            System.out.println("📸 Scrennshot saved in: " + destino.getAbsolutePath());
         }
 
         if (webDriver != null) {

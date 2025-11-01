@@ -54,7 +54,7 @@ public class HomePage extends BasePage {
         originInput.sendKeys(Keys.ENTER);
 
         // Asserts the origin station
-        Assert.assertEquals("VALENCIA JOAQUÍN SOROLLA", originInput.getAttribute("value"));
+        Assert.assertEquals("VALÈNCIA-JOAQUÍN SOROLLA", originInput.getAttribute("value"));
     }
 
     /**
@@ -70,12 +70,12 @@ public class HomePage extends BasePage {
         destinationInput.sendKeys(Keys.DOWN);
         destinationInput.sendKeys(Keys.ENTER);
 
-        // Asserts the destination station
+        // Asserts for the destination station
         Assert.assertEquals("BARCELONA-SANTS", destinationInput.getAttribute("value"));
     }
 
     /**
-     * Clicks on the departure date calendar in the Home page
+     * Clicks on the departure date calendar in the 'Home' page
      */
     public void selectDepartureDate() {
         WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
@@ -111,26 +111,22 @@ public class HomePage extends BasePage {
             wait.until(ExpectedConditions.visibilityOfElementLocated(monthYearLabel));
     }
 
-    // Select the correct day
+    // Click the correct day
     String dayXpath = String.format("//div[contains(@class, 'lightpick__day') and text()='%d']", targetDate.getDayOfMonth());
     WebElement dayElement = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(dayXpath)));
-
-    // Scroll into view and click
-    ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", dayElement);
     dayElement.click();
     }
 
     /**
-     * Method to click the 'Accept' button on the calendar in Home page.
+     * Method to click the 'Accept' button on the calendar in 'Home' page.
      */
     public void clickAcceptButton() {
         waitUntilElementIsDisplayed(acceptButtonLocator, TIMEOUT);
-        scrollElementIntoView(buscarBilleteLocator);
         clickElement(acceptButtonLocator);
     }
 
     /**
-     * Searches the selected ticket in the Home page.
+     * Searches the selected ticket in the 'Home' page.
      */
     public void clickSearchTicketButton() {
         waitUntilElementIsDisplayed(buscarBilleteLocator, TIMEOUT);

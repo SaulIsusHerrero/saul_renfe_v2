@@ -25,12 +25,12 @@ public class InvalidCardPaymentTest {
 
     @DataProvider(name = "paymentData")
     public Object[][] getPaymentData() {
-        return CSVDataProvider.readDatosPasajeros();
+        return CSVDataProvider.readPassengersData();
     }
 
     @DataProvider(name = "routeData")
     public Object[][] getRouteData() {
-        return CSVDataProvider.readPreciosTrayectos();
+        return CSVDataProvider.readTripPrices();
     }
 
     @BeforeMethod
@@ -65,7 +65,7 @@ public class InvalidCardPaymentTest {
             String cvv) {
 
         TemporaryDataStore.getInstance().set("testCase", "InvalidCardPaymentTest");
-
+        // Reusable components (steps)
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
         steps.selectDepartureDate();
         steps.selectTrainAndFare();
@@ -83,11 +83,11 @@ public class InvalidCardPaymentTest {
 
     @AfterMethod
     public void capturarPantallaSiFalla(ITestResult result) throws IOException {
-        System.out.println("🧪 Estado del test: " + result.getStatus() + " (" + result.getName() + ")");
+        System.out.println("🧪 Test status: " + result.getStatus() + " (" + result.getName() + ")");
 
         if (result.getStatus() == ITestResult.FAILURE && webDriver != null) {
             if (result.getThrowable() != null) {
-                System.err.println("❗ Excepción en test: " + result.getThrowable().getMessage());
+                System.err.println("❗ Test exception: " + result.getThrowable().getMessage());
             }
 
             File screenshot = ((TakesScreenshot) webDriver).getScreenshotAs(OutputType.FILE);
@@ -96,7 +96,7 @@ public class InvalidCardPaymentTest {
             File destino = new File("screenshots/" + testName + "_" + timestamp + ".png");
             destino.getParentFile().mkdirs();
             Files.copy(screenshot.toPath(), destino.toPath());
-            System.out.println("📸 Captura guardada en: " + destino.getAbsolutePath());
+            System.out.println("📸 Screenshot saved in: " + destino.getAbsolutePath());
         }
 
         if (webDriver != null) {

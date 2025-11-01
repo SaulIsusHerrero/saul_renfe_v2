@@ -2,40 +2,41 @@ package utils;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import java.util.Locale;
+import org.openqa.selenium.edge.EdgeDriver;
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class DriverManager {
 
+    private static WebDriver driver;
+
     public static WebDriver getDriver(String browser) {
-        String os = System.getProperty("os.name").toLowerCase(Locale.ROOT);
-        String driverPathPrefix;
+        if (driver == null) {
+            System.getProperty("browser", "chrome").toLowerCase(); // default: chrome
 
-        if (os.contains("win")) {
-            driverPathPrefix = "drivers/windows/";
-        } else if (os.contains("mac")) {
-            driverPathPrefix = "drivers/mac/";
-        } else {
-            driverPathPrefix = "drivers/linux/";
+            switch (browser) {
+                case "firefox":
+                    WebDriverManager.firefoxdriver().setup();
+                    driver = new FirefoxDriver();
+                    break;
+                case "edge":
+                    WebDriverManager.edgedriver().setup();
+                    driver = new EdgeDriver();
+                    break;
+                case "chrome":
+                default:
+                    WebDriverManager.chromedriver().setup();
+                    driver = new ChromeDriver();
+                    break;
+            }
         }
+        return driver;
+    }
 
-        switch (browser.toLowerCase(Locale.ROOT)) {
-            case "chrome":
-                System.setProperty("webdriver.chrome.driver",
-                        driverPathPrefix + (os.contains("win") ? "chromedriver.exe" : "chromedriver"));
-                return new ChromeDriver();
-            case "firefox":
-                System.setProperty("webdriver.gecko.driver",
-                        driverPathPrefix + (os.contains("win") ? "geckodriver.exe" : "geckodriver"));
-                return new FirefoxDriver();
-            case "edge":
-                System.setProperty("webdriver.edge.driver",
-                        driverPathPrefix + (os.contains("win") ? "msedgedriver.exe" : "msedgedriver"));
-                return new EdgeDriver();
-            default:
-                throw new IllegalArgumentException("Unsupported browser: " + browser);
+    public static void quitDriver() {
+        if (driver != null) {
+            driver.quit();
+            driver = null;
         }
     }
 }
-

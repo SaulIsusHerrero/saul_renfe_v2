@@ -31,7 +31,7 @@
             <version>${selenium.version}</version>
         </dependency>
 
-        <!-- WebDriverManager -->
+        <!-- DriverManager -->
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
@@ -71,13 +71,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>RELEASE</version>
-            <scope>test</scope>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>5.6.3</version> <!-- Verifica que sea la última versión -->
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <!-- Añadir ruta personalizada de tests -->

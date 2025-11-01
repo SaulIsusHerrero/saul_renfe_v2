@@ -25,8 +25,4 @@ public class TemporaryDataStore {
     public Object get(String key) {
         return data.get(key);
     }
-
-    public void clear() {
-        data.clear();
-    }
 }
