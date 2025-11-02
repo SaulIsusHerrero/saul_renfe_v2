@@ -41,16 +41,17 @@ public class IntroduceYourDataPage extends BasePage {
      * @param totalPriceTrip Price previously obtained, already normalized
      */
     public void verifyTotalPrice(String totalPriceTrip) {
-        waitUntilElementIsDisplayed(totalPriceDataLocator, TIMEOUT);
+        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
 
-        // Normalize the price from the new page
-        WebElement priceElement = new WebDriverWait(webDriver, TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(totalPriceDataLocator));
+        // Espera explícita para asegurar que el elemento esté presente y visible
+        WebElement priceElement = wait.until(ExpectedConditions.visibilityOfElementLocated(totalPriceDataLocator));
+
+        // Normaliza el texto del precio
         String totalPriceData = normalizePrice(priceElement.getText());
-
-        // The received price should already be normalized, but for safety:
         totalPriceTrip = normalizePrice(totalPriceTrip);
 
-        Assert.assertEquals(totalPriceData, totalPriceTrip);
+        // Compara los precios
+        Assert.assertEquals(totalPriceData, totalPriceTrip, "The display price doesn´t concur with the expected one");
     }
 
     /**
