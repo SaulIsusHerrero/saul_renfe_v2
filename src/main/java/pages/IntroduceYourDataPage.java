@@ -32,7 +32,7 @@ public class IntroduceYourDataPage extends BasePage {
      */
     public void verifyYouAreInIntroduceYourDataPage() {
         waitUntilElementIsDisplayed(totalPriceDataLocator, TIMEOUT);
-        Assert.assertTrue(webDriver.findElement(introduceTusDatosStepper).isEnabled(), "No está habilitado este step");
+        Assert.assertTrue(webDriver.findElement(introduceTusDatosStepper).isEnabled(), "Step disabled");
     }
 
     /**
@@ -41,18 +41,12 @@ public class IntroduceYourDataPage extends BasePage {
      * @param totalPriceTrip Price previously obtained, already normalized
      */
     public void verifyTotalPrice(String totalPriceTrip) {
-        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
-
-        // Espera explícita para asegurar que el elemento esté presente y visible
-        WebElement priceElement = wait.until(ExpectedConditions.visibilityOfElementLocated(totalPriceDataLocator));
-
-        // Normaliza el texto del precio
-        String totalPriceData = normalizePrice(priceElement.getText());
-        totalPriceTrip = normalizePrice(totalPriceTrip);
-
-        // Compara los precios
-        Assert.assertEquals(totalPriceData, totalPriceTrip, "The display price doesn´t concur with the expected one");
-    }
+    WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
+    WebElement priceElement = wait.until(ExpectedConditions.visibilityOfElementLocated(totalPriceDataLocator));
+    String totalPriceData = normalizePrice(priceElement.getText());
+    totalPriceTrip = normalizePrice(totalPriceTrip);
+    Assert.assertEquals(totalPriceData, totalPriceTrip, "The display price does not concur with the expected one.");
+}
 
     /**
      * Types the name in the textbox on the 'Introduce your data' page.
@@ -141,4 +135,3 @@ public class IntroduceYourDataPage extends BasePage {
     }
 
 }
-
