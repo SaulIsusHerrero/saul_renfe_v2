@@ -52,7 +52,7 @@ public class InvalidDataTraveler15days {
     * Verify that an error message appears indicating that the entered data is invalid, including the color of the message.
     */
     @Test(dataProvider = "paymentData")
-    public void InvalidDataTraveler15d(
+    public void InvalidDataTraveler15days(
             String originStation,
             String destinationStation,
             String firstName,

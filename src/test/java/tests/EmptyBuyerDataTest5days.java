@@ -51,7 +51,7 @@ public class EmptyBuyerDataTest5days {
     * It verifies that the "PAGAR" button is not enabled.
     */
     @Test(dataProvider = "paymentData")
-    public void EmptyBuyerDataTest5d (
+    public void EmptyBuyerDataTest5days (
     String originStation,
     String destinationStation,
     String firstName,

@@ -31,6 +31,7 @@ public class IntroduceYourDataPage extends BasePage {
      * Assert that I am on the Page and that the 'Enter your data' section is enabled
      */
     public void verifyYouAreInIntroduceYourDataPage() {
+        waitUntilElementIsDisplayed(totalPriceDataLocator, TIMEOUT);
         Assert.assertTrue(webDriver.findElement(introduceTusDatosStepper).isEnabled(), "No está habilitado este step");
     }
 
@@ -43,7 +44,8 @@ public class IntroduceYourDataPage extends BasePage {
         waitUntilElementIsDisplayed(totalPriceDataLocator, TIMEOUT);
 
         // Normalize the price from the new page
-        String totalPriceData = normalizePrice(webDriver.findElement(totalPriceDataLocator).getText());
+        WebElement priceElement = new WebDriverWait(webDriver, TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(totalPriceDataLocator));
+        String totalPriceData = normalizePrice(priceElement.getText());
 
         // The received price should already be normalized, but for safety:
         totalPriceTrip = normalizePrice(totalPriceTrip);
@@ -64,21 +66,21 @@ public class IntroduceYourDataPage extends BasePage {
     /**
      * Types the first surname in the textbox on the "Introduce your data" page.
      *
-     * @param primerApellido as a string
+     * @param firstSurname as a string
      */
-    public void writeFirstSurnameField(String primerApellido) {
+    public void writeFirstSurnameField(String firstSurname) {
         waitUntilElementIsDisplayed(firstSurnameField, TIMEOUT);
-        setElementText(firstSurnameField, primerApellido);
+        setElementText(firstSurnameField, firstSurname);
     }
 
     /**
      * type the second surname in the textbox on the "Introduce your data" page.
      *
-     * @param segundoApellido as a string
+     * @param secondSurname as a string
      */
-    public void writeSecondSurnameField(String segundoApellido) {
+    public void writeSecondSurnameField(String secondSurname) {
         waitUntilElementIsDisplayed(secondSurnameField, TIMEOUT);
-        setElementText(secondSurnameField, segundoApellido);
+        setElementText(secondSurnameField, secondSurname);
     }
 
     /**
