@@ -97,7 +97,7 @@ public class PaymentGatewayPage extends BasePage {
 
         // Verify if the button is enabled
         if (!paymentButton.isEnabled()) {
-            Assert.fail("❌ Payment details are missing, therefore the 'PAGAR' button is disabled. And test is FAILED");
+            Assert.fail("❌ Payment details are missing, therefore the 'PAGAR' button is disabled. And the test is FAILED");
         }
     }
 
