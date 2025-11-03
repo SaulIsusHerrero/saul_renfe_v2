@@ -53,8 +53,8 @@ public class InvalidCardPaymentTest {
             String originStation,
             String destinationStation,
             String firstName,
-            String primerApellido,
-            String segundoApellido,
+            String firstSurname,
+            String secondSurname,
             String dni,
             String email,
             String phone,
@@ -73,7 +73,7 @@ public class InvalidCardPaymentTest {
         steps.verifyAndConfirmTravel();
         steps.clickPopUpAndLinkAppear();
         steps.verifyPriceIsEqualInData();
-        steps.introduceYourDataAndConfirm(firstName, primerApellido, segundoApellido, dni, email, phone);
+        steps.introduceYourDataAndConfirm(firstName, firstSurname, secondSurname, dni, email, phone);
         steps.verifyPriceIsEqualInPersonalize();
         steps.confirmPersonalization();
         steps.verifyPriceIsEqualInCompra();
