@@ -24,7 +24,7 @@ public class InvalidDataTraveler15days {
 
     @DataProvider(name = "paymentData")
     public Object[][] getPaymentData() {
-        return CSVDataProvider.readPassengersDataError15d();
+        return CSVDataProvider.readPassengersDataError15days();
     }
 
     @DataProvider(name = "routeData")
@@ -56,8 +56,8 @@ public class InvalidDataTraveler15days {
             String originStation,
             String destinationStation,
             String firstName,
-            String primerApellido,
-            String segundoApellido,
+            String firstSurname,
+            String secondSurname,
             String dni,
             String email,
             String phone) {
@@ -70,7 +70,7 @@ public class InvalidDataTraveler15days {
         steps.verifyAndConfirmTravel();
         steps.clickPopUpAndLinkAppear();
         steps.verifyPriceIsEqualInData();
-        steps.introduceYourDataAndConfirm(firstName, primerApellido, segundoApellido, dni, email, phone);
+        steps.introduceYourDataAndConfirm(firstName, firstSurname, secondSurname, dni, email, phone);
         }
 
     @AfterMethod

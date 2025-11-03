@@ -18,7 +18,7 @@ public class CSVDataProvider {
         return readCSVFile("passengers_data.csv");
     }
 
-    public static Object[][] readPassengersDataError15d() {
+    public static Object[][] readPassengersDataError15days() {
         return readCSVFile("passengers_data_error_15days.csv");
     }
 

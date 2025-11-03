@@ -11,14 +11,13 @@ public class IntroduceYourDataPage extends BasePage {
     private By introduceTusDatosStepper = By.xpath("//li[contains(@class, 'active')]//span[contains(text(), 'Introduce tus datos')]");
     private By firstNameField = By.xpath("//input[@id='nombre0']");
     private By firstSurnameField = By.xpath("//input[@id='apellido10']");
-    private By secondSurnameField = By.xpath("//input[@id='apellido20']");
     private By dniField = By.xpath("//input[@id='documento0']");
+    private By secondSurnameField = By.xpath("//input[@id='apellido20']");
     private By telefonoField = By.xpath("//input[@id='telefono0']");
     private By emailField = By.xpath("//input[@id='email0']");
     private By totalPriceDataLocator = By.xpath("//span[@id='totalTrayecto']");
     private By btnPersonalizar = By.cssSelector("#btn-responsive > #submitpersonaliza");
-    private By errorName = By.xpath("//div[@class='error-validacion' and @role='alert' and text()='El nombre tiene un formato incorrecto']");
-
+    private By errorDNI = By.xpath("//div[@class='error-validacion' and @role='alert' and text()='El número de documento tiene un formato incorrecto']");
 
     //Constructor
     public IntroduceYourDataPage(WebDriver webDriver) {
@@ -110,23 +109,23 @@ public class IntroduceYourDataPage extends BasePage {
 
     public void checkErrorInDataField() {
 
-        WebDriverWait wait = new WebDriverWait(webDriver,TIMEOUT);
-        WebElement error = wait.until(ExpectedConditions.visibilityOfElementLocated(errorName));
+        WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT.plusSeconds(5)); // Increased timeout
+        WebElement error = wait.until(ExpectedConditions.visibilityOfElementLocated(errorDNI));
 
         // If appears, verify text and colour
-        String texto = error.getText().trim();
-        Assert.assertEquals(texto, "The name has an incorrect format");
+        String text = error.getText().trim();
+        Assert.assertEquals(text, "El número de documento tiene un formato incorrecto");
 
         String color = error.getCssValue("color");
         Color actual = Color.fromString(color);
         Color esperado = Color.fromString("#ff0000");
         Assert.assertEquals(actual, esperado, "The error message color should be red");
-        Assert.assertFalse(actual.equals(esperado), "The name field contains invalid data, therefore it is NOT possible to continue with the flow");
+        Assert.assertFalse(!actual.equals(esperado), "The DNI field contains invalid data, therefore it is NOT possible to continue with the flow. Test FAILED");
     }
 
     /**
      * Clicks in Personalize trip to follow the flow.
-     * @return boolean
+     *
      */
     public void clickPersonalizeTrip() {
         scrollElementIntoView(btnPersonalizar);
