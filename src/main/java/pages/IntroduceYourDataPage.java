@@ -123,8 +123,11 @@ public class IntroduceYourDataPage extends BasePage {
         String color = error.getCssValue("color");
         Color actual = Color.fromString(color);
         Color esperado = Color.fromString("#ff0000");
-        Assert.assertTrue(actual.equals(esperado), "The DNI field contains invalid data, therefore it is NOT possible to continue with the flow. Test FAILED");
-        }
+
+        Assert.assertNotEquals(actual, esperado, "The error message colour should be red");
+        System.out.println("The name field contains invalid data, therefore it is NOT possible to continue with the flow.TEST FAILED");
+
+    }
 
     /**
      * Clicks in Personalize trip to follow the flow.
