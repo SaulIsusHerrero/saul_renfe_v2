@@ -1,8 +1,6 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<suite name="Suite de Pruebas Renfe" parallel="tests" thread-count="3">
-
-    <!-- Default Chrome configuration that will always run -->
-    <test name="Default_Chrome_Execution">
+<suite name="Suite de Pruebas Renfe" parallel="classes" thread-count="4">
+    <test name="Chrome_Tests">
         <parameter name="browser" value="chrome"/>
         <classes>
             <class name="tests.EmptyBuyerDataTest5days"/>
