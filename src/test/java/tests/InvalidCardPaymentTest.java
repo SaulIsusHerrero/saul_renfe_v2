@@ -6,9 +6,9 @@ import org.openqa.selenium.WebDriver;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
 import steps.Steps;
-import utils.CSVDataProvider;
-import utils.DriverManager;
-import utils.TemporaryDataStore;
+import tools.CSVDataProvider;
+import tools.DriverManager;
+import tools.TemporaryDataStore;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +22,11 @@ public class InvalidCardPaymentTest {
 
     private WebDriver webDriver;
     private Steps steps;
+    private String browser;
+
+    public InvalidCardPaymentTest(String browser) {
+        this.browser = browser;
+    }
 
     @DataProvider(name = "paymentData")
     public Object[][] getPaymentData() {
@@ -34,20 +39,14 @@ public class InvalidCardPaymentTest {
     }
 
     @BeforeMethod
-    @Parameters("browser")
-    public void setup(@Optional("chrome") String browser) {
+    public void setup() {
         webDriver = DriverManager.getDriver(browser);
         webDriver.manage().timeouts().implicitlyWait(TIMEOUT);
         webDriver.manage().window().maximize();
         webDriver.get("https://www.renfe.com/es/es");
-
         steps = new Steps(webDriver);
     }
 
-    /*
-    E2E client selects the first available train and tries to pay with an incorrect credit card.
-    Check that a pop-up error message appears explaining the error in the payment data.
-    */
     @Test(dataProvider = "paymentData")
     public void InvalidCardPaymentTest(
             String originStation,
@@ -65,7 +64,7 @@ public class InvalidCardPaymentTest {
             String cvv) {
 
         TemporaryDataStore.getInstance().set("testCase", "InvalidCardPaymentTest");
-        // Reusable components (steps)
+
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
         steps.selectDepartureDate();
         steps.selectTrainAndFare();
@@ -82,25 +81,14 @@ public class InvalidCardPaymentTest {
     }
 
     @AfterMethod
-    public void capturarPantallaSiFalla(ITestResult result) throws IOException {
-        System.out.println("🧪 Test status: " + result.getStatus() + " (" + result.getName() + ")");
-
+    public void tearDown(ITestResult result) throws IOException {
         if (result.getStatus() == ITestResult.FAILURE && webDriver != null) {
-            if (result.getThrowable() != null) {
-                System.err.println("❗ Test exception: " + result.getThrowable().getMessage());
-            }
-
             File screenshot = ((TakesScreenshot) webDriver).getScreenshotAs(OutputType.FILE);
             String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            String testName = result.getName();
-            File destino = new File("screenshots/" + testName + "_" + timestamp + ".png");
+            File destino = new File("screenshots/" + result.getName() + "_" + timestamp + ".png");
             destino.getParentFile().mkdirs();
             Files.copy(screenshot.toPath(), destino.toPath());
-            System.out.println("📸 Screenshot saved in: " + destino.getAbsolutePath());
         }
-
-        if (webDriver != null) {
-            webDriver.quit();
-        }
+        DriverManager.quitDriver();
     }
 }

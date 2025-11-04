@@ -1,84 +1,49 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.example</groupId>
     <artifactId>Renfe-Tests-Saul</artifactId>
     <version>1.0-SNAPSHOT</version>
-
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
         <selenium.version>4.26.0</selenium.version>
         <testng.version>7.10.2</testng.version>
         <webdrivermanager.version>5.9.1</webdrivermanager.version>
     </properties>
-
     <dependencies>
-        <!-- TestNG -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>${testng.version}</version>
         </dependency>
-
-        <!-- Selenium -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>${selenium.version}</version>
         </dependency>
-
-        <!-- DriverManager -->
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
             <version>${webdrivermanager.version}</version>
         </dependency>
-
-        <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.36</version>
         </dependency>
-
-        <!-- CSV reader -->
         <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
             <version>5.7.1</version>
         </dependency>
-
-        <!-- Chrome DevTools Protocol para compatibilidad -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-devtools-v130</artifactId>
             <version>${selenium.version}</version>
         </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>RELEASE</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.github.bonigarcia</groupId>
-            <artifactId>webdrivermanager</artifactId>
-            <version>5.6.3</version> <!-- Verifica que sea la última versión -->
-        </dependency>
     </dependencies>
     <build>
         <plugins>
-            <!-- Añadir ruta personalizada de tests -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
@@ -98,8 +63,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!-- Compilador -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -109,8 +72,6 @@
                     <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
-
-            <!-- Plugin de ejecución de pruebas -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>

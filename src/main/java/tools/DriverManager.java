@@ -1,4 +1,4 @@
-package utils;
+package tools;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -12,8 +12,6 @@ public class DriverManager {
 
     public static WebDriver getDriver(String browser) {
         if (driver == null) {
-            System.getProperty("browser", "chrome").toLowerCase(); // default: chrome
-
             switch (browser) {
                 case "firefox":
                     WebDriverManager.firefoxdriver().setup();
@@ -32,7 +30,6 @@ public class DriverManager {
         }
         return driver;
     }
-
     public static void quitDriver() {
         if (driver != null) {
             driver.quit();

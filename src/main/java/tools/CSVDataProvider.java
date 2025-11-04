@@ -1,4 +1,4 @@
-package utils;
+package tools;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
@@ -22,7 +22,7 @@ public class CSVDataProvider {
         return readCSVFile("passengers_data_error_15days.csv");
     }
 
-    public static Object[][] readData€80Evenings() {
+    public static Object[][] readData80EurosEvenings() {
         return readCSVFile("passengers_data_80€_evenings.csv");
     }
 

@@ -2,7 +2,7 @@ package steps;
 
 import org.openqa.selenium.WebDriver;
 import pages.*;
-import utils.TemporaryDataStore;
+import tools.TemporaryDataStore;
 
 public class Steps extends BasePage {
 

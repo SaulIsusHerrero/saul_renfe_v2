@@ -3,11 +3,12 @@ package tests;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.testng.ITestResult;
 import org.testng.annotations.*;
+import steps.Steps;
 import tools.CSVDataProvider;
 import tools.DriverManager;
 import tools.TemporaryDataStore;
-import steps.Steps;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,23 +16,21 @@ import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.testng.ITestResult;
-
 import static pages.BasePage.TIMEOUT;
 
-public class InvalidDataTraveler15days {
+public class SelectTrainMinor80EurosEvenings {
 
     private WebDriver webDriver;
     private Steps steps;
     private String browser;
 
-    public InvalidDataTraveler15days(String browser) {
+    public SelectTrainMinor80EurosEvenings(String browser) {
         this.browser = browser;
     }
 
     @DataProvider(name = "paymentData")
     public Object[][] getPaymentData() {
-        return CSVDataProvider.readPassengersDataError15days();
+        return CSVDataProvider.readData80EurosEvenings();
     }
 
     @DataProvider(name = "routeData")
@@ -49,26 +48,15 @@ public class InvalidDataTraveler15days {
     }
 
     @Test(dataProvider = "paymentData")
-    public void InvalidDataTraveler15days(
-            String originStation,
-            String destinationStation,
-            String firstName,
-            String firstSurname,
-            String secondSurname,
-            String dni,
-            String email,
-            String phone) {
-
-        TemporaryDataStore.getInstance().set("testCase", "InvalidDataTraveler15days");
+    public void SelectTrainMinor80EurosEvenings(String originStation, String destinationStation) {
+        TemporaryDataStore.getInstance().set("testCase", "SelectTrainMinor80EurosEvenings");
 
         steps.performSearchOriginAndDestinationStation(originStation, destinationStation);
         steps.selectDepartureDate();
-        steps.selectTrainAndFare();
+        steps.selectTrainMinor80EurosAndBetween5To10PM();
         steps.getAndStoreDynamicPrice();
         steps.verifyAndConfirmTravel();
         steps.clickPopUpAndLinkAppear();
-        steps.verifyPriceIsEqualInData();
-        steps.introduceYourDataAndConfirm(firstName, firstSurname, secondSurname, dni, email, phone);
     }
 
     @AfterMethod
