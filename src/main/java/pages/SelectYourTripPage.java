@@ -82,10 +82,10 @@ public class SelectYourTripPage extends BasePage {
 
     /**
      * Selects the first available train that meets the following criteria:
-     * 1. Price below €50.
+     * 1. Price below €80.
      * 2. Departure time between 5:00 PM and 10:00 PM.
      */
-    public void selectFirstTrainUnder50EurosAndBetween5To10PM() {
+    public void selectFirstTrainUnder80EurosAndBetween5To10PM() {
         WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT);
         boolean found = false;
         int maxAttempts = 6; // Maximum number of days to advance to prevent infinite loop
@@ -114,7 +114,7 @@ public class SelectYourTripPage extends BasePage {
                 double price = Double.parseDouble(priceText);
 
                 // Validation
-                if (price < 50.0 &&
+                if (price < 80.0 &&
                         !departureTime.isBefore(LocalTime.of(17, 0)) &&
                         !departureTime.isAfter(LocalTime.of(22, 0))) {
 
@@ -122,7 +122,7 @@ public class SelectYourTripPage extends BasePage {
                     wait.until(ExpectedConditions.elementToBeClickable(trainElement));
                     scrollElementIntoViewElement(trainElement);
 
-                    // ✅ Clicks on the train card with the first price under €50 found between 5 PM and 10 PM
+                    // ✅ Clicks on the train card with the first price under €80 found between 5 PM and 10 PM
                     ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", trainElement);
                     // ✅ Click on the card within the train that matches the previously found price, selecting the basic fare
                     WebElement firstBasicFare = trainFare.get(0);
@@ -145,7 +145,7 @@ public class SelectYourTripPage extends BasePage {
 
         // If not found after N attempts, the test fails
         if (!found) {
-            Assert.fail("❌ No trains found with price < €50 and departure time between 17:00 and 22:00 after " + maxAttempts + " days.");
+            Assert.fail("❌ No trains found with price < €80 and departure time between 17:00 and 22:00 after " + maxAttempts + " days.");
         }
     }
 

@@ -52,11 +52,11 @@ public class Steps extends BasePage {
     }
 
     /**
-     * Selects train with less than €50 price
+     * Selects train with less than €80 price
      */
-    public void selectTrainMinor50EurosAndBetween5To10PM(){
+    public void selectTrainMinor80EurosAndBetween5To10PM(){
         new SelectYourTripPage(webDriver).verifyYouAreInSelecionaTuViaje();
-        new SelectYourTripPage(webDriver).selectFirstTrainUnder50EurosAndBetween5To10PM();
+        new SelectYourTripPage(webDriver).selectFirstTrainUnder80EurosAndBetween5To10PM();
     }
 
     /**

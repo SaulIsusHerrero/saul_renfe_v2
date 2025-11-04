@@ -8,7 +8,7 @@
             <class name="tests.EmptyBuyerDataTest5days"/>
             <class name="tests.InvalidCardPaymentTest"/>
             <class name="tests.InvalidDataTraveler15days"/>
-            <class name="tests.SelectTrainMinor50€Evenings"/>
+            <class name="tests.SelectTrainMinor80€Evenings"/>
         </classes>
     </test>
     <!-- Alternative configurations for other browsers -->
@@ -18,7 +18,7 @@
             <class name="tests.EmptyBuyerDataTest5days"/>
             <class name="tests.InvalidCardPaymentTest"/>
             <class name="tests.InvalidDataTraveler15days"/>
-            <class name="tests.SelectTrainMinor50€Evenings"/>
+            <class name="tests.SelectTrainMinor80€Evenings"/>
         </classes>
     </test>
     <test name="Firefox_Execution" enabled="false">
@@ -27,7 +27,7 @@
             <class name="tests.EmptyBuyerDataTest5days"/>
             <class name="tests.InvalidCardPaymentTest"/>
             <class name="tests.InvalidDataTraveler15days"/>
-            <class name="tests.SelectTrainMinor50€Evenings"/>
+            <class name="tests.SelectTrainMinor80€Evenings"/>
         </classes>
     </test>
     <test name="Edge_Execution" enabled="false">
@@ -36,7 +36,7 @@
             <class name="tests.EmptyBuyerDataTest5days"/>
             <class name="tests.InvalidCardPaymentTest"/>
             <class name="tests.InvalidDataTraveler15days"/>
-            <class name="tests.SelectTrainMinor50€Evenings"/>
+            <class name="tests.SelectTrainMinor80€Evenings"/>
         </classes>
     </test>
 </suite>
