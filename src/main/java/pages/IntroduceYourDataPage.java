@@ -107,6 +107,10 @@ public class IntroduceYourDataPage extends BasePage {
         setElementText(telefonoField, phone);
     }
 
+    /**
+     * Checks if there is an error traveler´s data.
+     *
+     */
     public void checkErrorInDataField() {
 
         WebDriverWait wait = new WebDriverWait(webDriver, TIMEOUT.plusSeconds(5)); // Increased timeout
@@ -119,12 +123,8 @@ public class IntroduceYourDataPage extends BasePage {
         String color = error.getCssValue("color");
         Color actual = Color.fromString(color);
         Color esperado = Color.fromString("#ff0000");
-        Assert.assertFalse(actual.equals(esperado), "The DNI field contains invalid data, therefore it is NOT possible to continue with the flow. Test FAILED");
-        if (actual.equals(esperado)) {
-            System.out.println("The DNI field contains invalid data, therefore it is NOT possible to continue with the flow. Test FAILED");
+        Assert.assertTrue(actual.equals(esperado), "The DNI field contains invalid data, therefore it is NOT possible to continue with the flow. Test FAILED");
         }
-
-    }
 
     /**
      * Clicks in Personalize trip to follow the flow.
