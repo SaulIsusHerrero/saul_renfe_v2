@@ -14,5 +14,5 @@ Feature: Invalid Card Payment
 
     Examples:
       | originStation            | destinationStation     | firstName | primerApellido | segundoApellido | dni        | email          | phone      | totalPrice | card              | expiration | cvv |
-      | VALENCIA JOAQUÍN SOROLLA | BARCELONA-SANTS        | John      | Doe            | López           | 46131651E | test1@qa.com   | 696824570  | 50.00      | 4000 0000 0000 1000 | 03/30      | 990 |
+      | VALÈNCIA-JOAQUÍN SOROLLA | BARCELONA-SANTS        | John      | Doe            | López           | 46131651E | test1@qa.com   | 696824570  | 50.00      | 4000 0000 0000 1000 | 03/30      | 990 |
       | MADRID-PUERTA DE ATOCHA  | SEVILLA-SANTA JUSTA    | Jane      | Smith          | García          | 12345678A | test2@qa.com   | 612345678  | 75.00      | 4111 1111 1111 1111 | 01/25      | 123 |

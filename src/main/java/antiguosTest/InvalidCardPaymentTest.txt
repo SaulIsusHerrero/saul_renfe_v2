@@ -74,7 +74,7 @@ public class InvalidCardPaymentTest {
         basePage.clickAcceptAllCookiesButton();
 
         // Usar datos del CSV para origen y destino (ESTACIONES, no nombres de personas)
-        homePage.enterOrigin(originStation);  // Usa originStation (ej. "VALENCIA JOAQUÍN SOROLLA")
+        homePage.enterOrigin(originStation);  // Usa originStation (ej. "VALÈNCIA-JOAQUÍN SOROLLA")
         homePage.enterDestination(destinationStation);  // Usa destinationStation (ej. "BARCELONA-SANTS")
 
         homePage.selectDepartureDate();

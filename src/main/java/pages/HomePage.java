@@ -40,7 +40,7 @@ public class HomePage extends BasePage {
         originInput.sendKeys(Keys.ENTER);
 
         //Asserts the origin station
-        Assert.assertEquals("VALENCIA JOAQUÍN SOROLLA", originInput.getAttribute("value"));
+        Assert.assertEquals("VALÈNCIA-JOAQUÍN SOROLLA", originInput.getAttribute("value"));
     }
 
     /**
