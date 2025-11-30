@@ -15,7 +15,7 @@ public class TestFactory {
             tests.add(new EmptyBuyerDataTest5days(browser));
             tests.add(new InvalidCardPaymentTest(browser));
             tests.add(new InvalidDataTraveler15days(browser));
-            tests.add(new SelectTrainMinor80EurosEvenings(browser)); // Renamed to avoid encoding issues
+            tests.add(new SelectTrainMinor80EurosEvenings(browser));
         }
 
         return tests.toArray();
